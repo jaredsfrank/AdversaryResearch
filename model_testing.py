@@ -64,7 +64,9 @@ def create_adversary(batch_size=2, target_class=1, image_reg=1000):
         image_loss = MSE(inputs, Variable(old_image))
         loss = model_loss + image_reg*image_loss
         predicted = torch.max(outputs.data, 1)
+        print "Target Class Weights:"
         print outputs.data[:, target_class]
+        print "Predicted Classes:"
         print predicted
         predicted = predicted[1]
         if np.all(predicted.numpy() == [target_class]*batch_size):
