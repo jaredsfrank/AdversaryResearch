@@ -42,7 +42,7 @@ def save_figure(imgs, name):
     imshow(torchvision.utils.make_grid(imgs))
     fig.savefig("/scratch/jsf239/{}.png".format(name))
 
-def create_adversary(batch_size=2, target_class=1, image_reg=1000):
+def create_adversary(batch_size=2, target_class=1, image_reg=1000, lr=.01):
     resnet = models.resnet18(pretrained=True)
     valdir = "/scratch/datasets/imagenet/val"
     val_loader = load_data(valdir, batch_size, True)
@@ -54,7 +54,7 @@ def create_adversary(batch_size=2, target_class=1, image_reg=1000):
     new_labels = Variable(torch.LongTensor([target_class]*batch_size))
     CrossEntropy = nn.CrossEntropyLoss()
     MSE = nn.MSELoss()
-    opt = optim.SGD(test(inputs), lr=.1, momentum=0.9)
+    opt = optim.SGD(test(inputs), lr=lr, momentum=0.9)
     save_figure(images, "Before")
     plt.show()
     predicted = torch.Tensor([-1]*batch_size)
