@@ -42,8 +42,10 @@ def save_figure(imgs, name):
     imshow(torchvision.utils.make_grid(imgs))
     fig.savefig("/scratch/jsf239/{}.png".format(name))
 
-def create_adversary(batch_size=2, target_class=1, image_reg=1000, lr=.01):
+def create_adversary(batch_size=2, target_class=1, image_reg=0, lr=.01):
+    # Load pretrained network
     resnet = models.resnet18(pretrained=True)
+    # Load in first <batch_size> images for validation
     valdir = "/scratch/datasets/imagenet/val"
     val_loader = load_data(valdir, batch_size, True)
     data = next(iter(val_loader))
@@ -52,10 +54,11 @@ def create_adversary(batch_size=2, target_class=1, image_reg=1000, lr=.01):
     old_image = images.clone()
     inputs = Variable(images, requires_grad = True)
     new_labels = Variable(torch.LongTensor([target_class]*batch_size))
+    # Instantiate Loss Classes
     CrossEntropy = nn.CrossEntropyLoss()
     MSE = nn.MSELoss()
     opt = optim.SGD(test(inputs), lr=lr, momentum=0.9)
-    save_figure(images, "Before")
+    save_figure(images, "Before_{}_{}".format(image_reg, lr))
     plt.show()
     predicted = torch.Tensor([-1]*batch_size)
     while not np.all(predicted.numpy() == [target_class]*batch_size):
@@ -71,8 +74,8 @@ def create_adversary(batch_size=2, target_class=1, image_reg=1000, lr=.01):
         print predicted
         predicted = predicted[1]
         if np.all(predicted.numpy() == [target_class]*batch_size):
-            save_figure(inputs.data, "After")
-            save_figure(images-old_image, "Diff")
+            save_figure(inputs.data, "After_{}_{}".format(image_reg, lr))
+            save_figure(images-old_image, "Diff_{}_{}".format(image_reg, lr))
             plt.show()
         else:
             opt.zero_grad()
