@@ -37,49 +37,39 @@ def load_data(path, batch_size = 100, shuffle = True):
 def test(inputs):
     yield inputs
 
+def save_figure(imgs, name):
+    fig = plt.figure(name)
+    imshow(torchvision.utils.make_grid(imgs))
+    fig.savefig("/scratch/jsf239/{}.png".format(name))
 
-def create_adversary():
+def create_adversary(batch_size=2, target_class=1, image_reg=1000):
     resnet = models.resnet18(pretrained=True)
     valdir = "/scratch/datasets/imagenet/val"
-    val_loader = load_data(valdir, 2, True)
+    val_loader = load_data(valdir, batch_size, True)
     data = next(iter(val_loader))
-    print("starting new batch")
     images, labels =  data
     print "The expected labels are {}".format(labels)
     old_image = images.clone()
     inputs = Variable(images, requires_grad = True)
-    new_label = Variable(torch.LongTensor([1, 1]))
-    crit = nn.CrossEntropyLoss()
-    reg = nn.MSELoss()
+    new_labels = Variable(torch.LongTensor([target_class]*batch_size))
+    CrossEntropy = nn.CrossEntropyLoss()
+    MSE = nn.MSELoss()
     opt = optim.SGD(test(inputs), lr=.1, momentum=0.9)
-    outputs = resnet(inputs)
-    imshow(torchvision.utils.make_grid(images))
+    save_figure(images, "Before")
     plt.show()
-    before_fig = plt.figure("before")
-    imshow(torchvision.utils.make_grid(images))
-    before_fig.savefig("/scratch/jsf239/before2.png")
-    i = 0
-    predicted = torch.Tensor([463])
-    while not np.all(predicted.numpy() == [1, 1]):
-        print "Iteration {}".format(i)
-        i += 1
+    predicted = torch.Tensor([-1]*batch_size)
+    while not np.all(predicted.numpy() == [target_class]*batch_size):
         outputs = resnet(inputs)
-        l1 = crit(outputs, new_label)
-        l2 = reg(inputs, Variable(old_image))
-
-        loss = l1 + 1000*l2
-        print crit(outputs, new_label), loss
+        model_loss = CrossEntropy(outputs, new_labels)
+        image_loss = MSE(inputs, Variable(old_image))
+        loss = model_loss + image_reg*image_loss
         predicted = torch.max(outputs.data, 1)
         print outputs.data
         print predicted
         predicted = predicted[1]
-        if np.all(predicted.numpy() == [1, 1]):
-            after_fig = plt.figure("After")
-            imshow(torchvision.utils.make_grid(inputs.data))
-            after_fig.savefig("/scratch/jsf239/after2.png")
-            diff_fig = plt.figure("Diff")
-            imshow(torchvision.utils.make_grid(images-old_image))
-            diff_fig.savefig("/scratch/jsf239/diff2.png")
+        if np.all(predicted.numpy() == [target_class]*batch_size):
+            save_figure(inputs.data, "After")
+            save_figure(images-old_image, "Diff")
             plt.show()
         else:
             opt.zero_grad()
@@ -100,13 +90,9 @@ def load_and_run_pretrained():
 	# Cycle through all data and determine which were correctly labeled
 	for data in val_loader:
 		images, labels = data
-		# imshow(torchvision.utils.make_grid(images))
-		plt.show()
 		output = resnet(Variable(images))
                 print ("The output is {}".format(output))
 		_, predicted = torch.max(output.data, 1)
-                print predicted
-                print labels
 		total += labels.size(0)
 		correct += (predicted == labels).sum()
 		print("Testing batch. Accuracy is {}".format(float(correct)/total))
