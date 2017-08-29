@@ -61,8 +61,8 @@ def create_adversary(batch_size=2, target_class=1, image_reg=1000):
     while not np.all(predicted.numpy() == [target_class]*batch_size):
         outputs = resnet(inputs)
         model_loss = CrossEntropy(outputs, new_labels)
-        # image_loss = MSE(inputs, Variable(old_image))
-        image_loss = torch.max(inputs - Variable(old_image))
+        image_loss = MSE(inputs, Variable(old_image))
+        # image_loss = torch.max(inputs - Variable(old_image))
         loss = model_loss + image_reg*image_loss
         predicted = torch.max(outputs.data, 1)
         print "Target Class Weights:"
