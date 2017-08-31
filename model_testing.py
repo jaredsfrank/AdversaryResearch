@@ -90,7 +90,7 @@ def load_and_run_pretrained():
     resnet.eval()
     print resnet
     valdir = "/scratch/datasets/imagenet/val"
-        val_loader = load_data(valdir, 2)
+    val_loader = load_data(valdir, 2)
     print("Done instantiating data loader")
     correct = 0
     total = 0
@@ -98,12 +98,11 @@ def load_and_run_pretrained():
     for data in val_loader:
         images, labels = data
         output = resnet(Variable(images))
-                print ("The output is {}".format(output))
+        print ("The output is {}".format(output))
         _, predicted = torch.max(output.data, 1)
         total += labels.size(0)
         correct += (predicted == labels).sum()
         print("Testing batch. Accuracy is {}".format(float(correct)/total))
-    
     print("Accuracy is {}".format(float(correct)/total))
 
 if __name__ == "__main__":
