@@ -21,17 +21,17 @@ def imshow(img):
     plt.imshow(np.transpose(npimg, (1, 2, 0)))
 
 def load_data(path, batch_size = 100, shuffle = True):
-	normalize = transforms.Normalize([0.485, 0.456, 0.406],
-					 [0.229, 0.224, 0.225])
-	data_loader = torch.utils.data.DataLoader(
-	        torchvision.datasets.ImageFolder(path, transforms.Compose([
-	            transforms.Scale(256),
-	            transforms.CenterCrop(224),
-	            transforms.ToTensor(),
-	            normalize,
-	        ])),
-	        batch_size=batch_size, shuffle=shuffle,
-	        num_workers=1, pin_memory=True)
+    normalize = transforms.Normalize([0.485, 0.456, 0.406],
+                     [0.229, 0.224, 0.225])
+    data_loader = torch.utils.data.DataLoader(
+            torchvision.datasets.ImageFolder(path, transforms.Compose([
+                transforms.Scale(256),
+                transforms.CenterCrop(224),
+                transforms.ToTensor(),
+                normalize,
+            ])),
+            batch_size=batch_size, shuffle=shuffle,
+            num_workers=1, pin_memory=True)
         return data_loader
 
 def test(inputs):
@@ -85,26 +85,26 @@ def create_adversary(batch_size=2, target_class=1, image_reg=0, lr=.01):
     
 
 def load_and_run_pretrained():
-	# Loading pretrained network and data 
-	resnet = models.resnet101(pretrained=True)
+    # Loading pretrained network and data 
+    resnet = models.resnet101(pretrained=True)
     resnet.eval()
-	print resnet
-	valdir = "/scratch/datasets/imagenet/val"
+    print resnet
+    valdir = "/scratch/datasets/imagenet/val"
         val_loader = load_data(valdir, 2)
-	print("Done instantiating data loader")
-	correct = 0
-	total = 0
-	# Cycle through all data and determine which were correctly labeled
-	for data in val_loader:
-		images, labels = data
-		output = resnet(Variable(images))
+    print("Done instantiating data loader")
+    correct = 0
+    total = 0
+    # Cycle through all data and determine which were correctly labeled
+    for data in val_loader:
+        images, labels = data
+        output = resnet(Variable(images))
                 print ("The output is {}".format(output))
-		_, predicted = torch.max(output.data, 1)
-		total += labels.size(0)
-		correct += (predicted == labels).sum()
-		print("Testing batch. Accuracy is {}".format(float(correct)/total))
-	
-	print("Accuracy is {}".format(float(correct)/total))
+        _, predicted = torch.max(output.data, 1)
+        total += labels.size(0)
+        correct += (predicted == labels).sum()
+        print("Testing batch. Accuracy is {}".format(float(correct)/total))
+    
+    print("Accuracy is {}".format(float(correct)/total))
 
 if __name__ == "__main__":
     # load_and_run_pretrained()
