@@ -32,7 +32,7 @@ def load_data(path, batch_size = 100, shuffle = True):
             ])),
             batch_size=batch_size, shuffle=shuffle,
             num_workers=1, pin_memory=True)
-        return data_loader
+    return data_loader
 
 def test(inputs):
     yield inputs
