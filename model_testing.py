@@ -45,6 +45,7 @@ def save_figure(imgs, name):
 def create_adversary(batch_size=2, target_class=1, image_reg=0, lr=.01):
     # Load pretrained network
     resnet = models.resnet18(pretrained=True)
+    resnet.eval()
     # Load in first <batch_size> images for validation
     valdir = "/scratch/datasets/imagenet/val"
     val_loader = load_data(valdir, batch_size, True)
@@ -86,11 +87,11 @@ def create_adversary(batch_size=2, target_class=1, image_reg=0, lr=.01):
 def load_and_run_pretrained():
 	# Loading pretrained network and data 
 	resnet = models.resnet101(pretrained=True)
+    resnet.eval()
 	print resnet
 	valdir = "/scratch/datasets/imagenet/val"
         val_loader = load_data(valdir, 2)
 	print("Done instantiating data loader")
-
 	correct = 0
 	total = 0
 	# Cycle through all data and determine which were correctly labeled
