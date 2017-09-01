@@ -42,7 +42,11 @@ def save_figure(imgs, name):
     imshow(torchvision.utils.make_grid(imgs))
     fig.savefig("/scratch/jsf239/{}.png".format(name))
 
-def create_adversary(batch_size=2, target_class=1, image_reg=0, lr=.01):
+def is_done(predicted, target_class, batch_size, iters, min_iters):
+    all_right = np.all(predicted.numpy() == [target_class]*batch_size)
+    return all_right and iters > min_iters
+
+def create_adversary(batch_size=4, target_class=1, image_reg=100, lr=.01):
     # Load pretrained network
     resnet = models.resnet18(pretrained=True)
     resnet.eval()
@@ -61,8 +65,12 @@ def create_adversary(batch_size=2, target_class=1, image_reg=0, lr=.01):
     opt = optim.SGD(test(inputs), lr=lr, momentum=0.9)
     save_figure(images, "Before_{}_{}".format(image_reg, lr))
     plt.show()
+    save_figure(images, "Before_{}_{}".format(image_reg, lr))
     predicted = torch.Tensor([-1]*batch_size)
-    while not np.all(predicted.numpy() == [target_class]*batch_size):
+    iters = 0
+    min_iters = 1000
+    while not is_done(predicted, target_class, batch_size, iters, min_iters):
+        print "Iteration {}".format(iters)
         outputs = resnet(inputs)
         model_loss = CrossEntropy(outputs, new_labels)
         image_loss = MSE(inputs, Variable(old_image))
@@ -74,9 +82,11 @@ def create_adversary(batch_size=2, target_class=1, image_reg=0, lr=.01):
         print "Predicted Classes:"
         print predicted
         predicted = predicted[1]
-        if np.all(predicted.numpy() == [target_class]*batch_size):
+        iters += 1
+        if is_done(predicted, target_class, batch_size, iters, min_iters):
+            print images.numpy().shape
+            print old_image.numpy().shape
             save_figure(inputs.data, "After_{}_{}".format(image_reg, lr))
-            save_figure(images-old_image, "Diff_{}_{}".format(image_reg, lr))
             plt.show()
         else:
             opt.zero_grad()
