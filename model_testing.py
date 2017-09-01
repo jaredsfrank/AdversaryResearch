@@ -42,7 +42,7 @@ def save_figure(imgs, name):
     imshow(torchvision.utils.make_grid(imgs))
     fig.savefig("/scratch/jsf239/{}.png".format(name))
 
-def create_adversary(batch_size=2, target_class=1, image_reg=0, lr=.01):
+def create_adversary(batch_size=2, target_class=1, image_reg=10, lr=.01):
     # Load pretrained network
     resnet = models.resnet18(pretrained=True)
     resnet.eval()
