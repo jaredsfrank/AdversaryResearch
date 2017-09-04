@@ -46,10 +46,12 @@ def is_done(predicted, target_class, batch_size, iters, min_iters):
     all_right = np.all(predicted.numpy() == [target_class]*batch_size)
     return all_right and iters > min_iters
 
-def create_adversary(batch_size=4, target_class=1, image_reg=100, lr=.01):
+def create_adversary(batch_size, target_class, image_reg, lr, l_inf=False):
     # Load pretrained network
     resnet = models.resnet18(pretrained=True)
     resnet.eval()
+    for parameter in resnet.parameters():
+        parameter.requires_grad = False
     # Load in first <batch_size> images for validation
     valdir = "/scratch/datasets/imagenet/val"
     val_loader = load_data(valdir, batch_size, True)
@@ -116,6 +118,4 @@ def load_and_run_pretrained():
         print("Testing batch. Accuracy is {}".format(float(correct)/total))
     print("Accuracy is {}".format(float(correct)/total))
 
-if __name__ == "__main__":
-    # load_and_run_pretrained()
-    create_adversary()
+,
