@@ -92,6 +92,7 @@ def create_adversary(batch_size=4, target_class=1, image_reg=100, lr=.01):
             opt.zero_grad()
             loss.backward()
             opt.step()
+            torch.clamp(images, min=0, max=1)
     
 
 def load_and_run_pretrained():
