@@ -31,5 +31,5 @@ if __name__ == "__main__":
 								   target_class=args.target_class,
 								   image_reg=args.image_reg,
 								   lr=args.lr,
-								   l_inf=args.l_inf)
+                                                                   l_inf=False)
 	

@@ -37,6 +37,10 @@ def load_data(path, batch_size = 100, shuffle = True):
 def test(inputs):
     yield inputs
 
+def diff(imgs, old_imgs):
+    fig = plt.figure("diff")
+    plt.imshow(np.transpose(np.abs(torchvision.utils.make_grid(imgs - old_imgs).numpy()), (1, 2, 0)))
+
 def save_figure(imgs, name):
     fig = plt.figure(name)
     imshow(torchvision.utils.make_grid(imgs))
@@ -46,7 +50,7 @@ def is_done(predicted, target_class, batch_size, iters, min_iters):
     all_right = np.all(predicted.numpy() == [target_class]*batch_size)
     return all_right and iters > min_iters
 
-def create_adversary(batch_size, target_class, image_reg, lr, l_inf=False):
+def create_adversary(batch_size=1, target_class=1, image_reg=100, lr=.1, l_inf=False):
     # Load pretrained network
     resnet = models.resnet18(pretrained=True)
     resnet.eval()
@@ -65,18 +69,29 @@ def create_adversary(batch_size, target_class, image_reg, lr, l_inf=False):
     CrossEntropy = nn.CrossEntropyLoss()
     MSE = nn.MSELoss()
     opt = optim.SGD(test(inputs), lr=lr, momentum=0.9)
-    save_figure(images, "Before_{}_{}".format(image_reg, lr))
+    print images[0,0,:,:].shape, np.min(images[0,:,:].numpy())
+    torch.clamp(images[:, 0,:,:], min=-.485/0.229, max=(1-.485)/0.229, out=old_image[:,0,:,:])
+    torch.clamp(old_image[:, 1,:,:], min=-.456/0.224, max=(1-.456)/0.224, out=old_image[:,1,:,:])
+    torch.clamp(old_image[:, 2,:,:], min=-.406/0.225, max=(1-.406)/0.225, out=old_image[:,2,:,:])
+    save_figure(old_image, "Before_{}_{}".format(image_reg, lr))
     plt.show()
     save_figure(images, "Before_{}_{}".format(image_reg, lr))
     predicted = torch.Tensor([-1]*batch_size)
     iters = 0
-    min_iters = 1000
+    min_iters = 0
     while not is_done(predicted, target_class, batch_size, iters, min_iters):
         print "Iteration {}".format(iters)
+        opt.zero_grad()
+        torch.clamp(images[:, 0,:,:], min=-.485/0.229, max=(1-.485)/0.229, out=images[:,0,:,:])
+        torch.clamp(images[:, 1,:,:], min=-.456/0.224, max=(1-.456)/0.224, out=images[:,1,:,:])
+        torch.clamp(images[:, 2,:,:], min=-.406/0.225, max=(1-.406)/0.225, out=images[:,2,:,:])
+
         outputs = resnet(inputs)
         model_loss = CrossEntropy(outputs, new_labels)
-        image_loss = MSE(inputs, Variable(old_image))
-        # image_loss = torch.max(inputs - Variable(old_image))
+        if not l_inf:
+            image_loss = MSE(inputs, Variable(old_image))
+        else:
+            image_loss = torch.max(inputs - Variable(old_image))
         loss = model_loss + image_reg*image_loss
         predicted = torch.max(outputs.data, 1)
         print "Target Class Weights:"
@@ -88,13 +103,18 @@ def create_adversary(batch_size, target_class, image_reg, lr, l_inf=False):
         if is_done(predicted, target_class, batch_size, iters, min_iters):
             print images.numpy().shape
             print old_image.numpy().shape
+            # reshaped = images.numpy().reshape((224, 224, 3))[:,:,1]
+            # reshaped_old = old_image.numpy().reshape((224, 224, 3))[:,:,1]
             save_figure(inputs.data, "After_{}_{}".format(image_reg, lr))
+            diff(images, old_image)
+            # plt.figure('diff')
+            # plt.imshow(reshaped - reshaped_old)
             plt.show()
         else:
-            opt.zero_grad()
+            print image_loss
+            print model_loss
             loss.backward()
             opt.step()
-            torch.clamp(images, min=0, max=1)
     
 
 def load_and_run_pretrained():
@@ -118,4 +138,3 @@ def load_and_run_pretrained():
         print("Testing batch. Accuracy is {}".format(float(correct)/total))
     print("Accuracy is {}".format(float(correct)/total))
 
-,
