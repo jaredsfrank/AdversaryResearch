@@ -103,12 +103,8 @@ def create_adversary(batch_size=1, target_class=1, image_reg=100, lr=.1, l_inf=F
         if is_done(predicted, target_class, batch_size, iters, min_iters):
             print images.numpy().shape
             print old_image.numpy().shape
-            # reshaped = images.numpy().reshape((224, 224, 3))[:,:,1]
-            # reshaped_old = old_image.numpy().reshape((224, 224, 3))[:,:,1]
             save_figure(inputs.data, "After_{}_{}".format(image_reg, lr))
             diff(images, old_image)
-            # plt.figure('diff')
-            # plt.imshow(reshaped - reshaped_old)
             plt.show()
         else:
             print image_loss
