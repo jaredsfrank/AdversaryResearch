@@ -96,7 +96,7 @@ class LBFGS(object):
       self.clamp_images(images)
       old_images = images.clone()
       outputs = resnet(inputs)
-      predicted = torch.max(outputs.data, 1)
+      predicted = torch.max(outputs.data, 1)[1]
       new_labels = torch.topk(outputs, 2, 1)[1][:, 1]
       # new_labels = Variable(torch.LongTensor([target_class]*batch_size)).cuda()
       iters = 0
