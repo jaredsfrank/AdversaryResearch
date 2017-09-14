@@ -84,7 +84,7 @@ class LBFGS(object):
       labels = labels.cuda()
       original_labels = labels.clone()
       inputs = Variable(images, requires_grad = True)
-      new_labels = Variable(torch.LongTensor([target_class]*batch_size))
+      new_labels = Variable(torch.LongTensor([target_class]*batch_size)).cuda()
       # Instantiate Loss Classes
       CrossEntropy = nn.CrossEntropyLoss()
       MSE = nn.MSELoss()
