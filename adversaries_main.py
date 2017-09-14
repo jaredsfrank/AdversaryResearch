@@ -32,8 +32,9 @@ if __name__ == "__main__":
     #                                lr=args.lr,
     #                                l_inf=False)
     lbfgs = adversaries.LBFGS()
+    lbfgs.verbose = False
     ave_mse = 0.0
-    iters = 1
+    iters = 10
     for i in range(iters):
         mse = lbfgs.create_adversary(batch_size=args.batch_size,
                                      target_class=args.target_class,
