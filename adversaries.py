@@ -71,6 +71,7 @@ class LBFGS(object):
   def create_adversary(self, batch_size=1, target_class=1, image_reg=100, lr=.1):
       # Load pretrained network
       resnet = models.resnet18(pretrained=True)
+      resnet.cuda()
       resnet.eval()
       for parameter in resnet.parameters():
           parameter.requires_grad = False
@@ -79,6 +80,8 @@ class LBFGS(object):
       val_loader = self.load_data(valdir, batch_size, True)
       data = next(iter(val_loader))
       images, labels =  data
+      images = images.cuda()
+      labels = labels.cuda()
       original_labels = labels.clone()
       inputs = Variable(images, requires_grad = True)
       new_labels = Variable(torch.LongTensor([target_class]*batch_size))
@@ -101,8 +104,8 @@ class LBFGS(object):
         opt.zero_grad()
         self.clamp_images(images)
         outputs = resnet(inputs)
-        model_loss = CrossEntropy(outputs, new_labels)
-        image_loss = MSE(inputs, Variable(old_images))
+        model_loss = CrossEntropy(outputs, new_labels).cuda()
+        image_loss = MSE(inputs, Variable(old_images)).cuda()
         loss = model_loss + image_reg*image_loss
         predicted = torch.max(outputs.data, 1)
         if self.verbose:
