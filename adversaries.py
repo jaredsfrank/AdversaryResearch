@@ -53,17 +53,9 @@ class LBFGS(object):
     image_diff/=maximum_element
     plt.imshow(np.transpose(image_diff, (1, 2, 0)))
 
-  def is_done(self, predicted, target_class, batch_size, iters, min_iters):
-    all_right = np.all(predicted.cpu().numpy() == [target_class]*batch_size)
-    return all_right and iters > min_iters
-
   def all_changed(self, original_labels, predictions):
     np_orig = original_labels.cpu().numpy()
     np_preds = predictions.cpu().numpy()
-    print "the diff is "
-    print np_orig, np_preds
-    print np_orig != np_preds
-    print np.all(np_orig != np_preds)
     return np.all(np_orig != np_preds)
 
   def clamp_images(self, images):
@@ -97,11 +89,13 @@ class LBFGS(object):
       old_images = images.clone()
       outputs = resnet(inputs)
       predicted = torch.max(outputs.data, 1)[1]
-      new_labels = torch.topk(outputs, 2, 1)[1][:, 1]
-      # new_labels = Variable(torch.LongTensor([target_class]*batch_size)).cuda()
+      if target_class == -1:
+        new_labels = torch.topk(outputs, 2, 1)[1][:, 1]
+      else:
+        new_labels = Variable(torch.LongTensor([target_class]*batch_size)).cuda()
       iters = 0
       min_iters = 0
-      while not self.all_changed(original_labels, predicted):#self.is_done(predicted, target_class, batch_size, iters, min_iters):
+      while not self.all_changed(original_labels, predicted):
         if self.verbose:
           print "Iteration {}".format(iters)
         opt.zero_grad()
@@ -116,7 +110,7 @@ class LBFGS(object):
           print outputs.data[:, target_class] - predicted[0]
         predicted = predicted[1]
         iters += 1
-        if self.all_changed(original_labels, predicted):# self.is_done(predicted, target_class, batch_size, iters, min_iters):
+        if self.all_changed(original_labels, predicted):
           if self.show_images:
             self.save_figure(inputs.data, "After_{}_{}".format(image_reg, lr))
             self.save_figure(old_images, "Before_{}_{}".format(image_reg, lr))
@@ -125,7 +119,8 @@ class LBFGS(object):
         else:
             loss.backward()
             opt.step()
-            new_labels = torch.topk(resnet(inputs), 2, 1)[1][:, 1]
+            if target_class == -1:
+              new_labels = torch.topk(resnet(inputs), 2, 1)[1][:, 1]
       return MSE(images, Variable(old_images))
 
 
