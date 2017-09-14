@@ -10,16 +10,16 @@ import model_testing
 import adversaries
 
 parser = argparse.ArgumentParser()
-parser.add_argument("batch_size", 
+parser.add_argument("--batch_size", 
     help="Number of adversarial examples to generate",
     type=int)
-parser.add_argument("target_class",
+parser.add_argument("--target_class",
     help="Target class",
     type=int)
-parser.add_argument("image_reg",
+parser.add_argument("--image_reg",
     help="Regularizer on the image loss function",
     type=int)
-parser.add_argument("lr",
+parser.add_argument("--lr",
     help="Learning rate", 
     type=float)
 args = parser.parse_args()
