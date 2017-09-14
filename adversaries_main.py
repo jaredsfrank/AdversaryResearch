@@ -39,7 +39,7 @@ if __name__ == "__main__":
                                      target_class=args.target_class,
                                      image_reg=args.image_reg,
                                      lr=args.lr)
-        print mse
+        print mse[0]
         print mse.numpy()
         # ave_mse += mse
     print 
