@@ -41,7 +41,7 @@ if __name__ == "__main__":
                                      image_reg=args.image_reg,
                                      lr=args.lr)
         
-        ave_mse += mse.data.cuda().numpy()[0]
+        ave_mse += mse.data.cpu().numpy()[0]
         print "At iteration {}, the average mse is {}".format(i, ave_mse/float(iters))
     print ave_mse/float(iters)
     
