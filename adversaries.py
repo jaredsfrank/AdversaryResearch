@@ -53,6 +53,14 @@ class LBFGS(object):
     all_right = np.all(predicted.numpy() == [target_class]*batch_size)
     return all_right and iters > min_iters
 
+  def clamp_images(self, images):
+    """Clamps image to between minimum and maximum range in place."""
+    for i in range(len(self.mean_norm)):
+      minimum_value = (0 - self.mean_norm[i])/self.std_norm[i]
+      maximum_value = (1 - self.mean_norm[i])/self.std_norm[i]
+      torch.clamp(images[:, i,:,:], min=minimum_value, max=maximum_value, out=images[:,i,:,:])
+
+
   def create_adversary(self, batch_size=1, target_class=1, image_reg=100, lr=.1, l_inf=False):
       # Load pretrained network
       resnet = models.resnet18(pretrained=True)
@@ -65,7 +73,6 @@ class LBFGS(object):
       data = next(iter(val_loader))
       images, labels =  data
       print "The expected labels are {}".format(labels)
-      old_image = images.clone()
       inputs = Variable(images, requires_grad = True)
       new_labels = Variable(torch.LongTensor([target_class]*batch_size))
       # Instantiate Loss Classes
@@ -73,10 +80,9 @@ class LBFGS(object):
       MSE = nn.MSELoss()
       opt = optim.SGD(test(inputs), lr=lr, momentum=0.9)
       print images[0,0,:,:].shape, np.min(images[0,:,:].numpy())
-      torch.clamp(images[:, 0,:,:], min=-.485/0.229, max=(1-.485)/0.229, out=old_image[:,0,:,:])
-      torch.clamp(old_image[:, 1,:,:], min=-.456/0.224, max=(1-.456)/0.224, out=old_image[:,1,:,:])
-      torch.clamp(old_image[:, 2,:,:], min=-.406/0.225, max=(1-.406)/0.225, out=old_image[:,2,:,:])
-      self.save_figure(old_image, "Before_{}_{}".format(image_reg, lr))
+      self.clamp_images(images)
+      old_images = images.clone()
+      self.save_figure(old_images, "Before_{}_{}".format(image_reg, lr))
       plt.show()
       self.save_figure(images, "Before_{}_{}".format(image_reg, lr))
       predicted = torch.Tensor([-1]*batch_size)
@@ -85,29 +91,24 @@ class LBFGS(object):
       while not self.is_done(predicted, target_class, batch_size, iters, min_iters):
           print "Iteration {}".format(iters)
           opt.zero_grad()
-          torch.clamp(images[:, 0,:,:], min=-.485/0.229, max=(1-.485)/0.229, out=images[:,0,:,:])
-          torch.clamp(images[:, 1,:,:], min=-.456/0.224, max=(1-.456)/0.224, out=images[:,1,:,:])
-          torch.clamp(images[:, 2,:,:], min=-.406/0.225, max=(1-.406)/0.225, out=images[:,2,:,:])
-
+          self.clamp_images(images)
           outputs = resnet(inputs)
           model_loss = CrossEntropy(outputs, new_labels)
           if not l_inf:
-              image_loss = MSE(inputs, Variable(old_image))
+              image_loss = MSE(inputs, Variable(old_images))
           else:
-              image_loss = torch.max(inputs - Variable(old_image))
+              image_loss = torch.max(inputs - Variable(old_images))
           loss = model_loss + image_reg*image_loss
           predicted = torch.max(outputs.data, 1)
-          print "Target Class Weights:"
-          print outputs.data[:, target_class]
-          print "Predicted Classes:"
-          print predicted
+          print "Target Class Weights Minus Predicted Weights:"
+          print outputs.data[:, target_class] predicted[0]
           predicted = predicted[1]
           iters += 1
           if self.is_done(predicted, target_class, batch_size, iters, min_iters):
               print images.numpy().shape
-              print old_image.numpy().shape
+              print old_images.numpy().shape
               self.save_figure(inputs.data, "After_{}_{}".format(image_reg, lr))
-              self.diff(images, old_image)
+              self.diff(images, old_images)
               plt.show()
           else:
               print image_loss
