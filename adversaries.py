@@ -9,7 +9,7 @@ import numpy as np
 import torch.nn as nn
 import torch.optim as optim
 
-def test(self, inputs):
+def test(inputs):
       yield inputs
 
 class LBFGS(object):
