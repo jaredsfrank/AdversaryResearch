@@ -1,7 +1,8 @@
 """Runs adversarial example trainer
 
 Example Usage:
-python adversaries_main.py 4 1 100 0.01
+python adversaries_main.py --batch_size 100 \
+    --target_class 1 --image_reg 100 --lr 1
 
 
 """
@@ -22,18 +23,16 @@ parser.add_argument("--image_reg",
 parser.add_argument("--lr",
     help="Learning rate", 
     type=float)
+parser.add_argument('--verbose', action='store_true', help='print messages?')
 args = parser.parse_args()
 
 
 if __name__ == "__main__":
-    # model_testing.create_adversary(batch_size=args.batch_size,
-    #                                target_class=args.target_class,
-    #                                image_reg=args.image_reg,
-    #                                lr=args.lr,
-    #                                l_inf=False)
     lbfgs = adversaries.LBFGS()
     ave_mse = 0.0
     iters = 10
+    if args.verbose:
+        lbfgs.verbose = True
     for i in range(iters):
         mse = lbfgs.create_adversary(batch_size=args.batch_size,
                                      target_class=args.target_class,

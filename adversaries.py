@@ -17,7 +17,7 @@ class LBFGS(object):
   def __init__(self):
     self.mean_norm = [0.485, 0.456, 0.406]
     self.std_norm = [0.229, 0.224, 0.225]
-    self.verbose = True
+    self.verbose = False
     self.show_images = False
 
   def imshow(self, img):
