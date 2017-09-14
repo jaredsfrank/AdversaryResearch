@@ -71,7 +71,7 @@ class LBFGS(object):
 
   def create_adversary(self, batch_size=1, target_class=1, image_reg=100, lr=.1):
       # Load pretrained network
-      resnet = models.resnet18(pretrained=True)
+      resnet = models.resnet101(pretrained=True)
       resnet.cuda()
       resnet.eval()
       for parameter in resnet.parameters():
