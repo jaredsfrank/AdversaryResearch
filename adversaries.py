@@ -95,8 +95,6 @@ class LBFGS(object):
         outputs = resnet(inputs)
         model_loss = CrossEntropy(outputs, new_labels)
         image_loss = MSE(inputs, Variable(old_images))
-        print "image loss is "
-        print image_loss.numpy()
         loss = model_loss + image_reg*image_loss
         predicted = torch.max(outputs.data, 1)
         if self.verbose:
