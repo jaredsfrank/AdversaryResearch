@@ -60,7 +60,6 @@ class LBFGS(object):
       maximum_value = (1 - self.mean_norm[i])/self.std_norm[i]
       torch.clamp(images[:, i,:,:], min=minimum_value, max=maximum_value, out=images[:,i,:,:])
 
-
   def create_adversary(self, batch_size=1, target_class=1, image_reg=100, lr=.1, l_inf=False):
       # Load pretrained network
       resnet = models.resnet18(pretrained=True)
@@ -101,7 +100,7 @@ class LBFGS(object):
           loss = model_loss + image_reg*image_loss
           predicted = torch.max(outputs.data, 1)
           print "Target Class Weights Minus Predicted Weights:"
-          print outputs.data[:, target_class] predicted[0]
+          print outputs.data[:, target_class] - predicted[0]
           predicted = predicted[1]
           iters += 1
           if self.is_done(predicted, target_class, batch_size, iters, min_iters):
