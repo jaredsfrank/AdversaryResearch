@@ -14,13 +14,14 @@ def test(inputs):
 
 class LBFGS(object):
 
-  def __init__(self):
+  def __init__(self, batch_size):
     self.mean_norm = [0.485, 0.456, 0.406]
     self.std_norm = [0.229, 0.224, 0.225]
     self.verbose = False
     self.show_images = False
     valdir = "/scratch/datasets/imagenet/val"
-    self.val_loader = self.load_data(valdir, batch_size, True)
+    self.batch_size = batch_size
+    self.val_loader = self.load_data(valdir, self.batch_size, True)
 
   def imshow(self, img):
       #img = img / 4 + 0.5     # unnormalize
@@ -67,7 +68,7 @@ class LBFGS(object):
       maximum_value = (1 - self.mean_norm[i])/self.std_norm[i]
       torch.clamp(images[:, i,:,:], min=minimum_value, max=maximum_value, out=images[:,i,:,:])
 
-  def create_adversary(self, batch_size=1, target_class=1, image_reg=100, lr=.1):
+  def create_adversary(self, target_class=1, image_reg=100, lr=.1):
       # Load pretrained network
       resnet = models.resnet101(pretrained=True)
       resnet.cuda()
@@ -92,7 +93,7 @@ class LBFGS(object):
       if target_class == -1:
         new_labels = torch.topk(outputs, 2, 1)[1][:, 1]
       else:
-        new_labels = Variable(torch.LongTensor([target_class]*batch_size)).cuda()
+        new_labels = Variable(torch.LongTensor([target_class]*self.batch_size)).cuda()
       iters = 0
       min_iters = 0
       while not self.all_changed(original_labels, predicted):

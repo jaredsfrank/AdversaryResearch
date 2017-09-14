@@ -29,7 +29,7 @@ args = parser.parse_args()
 
 
 if __name__ == "__main__":
-    lbfgs = adversaries.LBFGS()
+    lbfgs = adversaries.LBFGS(args.batch_size)
     ave_mse = 0.0
     iters = 10
     if args.verbose:
@@ -37,8 +37,7 @@ if __name__ == "__main__":
     if args.show_images:
         lbfgs.show_images = True
     for i in range(iters):
-        mse = lbfgs.create_adversary(batch_size=args.batch_size,
-                                     target_class=args.target_class,
+        mse = lbfgs.create_adversary(target_class=args.target_class,
                                      image_reg=args.image_reg,
                                      lr=args.lr)
         
