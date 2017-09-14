@@ -24,6 +24,7 @@ parser.add_argument("--lr",
     help="Learning rate", 
     type=float)
 parser.add_argument('--verbose', action='store_true', help='print messages?')
+parser.add_argument('--show_images', action='store_true', help='show images?')
 args = parser.parse_args()
 
 

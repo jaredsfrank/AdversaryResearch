@@ -49,6 +49,8 @@ class LBFGS(object):
   def diff(self, imgs, old_imgs):
     fig = plt.figure("diff")
     image_diff = np.abs(torchvision.utils.make_grid(imgs - old_imgs).cpu().numpy())
+    maximum_element = np.max(image_diff)
+    image_diff/=maximum_element
     plt.imshow(np.transpose(image_diff, (1, 2, 0)))
 
   def is_done(self, predicted, target_class, batch_size, iters, min_iters):
