@@ -23,7 +23,7 @@ class LBFGS(object):
       #img = img / 4 + 0.5     # unnormalize
       for i in range(len(self.mean_norm)):
         img[i, :, :] = img[i, :, :] * self.std_norm[i] + self.mean_norm[i]
-      npimg = img.cuda().numpy()
+      npimg = img.cpu().numpy()
       plt.imshow(np.transpose(npimg, (1, 2, 0)))
 
   def save_figure(self, imgs, name):
@@ -47,11 +47,11 @@ class LBFGS(object):
 
   def diff(self, imgs, old_imgs):
     fig = plt.figure("diff")
-    image_diff = np.abs(torchvision.utils.make_grid(imgs - old_imgs).cuda().numpy())
+    image_diff = np.abs(torchvision.utils.make_grid(imgs - old_imgs).cpu().numpy())
     plt.imshow(np.transpose(image_diff, (1, 2, 0)))
 
   def is_done(self, predicted, target_class, batch_size, iters, min_iters):
-    all_right = np.all(predicted.cuda.numpy() == [target_class]*batch_size)
+    all_right = np.all(predicted.cpu().numpy() == [target_class]*batch_size)
     return all_right and iters > min_iters
 
   def all_changed(self, original_labels, predictions):
