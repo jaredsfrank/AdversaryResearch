@@ -32,7 +32,7 @@ if __name__ == "__main__":
     #                                lr=args.lr,
     #                                l_inf=False)
     lbfgs = adversaries.LBFGS()
-    # lbfgs.verbose = False
+    lbfgs.verbose = False
     ave_mse = 0.0
     iters = 10
     for i in range(iters):
@@ -41,7 +41,7 @@ if __name__ == "__main__":
                                      image_reg=args.image_reg,
                                      lr=args.lr)
         
-        ave_mse += mse.data.numpy()[0]
+        ave_mse += mse.data.cuda().numpy()[0]
         print "At iteration {}, the average mse is {}".format(i, ave_mse/float(iters))
     print ave_mse/float(iters)
     
