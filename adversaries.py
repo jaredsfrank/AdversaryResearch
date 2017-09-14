@@ -58,11 +58,13 @@ class LBFGS(object):
     return all_right and iters > min_iters
 
   def all_changed(self, original_labels, predictions):
+    np_orig = original_labels.cpu().numpy()
+    np_preds = predictions.cpu().numpy()
     print "the diff is "
-    print original_labels.numpy(), predictions.numpy()
-    print original_labels.numpy() != predictions.numpy()
-    print np.all(original_labels.numpy() != predictions.numpy())
-    return np.all(original_labels.numpy() != predictions.numpy())
+    print np_orig, np_preds
+    print np_orig != np_preds
+    print np.all(np_orig != np_preds)
+    return np.all(np_orig != np_preds)
 
   def clamp_images(self, images):
     """Clamps image to between minimum and maximum range in place."""
