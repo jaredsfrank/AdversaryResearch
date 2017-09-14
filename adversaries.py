@@ -110,6 +110,6 @@ class LBFGS(object):
             loss.backward()
             opt.step()
         # image_loss = torch.max(inputs - Variable(old_images))
-        return MSE(images, Variable(old_images))
+      return MSE(images, Variable(old_images))
 
 
