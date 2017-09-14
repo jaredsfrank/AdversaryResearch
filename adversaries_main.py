@@ -40,7 +40,7 @@ if __name__ == "__main__":
                                      image_reg=args.image_reg,
                                      lr=args.lr)
         print mse[0]
-        print mse.numpy()
+        print mse.data.numpy()
         # ave_mse += mse
     print 
     
