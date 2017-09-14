@@ -58,6 +58,7 @@ class LBFGS(object):
     print "the diff is "
     print original_labels.numpy(), predictions.numpy()
     print original_labels.numpy() != predictions.numpy()
+    print np.all(original_labels.numpy() != predictions.numpy())
     return np.all(original_labels.numpy() != predictions.numpy())
 
   def clamp_images(self, images):
