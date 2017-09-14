@@ -22,8 +22,6 @@ parser.add_argument("image_reg",
 parser.add_argument("lr",
     help="Learning rate", 
     type=float)
-parser.add_argument("--l_inf", 
-    help="If flagged, uses l infinity regularizer")
 args = parser.parse_args()
 
 
@@ -34,7 +32,7 @@ if __name__ == "__main__":
     #                                lr=args.lr,
     #                                l_inf=False)
     lbfgs = adversaries.LBFGS()
-    lbfgs.create_adversary(batch_size=args.batch_size,
+    print lbfgs.create_adversary(batch_size=args.batch_size,
                            target_class=args.target_class,
                            image_reg=args.image_reg,
                            lr=args.lr)

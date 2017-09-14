@@ -96,7 +96,7 @@ class LBFGS(object):
         model_loss = CrossEntropy(outputs, new_labels)
         image_loss = MSE(inputs, Variable(old_images))
         print "image loss is "
-        print image_loss
+        print image_loss.numpy()
         loss = model_loss + image_reg*image_loss
         predicted = torch.max(outputs.data, 1)
         if self.verbose:
@@ -111,6 +111,7 @@ class LBFGS(object):
         else:
             loss.backward()
             opt.step()
-        image_loss = torch.max(inputs - Variable(old_images))
+        # image_loss = torch.max(inputs - Variable(old_images))
+        return MSE(images, Variable(old_images))
 
 
