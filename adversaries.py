@@ -19,6 +19,8 @@ class LBFGS(object):
     self.std_norm = [0.229, 0.224, 0.225]
     self.verbose = False
     self.show_images = False
+    valdir = "/scratch/datasets/imagenet/val"
+    self.val_loader = self.load_data(valdir, batch_size, True)
 
   def imshow(self, img):
       #img = img / 4 + 0.5     # unnormalize
@@ -73,13 +75,11 @@ class LBFGS(object):
       for parameter in resnet.parameters():
           parameter.requires_grad = False
       # Load in first <batch_size> images for validation
-      valdir = "/scratch/datasets/imagenet/val"
-      val_loader = self.load_data(valdir, batch_size, True)
-      data = next(iter(val_loader))
+      data = next(iter(self.val_loader))
       images, labels =  data
       images = images.cuda()
-      labels = labels.cuda()
-      original_labels = labels.clone()
+      original_labels = labels.cuda()
+      # original_labels = labels.clone()
       inputs = Variable(images, requires_grad = True)
       # Instantiate Loss Classes
       CrossEntropy = nn.CrossEntropyLoss()
