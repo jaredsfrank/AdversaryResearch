@@ -97,8 +97,6 @@ class LBFGS(object):
       old_images = images.clone()
       new_labels = torch.topk(resnet(inputs), 2, 1)[1][:, 1]
       # new_labels = Variable(torch.LongTensor([target_class]*batch_size)).cuda()
-      print new_labels
-      return
       iters = 0
       min_iters = 0
       while not self.all_changed(original_labels, predicted):#self.is_done(predicted, target_class, batch_size, iters, min_iters):
@@ -125,6 +123,7 @@ class LBFGS(object):
         else:
             loss.backward()
             opt.step()
+            new_labels = torch.topk(resnet(inputs), 2, 1)[1][:, 1]
       return MSE(images, Variable(old_images))
 
 
