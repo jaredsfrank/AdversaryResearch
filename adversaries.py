@@ -95,9 +95,8 @@ class LBFGS(object):
       opt = optim.SGD(test(inputs), lr=lr, momentum=0.9)
       self.clamp_images(images)
       old_images = images.clone()
-      predicted = labels
+      new_labels = torch.topk(resnet(inputs), 2, 1)
       # new_labels = Variable(torch.LongTensor([target_class]*batch_size)).cuda()
-      new_labels = torch.topk(predicted, 2, 1)
       print new_labels
       return
       iters = 0
