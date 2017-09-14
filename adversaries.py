@@ -91,7 +91,7 @@ class LBFGS(object):
         self.save_figure(old_images, "Before_{}_{}".format(image_reg, lr))
         plt.show()
         self.save_figure(images, "Before_{}_{}".format(image_reg, lr))
-      predicted = torch.Tensor([-1]*batch_size)
+      predicted = labels
       iters = 0
       min_iters = 0
       while not self.all_changed(original_labels, predicted): # self.is_done(predicted, target_class, batch_size, iters, min_iters):
