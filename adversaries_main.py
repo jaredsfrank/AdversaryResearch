@@ -42,5 +42,6 @@ if __name__ == "__main__":
                                      lr=args.lr)
         
         ave_mse += mse.data.numpy()[0]
-    print ave_mse
+        print "At iteration {}, the average mse is {}".format(i, ave_mse/float(iters))
+    print ave_mse/float(iters)
     
