@@ -97,7 +97,7 @@ class LBFGS(object):
       predicted = labels
       iters = 0
       min_iters = 0
-      while not self.is_done(predicted, target_class, batch_size, iters, min_iters):
+      while not all_changed(original_labels, predicted):#self.is_done(predicted, target_class, batch_size, iters, min_iters):
         if self.verbose:
           print "Iteration {}".format(iters)
         opt.zero_grad()
@@ -112,7 +112,7 @@ class LBFGS(object):
           print outputs.data[:, target_class] - predicted[0]
         predicted = predicted[1]
         iters += 1
-        if self.is_done(predicted, target_class, batch_size, iters, min_iters):
+        if all_changed(original_labels, predicted):# self.is_done(predicted, target_class, batch_size, iters, min_iters):
           if self.show_images:
             self.save_figure(inputs.data, "After_{}_{}".format(image_reg, lr))
             self.save_figure(old_images, "Before_{}_{}".format(image_reg, lr))
