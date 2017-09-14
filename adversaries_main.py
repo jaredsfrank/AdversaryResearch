@@ -35,8 +35,7 @@ if __name__ == "__main__":
     #                                l_inf=False)
     lbfgs = adversaries.LBFGS()
     lbfgs.create_adversary(batch_size=args.batch_size,
-                                   target_class=args.target_class,
-                                   image_reg=args.image_reg,
-                                   lr=args.lr,
-                                   l_inf=False)
+                           target_class=args.target_class,
+                           image_reg=args.image_reg,
+                           lr=args.lr)
     
