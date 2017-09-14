@@ -94,10 +94,6 @@ class LBFGS(object):
       opt = optim.SGD(test(inputs), lr=lr, momentum=0.9)
       self.clamp_images(images)
       old_images = images.clone()
-      if self.show_images:
-        self.save_figure(old_images, "Before_{}_{}".format(image_reg, lr))
-        plt.show()
-        self.save_figure(images, "Before_{}_{}".format(image_reg, lr))
       predicted = labels
       iters = 0
       min_iters = 0
@@ -119,6 +115,7 @@ class LBFGS(object):
         if self.is_done(predicted, target_class, batch_size, iters, min_iters):
           if self.show_images:
             self.save_figure(inputs.data, "After_{}_{}".format(image_reg, lr))
+            self.save_figure(old_images, "Before_{}_{}".format(image_reg, lr))
             self.diff(images, old_images)
             plt.show()
         else:
