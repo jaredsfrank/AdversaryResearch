@@ -34,6 +34,8 @@ if __name__ == "__main__":
     iters = 10
     if args.verbose:
         lbfgs.verbose = True
+    if args.show_images:
+        lbfgs.show_images = True
     for i in range(iters):
         mse = lbfgs.create_adversary(batch_size=args.batch_size,
                                      target_class=args.target_class,
