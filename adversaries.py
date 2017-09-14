@@ -91,7 +91,7 @@ class LBFGS(object):
       predicted = torch.Tensor([-1]*batch_size)
       iters = 0
       min_iters = 0
-      while not self.all_changed(original_labels, predicted) # self.is_done(predicted, target_class, batch_size, iters, min_iters):
+      while not self.all_changed(original_labels, predicted): # self.is_done(predicted, target_class, batch_size, iters, min_iters):
         if self.verbose:
           print "Iteration {}".format(iters)
         opt.zero_grad()
