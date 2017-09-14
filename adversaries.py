@@ -47,7 +47,7 @@ class LBFGS(object):
   def diff(self, imgs, old_imgs):
     fig = plt.figure("diff")
     image_diff = np.abs(torchvision.utils.make_grid(imgs - old_imgs).numpy())
-    plt.imshow(image_diff, np.transpose(, (1, 2, 0)))
+    plt.imshow(np.transpose(image_diff, (1, 2, 0)))
 
   def is_done(self, predicted, target_class, batch_size, iters, min_iters):
     all_right = np.all(predicted.numpy() == [target_class]*batch_size)
