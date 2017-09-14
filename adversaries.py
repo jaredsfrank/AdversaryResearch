@@ -18,6 +18,7 @@ class LBFGS(object):
     self.mean_norm = [0.485, 0.456, 0.406]
     self.std_norm = [0.229, 0.224, 0.225]
     self.verbose = True
+    self.show_images = False
 
   def imshow(self, img):
       #img = img / 4 + 0.5     # unnormalize
@@ -91,7 +92,7 @@ class LBFGS(object):
       opt = optim.SGD(test(inputs), lr=lr, momentum=0.9)
       self.clamp_images(images)
       old_images = images.clone()
-      if self.verbose:
+      if self.show_images:
         self.save_figure(old_images, "Before_{}_{}".format(image_reg, lr))
         plt.show()
         self.save_figure(images, "Before_{}_{}".format(image_reg, lr))
@@ -114,14 +115,13 @@ class LBFGS(object):
         predicted = predicted[1]
         iters += 1
         if self.is_done(predicted, target_class, batch_size, iters, min_iters):
-            if self.verbose:
-              self.save_figure(inputs.data, "After_{}_{}".format(image_reg, lr))
-              self.diff(images, old_images)
-              plt.show()
+          if self.show_images:
+            self.save_figure(inputs.data, "After_{}_{}".format(image_reg, lr))
+            self.diff(images, old_images)
+            plt.show()
         else:
             loss.backward()
             opt.step()
-        # image_loss = torch.max(inputs - Variable(old_images))
       return MSE(images, Variable(old_images))
 
 

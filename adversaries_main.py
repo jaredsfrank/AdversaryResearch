@@ -32,7 +32,6 @@ if __name__ == "__main__":
     #                                lr=args.lr,
     #                                l_inf=False)
     lbfgs = adversaries.LBFGS()
-    lbfgs.verbose = False
     ave_mse = 0.0
     iters = 10
     for i in range(iters):
