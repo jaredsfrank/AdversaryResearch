@@ -119,8 +119,7 @@ class LBFGS(object):
     if target_class == -1:
       new_labels = torch.topk(outputs, 2, 1)[1][:, 1]
     else:
-      # new_labels = Variable(torch.LongTensor([target_class]*self.batch_size))
-      new_labels = Variable(torch.LongTensor(np.arange(self.batch_size)))
+      new_labels = Variable(torch.LongTensor([target_class]*self.batch_size))
       if self.cuda:
         new_labels = new_labels.cuda()
     iters = 0
