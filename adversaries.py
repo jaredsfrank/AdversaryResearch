@@ -139,7 +139,7 @@ class LBFGS(object):
       total_images = 0.0
       for parameter in model.parameters():
           parameter.requires_grad = False
-      for iteration, batch in enumerate(training_data_loader, 1):
+      for iteration, batch in enumerate(self.val_loader, 1):
         total_images += self.batch_size
         mse = self.adversary_batch(batch, model, target_class, image_reg, lr)
         ave_mse += mse.data.cpu().numpy()[0]
