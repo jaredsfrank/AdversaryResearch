@@ -46,17 +46,17 @@ class LBFGS(object):
 
   def load_data(self, path, batch_size = 100, shuffle = True):
     """Initializes data loader given a batch size."""
-      normalize = transforms.Normalize(self.mean_norm, self.std_norm)
-      data_loader = torch.utils.data.DataLoader(
-              torchvision.datasets.ImageFolder(path, transforms.Compose([
-                  transforms.Scale(256),
-                  transforms.CenterCrop(224),
-                  transforms.ToTensor(),
-                  normalize,
-              ])),
-              batch_size=batch_size, shuffle=shuffle,
-              num_workers=1, pin_memory=True)
-      return data_loader
+    normalize = transforms.Normalize(self.mean_norm, self.std_norm)
+    data_loader = torch.utils.data.DataLoader(
+            torchvision.datasets.ImageFolder(path, transforms.Compose([
+                transforms.Scale(256),
+                transforms.CenterCrop(224),
+                transforms.ToTensor(),
+                normalize,
+            ])),
+            batch_size=batch_size, shuffle=shuffle,
+            num_workers=1, pin_memory=True)
+    return data_loader
 
   def diff(self, imgs, old_imgs):
     """Visualizes difference between altered and original image."""
