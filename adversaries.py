@@ -26,7 +26,7 @@ class LBFGS(object):
     # Instantiate Loss Classes
     self.CrossEntropy = nn.CrossEntropyLoss()
     self.MSE = nn.MSELoss()
-    self.cuda = True
+    self.cuda = False
 
   def imshow(self, img):
     """Unnormalizes image and then shows via matplotlib."""
@@ -46,8 +46,7 @@ class LBFGS(object):
 
   def load_data(self, path, batch_size = 100, shuffle = True):
     """Initializes data loader given a batch size."""
-      normalize = transforms.Normalize(self.mean_norm,
-                       self.std_norm)
+      normalize = transforms.Normalize(self.mean_norm, self.std_norm)
       data_loader = torch.utils.data.DataLoader(
               torchvision.datasets.ImageFolder(path, transforms.Compose([
                   transforms.Scale(256),

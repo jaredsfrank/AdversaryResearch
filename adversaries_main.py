@@ -25,6 +25,7 @@ parser.add_argument("--lr",
     type=float)
 parser.add_argument('--verbose', action='store_true', help='print messages?')
 parser.add_argument('--show_images', action='store_true', help='show images?')
+parser.add_argument('--cuda', action='store_true', help='use cuda?')
 args = parser.parse_args()
 
 
@@ -36,6 +37,8 @@ if __name__ == "__main__":
         lbfgs.verbose = True
     if args.show_images:
         lbfgs.show_images = True
+    if args.cuda:
+        lbfgs.cuda = True
     ave_mse = lbfgs.create_all_adversaries(target_class=args.target_class,
                                            image_reg=args.image_reg,
                                            lr=args.lr)
