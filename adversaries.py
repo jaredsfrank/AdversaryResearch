@@ -77,7 +77,7 @@ class LBFGS(object):
     else:
       np_orig = original_labels.numpy()
       np_preds = predictions.numpy()
-    print np_orig != np_preds
+    print original_labels
     return np.all(np_orig != np_preds)
 
   def clamp_images(self, images):
