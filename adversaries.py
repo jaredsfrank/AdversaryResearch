@@ -125,7 +125,7 @@ class LBFGS(object):
         new_labels = new_labels.cuda()
     iters = 0
     print new_labels
-    print torch.topk(outputs, 2, 1)[1][:, 1]
+    print torch.topk(outputs, 2, 1)
     return
     while not self.all_changed(original_labels, predicted_classes):
       if self.verbose:
