@@ -122,6 +122,9 @@ class LBFGS(object):
       new_labels = Variable(torch.LongTensor([target_class]*self.batch_size))
       if self.cuda:
         new_labels = new_labels.cuda()
+    print original_labels
+    print new_labels
+    return
     iters = 0
     while not self.all_changed(original_labels, predicted_classes):
       if self.verbose:
