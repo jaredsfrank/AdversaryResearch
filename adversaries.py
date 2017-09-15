@@ -203,6 +203,7 @@ class LBFGS(object):
     # Set all model parameters to not update during training
     for parameter in model.parameters():
         parameter.requires_grad = False
+    print "Starting Iterations"
     for iteration, batch in enumerate(self.val_loader, 1):
       total_images += self.batch_size
       iters, mse = self.adversary_batch(batch, model, target_class, image_reg, lr)
