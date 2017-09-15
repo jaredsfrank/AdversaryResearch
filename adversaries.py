@@ -102,6 +102,7 @@ class LBFGS(object):
         if self.verbose:
           print "Target Class Weights Minus Predicted Weights:"
           print outputs.data[:, new_labels.data][0] #  - predicted[0]
+          print outputs.data[:, target_class] 
         predicted = predicted[1]
         iters += 1
         if self.all_changed(original_labels, predicted):
