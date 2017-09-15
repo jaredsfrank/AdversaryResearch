@@ -78,7 +78,6 @@ class LBFGS(object):
       original_labels = labels.cuda()
       # original_labels = labels.clone()
       inputs = Variable(images, requires_grad = True)
-      
       opt = optim.SGD(test(inputs), lr=lr, momentum=0.9)
       self.clamp_images(images)
       old_images = images.clone()
@@ -125,7 +124,6 @@ class LBFGS(object):
       model.eval()
       for parameter in model.parameters():
           parameter.requires_grad = False
-      # Instantiate Loss Classes
       data = next(iter(self.val_loader))
       return self.adversary_batch(data, model, target_class, image_reg, lr)
 
@@ -143,7 +141,7 @@ class LBFGS(object):
         total_images += self.batch_size
         mse = self.adversary_batch(batch, model, target_class, image_reg, lr)
         ave_mse += mse.data.cpu().numpy()[0]
-        print "At iteration {}, the average mse is {}".format(iteration, ave_mse/float(total_images))
+        print "At iteration {}, the average mse is {}".format(total_images, ave_mse/float(total_images))
       return ave_mse/float(total_images)
       
 
