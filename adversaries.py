@@ -124,6 +124,8 @@ class LBFGS(object):
       if self.cuda:
         new_labels = new_labels.cuda()
     iters = 0
+    print new_labels
+    return
     while not self.all_changed(original_labels, predicted_classes):
       if self.verbose:
         print "Iteration {}".format(iters)
