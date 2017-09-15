@@ -151,8 +151,8 @@ class LBFGS(object):
       else:
           loss.backward()
           opt.step()
-          # if target_class == -1:
-          #   new_labels = torch.topk(model(inputs), 2, 1)[1][:, 1]
+          if target_class == -1:
+            new_labels = torch.topk(model(inputs), 2, 1)[1][:, 1]
     return iters, self.MSE(images, Variable(old_images))
 
   def create_one_adversary_batch(self, target_class, image_reg, lr):
