@@ -36,12 +36,8 @@ if __name__ == "__main__":
         lbfgs.verbose = True
     if args.show_images:
         lbfgs.show_images = True
-    for i in range(iters):
-        mse = lbfgs.create_adversary(target_class=args.target_class,
-                                     image_reg=args.image_reg,
-                                     lr=args.lr)
-        
-        ave_mse += mse.data.cpu().numpy()[0]
-        print "At iteration {}, the average mse is {}".format(i, ave_mse/float(iters))
-    print ave_mse/float(iters)
+    ave_mse = lbfgs.create_all_adversaries(target_class=args.target_class,
+                                           image_reg=args.image_reg,
+                                           lr=args.lr)
+    print ave_mse
     

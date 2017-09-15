@@ -22,6 +22,9 @@ class LBFGS(object):
     valdir = "/scratch/datasets/imagenet/val"
     self.batch_size = batch_size
     self.val_loader = self.load_data(valdir, self.batch_size, True)
+    # Instantiate Loss Classes
+    self.CrossEntropy = nn.CrossEntropyLoss()
+    self.MSE = nn.MSELoss()
 
   def imshow(self, img):
       #img = img / 4 + 0.5     # unnormalize
@@ -68,27 +71,18 @@ class LBFGS(object):
       maximum_value = (1 - self.mean_norm[i])/self.std_norm[i]
       torch.clamp(images[:, i,:,:], min=minimum_value, max=maximum_value, out=images[:,i,:,:])
 
-  def create_adversary(self, target_class=1, image_reg=100, lr=.1):
-      # Load pretrained network
-      resnet = models.resnet101(pretrained=True)
-      resnet.cuda()
-      resnet.eval()
-      for parameter in resnet.parameters():
-          parameter.requires_grad = False
+  def adversary_batch(self, data, model, target_class, image_reg, lr):
       # Load in first <batch_size> images for validation
-      data = next(iter(self.val_loader))
       images, labels =  data
       images = images.cuda()
       original_labels = labels.cuda()
       # original_labels = labels.clone()
       inputs = Variable(images, requires_grad = True)
-      # Instantiate Loss Classes
-      CrossEntropy = nn.CrossEntropyLoss()
-      MSE = nn.MSELoss()
+      
       opt = optim.SGD(test(inputs), lr=lr, momentum=0.9)
       self.clamp_images(images)
       old_images = images.clone()
-      outputs = resnet(inputs)
+      outputs = model(inputs)
       predicted = torch.max(outputs.data, 1)[1]
       if target_class == -1:
         new_labels = torch.topk(outputs, 2, 1)[1][:, 1]
@@ -101,9 +95,9 @@ class LBFGS(object):
           print "Iteration {}".format(iters)
         opt.zero_grad()
         self.clamp_images(images)
-        outputs = resnet(inputs)
-        model_loss = CrossEntropy(outputs, new_labels).cuda()
-        image_loss = MSE(inputs, Variable(old_images)).cuda()
+        outputs = model(inputs)
+        model_loss = self.CrossEntropy(outputs, new_labels).cuda()
+        image_loss = self.MSE(inputs, Variable(old_images)).cuda()
         loss = model_loss + image_reg*image_loss
         predicted = torch.max(outputs.data, 1)
         if self.verbose:
@@ -121,7 +115,36 @@ class LBFGS(object):
             loss.backward()
             opt.step()
             if target_class == -1:
-              new_labels = torch.topk(resnet(inputs), 2, 1)[1][:, 1]
-      return MSE(images, Variable(old_images))
+              new_labels = torch.topk(model(inputs), 2, 1)[1][:, 1]
+      return self.MSE(images, Variable(old_images))
+
+  def create_one_adversary_batch(self, target_class, image_reg, lr):
+      # Load pretrained network
+      model = models.resnet101(pretrained=True)
+      model.cuda()
+      model.eval()
+      for parameter in model.parameters():
+          parameter.requires_grad = False
+      # Instantiate Loss Classes
+      data = next(iter(self.val_loader))
+      return self.adversary_batch(data, model, target_class, image_reg, lr)
+
+
+  def create_all_adversaries(self, target_class, image_reg, lr):
+      # Load pretrained network
+      model = models.resnet101(pretrained=True)
+      model.cuda()
+      model.eval()
+      ave_mse = 0.0
+      total_images = 0.0
+      for parameter in model.parameters():
+          parameter.requires_grad = False
+      for iteration, batch in enumerate(training_data_loader, 1):
+        total_images += self.batch_size
+        mse = self.adversary_batch(batch, model, target_class, image_reg, lr)
+        ave_mse += mse.data.cpu().numpy()[0]
+        print "At iteration {}, the average mse is {}".format(iteration, ave_mse/float(total_images))
+      return ave_mse/float(total_images)
+      
 
 
