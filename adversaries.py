@@ -115,7 +115,7 @@ class LBFGS(object):
             opt.step()
             if target_class == -1:
               new_labels = torch.topk(model(inputs), 2, 1)[1][:, 1]
-      return self.MSE(images, Variable(old_images))
+      return iters, self.MSE(images, Variable(old_images))
 
   def create_one_adversary_batch(self, target_class, image_reg, lr):
       # Load pretrained network
@@ -139,9 +139,10 @@ class LBFGS(object):
           parameter.requires_grad = False
       for iteration, batch in enumerate(self.val_loader, 1):
         total_images += self.batch_size
-        mse = self.adversary_batch(batch, model, target_class, image_reg, lr)
+        iters, mse = self.adversary_batch(batch, model, target_class, image_reg, lr)
         ave_mse += mse.data.cpu().numpy()[0]
         print "At iteration {}, the average mse is {}".format(total_images, ave_mse/float(total_images))
+        print "That batch took {} iterations".format(iters)
       return ave_mse/float(total_images)
       
 
