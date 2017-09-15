@@ -85,12 +85,8 @@ class LBFGS(object):
       predicted = torch.max(outputs.data, 1)[1]
       if target_class == -1:
         new_labels = torch.topk(outputs, 2, 1)[1][:, 1]
-        print new_labels 
-        return
       else:
         new_labels = Variable(torch.LongTensor([target_class]*self.batch_size)).cuda()
-        print new_labels
-        return
       iters = 0
       min_iters = 0
       while not self.all_changed(original_labels, predicted):
@@ -105,7 +101,7 @@ class LBFGS(object):
         predicted = torch.max(outputs.data, 1)
         if self.verbose:
           print "Target Class Weights Minus Predicted Weights:"
-          print outputs.data[:, new_labels.data] - predicted[0]
+          print outputs.data[:, new_labels.data] #  - predicted[0]
         predicted = predicted[1]
         iters += 1
         if self.all_changed(original_labels, predicted):
