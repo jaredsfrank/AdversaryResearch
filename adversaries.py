@@ -101,7 +101,7 @@ class LBFGS(object):
         predicted = torch.max(outputs.data, 1)
         if self.verbose:
           print "Target Class Weights Minus Predicted Weights:"
-          print outputs.data[:, new_labels] - predicted[0]
+          print outputs.data[:, new_labels.data] - predicted[0]
         predicted = predicted[1]
         iters += 1
         if self.all_changed(original_labels, predicted):
