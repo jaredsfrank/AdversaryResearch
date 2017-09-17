@@ -99,11 +99,11 @@ class LBFGS(object):
       predicted_classes = torch.max(outputs.data, 1)[1]
       print predicted_classes
       print original_labels
-      predicting_correct_class = torch.byte(predicted_classes == original_labels)
+      predicting_correct_class = predicted_classes == original_labels
       second_best_class = torch.topk(outputs, 2, 1)[1][:, 1]
       # For each label in outputs that is correctly classified, replace
       # use second best class. Otherwise, stick with current prediction
-      new_labels = outputs.masked_scatter_(predicting_correct_class,
+      new_labels = outputs.masked_scatter_(predicting_correct_class.byte(),
                                            second_best_class)
 
     else:
