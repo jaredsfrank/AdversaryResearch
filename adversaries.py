@@ -38,7 +38,7 @@ class Adverarial_Base(object):
     for i in range(len(self.mean_norm)):
       img[i, :, :] = img[i, :, :] * self.std_norm[i] + self.mean_norm[i]
     if self.cuda:
-      imf = img.cpu()
+      img = img.cpu()
     npimg = img.numpy()
     plt.imshow(np.transpose(npimg, (1, 2, 0)))
 
