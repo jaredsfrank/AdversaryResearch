@@ -95,7 +95,9 @@ class LBFGS(object):
 
     """
     if target_class == -1:
-      print outputs
+
+      predicted_classes = torch.max(outputs.data, 1)[1]
+      print predicted_classes
       print original_labels
       predicting_correct_class = outputs == original_labels
       second_best_class = torch.topk(outputs, 2, 1)[1][:, 1]
