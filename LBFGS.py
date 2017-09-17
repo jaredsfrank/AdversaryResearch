@@ -74,4 +74,4 @@ class LBFGS(adversaries.Adverarial_Base):
           loss.backward()
           opt.step()
           new_labels = self.target_class_tensor(target_class, outputs, original_labels)
-    return iters, self.MSE(images, Variable(old_images)), self.percent_changed(original_labels, predictions)
+    return iters, self.MSE(images, Variable(old_images)), self.percent_changed(original_labels, predicted_classes)
