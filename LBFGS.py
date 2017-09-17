@@ -12,8 +12,8 @@ import torch.nn as nn
 import torch.optim as optim
 
 class LBFGS(adversaries.Adverarial_Base):
-	
-	def adversary_batch(self, data, model, target_class, image_reg, lr):
+    
+  def adversary_batch(self, data, model, target_class, image_reg, lr):
     """Creates adversarial examples for one batch of data.
 
     Helper function for create_one_adversary_batch.
