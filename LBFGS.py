@@ -13,9 +13,9 @@ import torch.optim as optim
 
 class LBFGS(adversaries.Adverarial_Base):
 
-  def __init__(self):
+  def __init__(self, batch_size):
     self.max_iters = -1
-    adversaries.Adverarial_Base.__init__(self)
+    adversaries.Adverarial_Base.__init__(self, batch_size)
 
   def check_iters(self, iters):
     """Returns true if iters has not exceed the max number of iters."""
