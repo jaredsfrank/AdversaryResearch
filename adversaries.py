@@ -111,7 +111,7 @@ class Adverarial_Base(object):
       new_labels = new_labels.cuda()
     return new_labels
 
-  @abstractmethod
+  @abc.abstractmethod
   def adversary_batch(self, data, model, target_class, image_reg, lr):
     """Creates adversarial examples for one batch of data.
 
