@@ -87,6 +87,26 @@ class LBFGS(object):
       maximum_value = (1 - self.mean_norm[i])/self.std_norm[i]
       torch.clamp(images[:, i,:,:], min=minimum_value, max=maximum_value, out=images[:,i,:,:])
 
+  def target_class_tensor(self, target_class, outputs, original_labels):
+    """Returns the target class tensor.
+    
+    If target class is -1, use the second most likely class for each
+    label that is currently correctly predicted
+
+    """
+    if target_class == -1:
+      predicting_correct_class = outputs == original_labels
+      second_best_class = torch.topk(outputs, 2, 1)[1][:, 1]
+      # For each label in outputs that is correctly classified, replace
+      # use second best class. Otherwise, stick with current prediction
+      new_labels = outputs.masked_scatter_(predicting_correct_class,
+                                                   second_best_class)
+
+    else:
+      new_labels = Variable(torch.LongTensor([target_class]*self.batch_size))
+      if self.cuda:
+        new_labels = new_labels.cuda()
+
   def adversary_batch(self, data, model, target_class, image_reg, lr):
     """Creates adversarial examples for one batch of data.
 
@@ -117,12 +137,7 @@ class LBFGS(object):
     outputs = model(inputs)
     predicted_classes = torch.max(outputs.data, 1)[1]
     # Set target variables for model loss
-    if target_class == -1:
-      new_labels = torch.topk(outputs, 2, 1)[1][:, 1]
-    else:
-      new_labels = Variable(torch.LongTensor([target_class]*self.batch_size))
-      if self.cuda:
-        new_labels = new_labels.cuda()
+    self.target_class_tensor(target_class, outputs, original_labels)
     iters = 0
     while not self.all_changed(original_labels, predicted_classes):
       if self.verbose:
@@ -152,8 +167,7 @@ class LBFGS(object):
       else:
           loss.backward()
           opt.step()
-          if target_class == -1:
-            new_labels = torch.topk(model(inputs), 2, 1)[1][:, 1]
+          self.target_class_tensor(target_class, outputs, original_labels)
     return iters, self.MSE(images, Variable(old_images))
 
   def create_one_adversary_batch(self, target_class, image_reg, lr):
