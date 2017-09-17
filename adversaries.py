@@ -139,6 +139,7 @@ class Adverarial_Base(object):
     Returns:
       iters: Number of iterations it took to create adversarial example
       MSE: Means Squared error between original and altered image.
+      percent_chaged: Percent of the batch that was succesfully generated
 
     """
     # Load in first <batch_size> images for validation
