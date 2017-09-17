@@ -97,20 +97,17 @@ class LBFGS(object):
     if target_class == -1:
 
       predicted_classes = torch.max(outputs.data, 1)[1]
-      print predicted_classes
-      print original_labels
-      print outputs
       predicting_correct_class = predicted_classes == original_labels
       second_best_class = torch.topk(outputs, 2, 1)[1][:, 1]
       # For each label in outputs that is correctly classified, replace
       # use second best class. Otherwise, stick with current prediction
       new_labels = Variable(predicted_classes).masked_scatter_(predicting_correct_class,
                                                                second_best_class)
-
     else:
       new_labels = Variable(torch.LongTensor([target_class]*self.batch_size))
-      if self.cuda:
-        new_labels = new_labels.cuda()
+    if self.cuda:
+      new_labels = new_labels.cuda()
+    return new_labels
 
   def adversary_batch(self, data, model, target_class, image_reg, lr):
     """Creates adversarial examples for one batch of data.
@@ -142,7 +139,7 @@ class LBFGS(object):
     outputs = model(inputs)
     predicted_classes = torch.max(outputs.data, 1)[1]
     # Set target variables for model loss
-    self.target_class_tensor(target_class, outputs, original_labels)
+    new_labels = self.target_class_tensor(target_class, outputs, original_labels)
     iters = 0
     while not self.all_changed(original_labels, predicted_classes):
       if self.verbose:
@@ -172,7 +169,7 @@ class LBFGS(object):
       else:
           loss.backward()
           opt.step()
-          self.target_class_tensor(target_class, outputs, original_labels)
+          new_labels = self.target_class_tensor(target_class, outputs, original_labels)
     return iters, self.MSE(images, Variable(old_images))
 
   def create_one_adversary_batch(self, target_class, image_reg, lr):
