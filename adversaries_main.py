@@ -8,7 +8,7 @@ python adversaries_main.py --batch_size 100 \
 """
 import argparse
 import model_testing
-import adversaries
+import LBFGS
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--batch_size", 
@@ -30,7 +30,7 @@ args = parser.parse_args()
 
 
 if __name__ == "__main__":
-    lbfgs = adversaries.LBFGS(args.batch_size)
+    lbfgs = LBFGS.LBFGS(args.batch_size)
     ave_mse = 0.0
     iters = 10
     if args.verbose:

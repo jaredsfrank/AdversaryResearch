@@ -1,3 +1,4 @@
+import abc
 import torch
 import torchvision
 import torchvision.models as models
@@ -12,7 +13,9 @@ import torch.optim as optim
 def test(inputs):
       yield inputs
 
-class LBFGS(object):
+class Adverarial_Base(object):
+
+  __metaclass__ = abc.ABCMeta
 
   def __init__(self, batch_size):
     """ Initializes useful default settings and loss functions."""
@@ -108,6 +111,7 @@ class LBFGS(object):
       new_labels = new_labels.cuda()
     return new_labels
 
+  @abstractmethod
   def adversary_batch(self, data, model, target_class, image_reg, lr):
     """Creates adversarial examples for one batch of data.
 
@@ -127,49 +131,7 @@ class LBFGS(object):
 
     """
     # Load in first <batch_size> images for validation
-    images, original_labels =  data
-    if self.cuda:
-      images = images.cuda()
-      original_labels = original_labels.cuda()
-    inputs = Variable(images, requires_grad = True)
-    opt = optim.SGD(test(inputs), lr=lr, momentum=0.9)
-    self.clamp_images(images)
-    old_images = images.clone()
-    outputs = model(inputs)
-    predicted_classes = torch.max(outputs.data, 1)[1]
-    # Set target variables for model loss
-    new_labels = self.target_class_tensor(target_class, outputs, original_labels)
-    iters = 0
-    while not self.all_changed(original_labels, predicted_classes):
-      if self.verbose:
-        print "Iteration {}".format(iters)
-      opt.zero_grad()
-      # Clamp loss so that all pixels are in valid range (Between 0 and 1 unnormalized)
-      self.clamp_images(images)
-      outputs = model(inputs)
-      # Compute full loss of adversarial example
-      model_loss = self.CrossEntropy(outputs, new_labels)
-      image_loss = self.MSE(inputs, Variable(old_images))
-      if self.cuda:
-        model_loss = model_loss.cuda()
-        image_loss = image_loss.cuda()
-      loss = model_loss + image_reg*image_loss
-      predicted_loss, predicted_classes = torch.max(outputs.data, 1)
-      if self.verbose:
-        print "Target Class Weights Minus Predicted Weights:"
-        print outputs.data[:, new_labels.data][:,0] - predicted_loss
-      iters += 1
-      if self.all_changed(original_labels, predicted_classes):
-        if self.show_images:
-          self.save_figure(inputs.data, "After_{}_{}".format(image_reg, lr))
-          self.save_figure(old_images, "Before_{}_{}".format(image_reg, lr))
-          self.diff(images, old_images)
-          plt.show()
-      else:
-          loss.backward()
-          opt.step()
-          new_labels = self.target_class_tensor(target_class, outputs, original_labels)
-    return iters, self.MSE(images, Variable(old_images))
+    return
 
   def create_one_adversary_batch(self, target_class, image_reg, lr):
     """Create adversarial example for one random batch of data.
