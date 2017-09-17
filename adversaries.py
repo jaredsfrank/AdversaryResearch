@@ -99,6 +99,7 @@ class LBFGS(object):
       predicted_classes = torch.max(outputs.data, 1)[1]
       print predicted_classes
       print original_labels
+      print outputs
       predicting_correct_class = predicted_classes == original_labels
       second_best_class = torch.topk(outputs, 2, 1)[1][:, 1]
       # For each label in outputs that is correctly classified, replace
