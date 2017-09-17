@@ -205,7 +205,7 @@ class Adverarial_Base(object):
         ave_mse += mse.data.numpy()[0]
       print "At iteration {}, the average mse is {}".format(total_images, ave_mse/float(total_images))
       print "That batch took {} iterations".format(iters)
-      print "{}%% of the batch was succesfully generated".format(percent_changed*100)
+      print "{}% of the batch was succesfully generated".format(percent_changed*100)
     return ave_mse/float(total_images)
       
 
