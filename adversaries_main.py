@@ -42,10 +42,11 @@ if __name__ == "__main__":
         lbfgs.show_images = True
     if args.cuda:
         lbfgs.cuda = True
-    print args.max_iters
-    
-    # ave_mse = lbfgs.create_all_adversaries(target_class=args.target_class,
-    #                                        image_reg=args.image_reg,
-    #                                        lr=args.lr)
-    # print ave_mse
+    if args.max_iters is not None:
+        lbfgs.max_iters = args.max_iters
+
+    ave_mse = lbfgs.create_all_adversaries(target_class=args.target_class,
+                                           image_reg=args.image_reg,
+                                           lr=args.lr)
+    print ave_mse
     
