@@ -12,6 +12,17 @@ import torch.nn as nn
 import torch.optim as optim
 
 class LBFGS(adversaries.Adverarial_Base):
+
+  def __init__(self):
+    self.max_iters = -1
+    adversaries.Adverarial_Base.__init__(self)
+
+  def check_iters(self, iters):
+    """Returns true if iters has not exceed the max number of iters."""
+    if max_iters >= 0:
+      return iters < self.max_iters
+    else:
+      return True
     
   def adversary_batch(self, data, model, target_class, image_reg, lr):
     """Creates adversarial examples for one batch of data.
@@ -45,7 +56,7 @@ class LBFGS(adversaries.Adverarial_Base):
     # Set target variables for model loss
     new_labels = self.target_class_tensor(target_class, outputs, original_labels)
     iters = 0
-    while not self.all_changed(original_labels, predicted_classes):
+    while self.check_iters(iters) and not self.all_changed(original_labels, predicted_classes):
       if self.verbose:
         print "Iteration {}".format(iters)
       opt.zero_grad()
@@ -64,7 +75,7 @@ class LBFGS(adversaries.Adverarial_Base):
         print "Target Class Weights Minus Predicted Weights:"
         print outputs.data[:, new_labels.data][:,0] - predicted_loss
       iters += 1
-      if self.all_changed(original_labels, predicted_classes):
+      if self.check_iters(iters) and self.all_changed(original_labels, predicted_classes):
         if self.show_images:
           self.save_figure(inputs.data, "After_{}_{}".format(image_reg, lr))
           self.save_figure(old_images, "Before_{}_{}".format(image_reg, lr))

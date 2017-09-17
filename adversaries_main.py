@@ -23,6 +23,9 @@ parser.add_argument("--image_reg",
 parser.add_argument("--lr",
     help="Learning rate", 
     type=float)
+parser.add_argument("--max_iters",
+    help="Maximum number of iterations", 
+    type=float)
 parser.add_argument('--verbose', action='store_true', help='print messages?')
 parser.add_argument('--show_images', action='store_true', help='show images?')
 parser.add_argument('--cuda', action='store_true', help='use cuda?')
@@ -39,6 +42,8 @@ if __name__ == "__main__":
         lbfgs.show_images = True
     if args.cuda:
         lbfgs.cuda = True
+    print args.max_iters
+    return
     ave_mse = lbfgs.create_all_adversaries(target_class=args.target_class,
                                            image_reg=args.image_reg,
                                            lr=args.lr)
