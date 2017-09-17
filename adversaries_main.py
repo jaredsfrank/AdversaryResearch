@@ -43,9 +43,9 @@ if __name__ == "__main__":
     if args.cuda:
         lbfgs.cuda = True
     print args.max_iters
-    return
-    ave_mse = lbfgs.create_all_adversaries(target_class=args.target_class,
-                                           image_reg=args.image_reg,
-                                           lr=args.lr)
-    print ave_mse
+    
+    # ave_mse = lbfgs.create_all_adversaries(target_class=args.target_class,
+    #                                        image_reg=args.image_reg,
+    #                                        lr=args.lr)
+    # print ave_mse
     
