@@ -73,6 +73,16 @@ class Adverarial_Base(object):
     image_diff/=maximum_element
     plt.imshow(np.transpose(image_diff, (1, 2, 0)))
 
+  def percent_changed(self, original_labels, predictions):
+    """Returns percent of original labels that were fooled."""
+    if self.cuda:
+      np_orig = original_labels.cpu().numpy()
+      np_preds = predictions.cpu().numpy()
+    else:
+      np_orig = original_labels.numpy()
+      np_preds = predictions.numpy()
+    return np.sum(np_orig != np_preds)/float(len(np_orig))
+
   def all_changed(self, original_labels, predictions):
     """Returns true if all predictions are wrong given original correct labels."""
     if self.cuda:
@@ -185,13 +195,16 @@ class Adverarial_Base(object):
     print "Starting Iterations"
     for iteration, batch in enumerate(self.val_loader, 1):
       total_images += self.batch_size
-      iters, mse = self.adversary_batch(batch, model, target_class, image_reg, lr)
+      iters, mse, percent_changed = self.adversary_batch(batch, model, 
+                                                         target_class, 
+                                                         image_reg, lr)
       if self.cuda:
         ave_mse += mse.data.cpu().numpy()[0]
       else:
         ave_mse += mse.data.numpy()[0]
       print "At iteration {}, the average mse is {}".format(total_images, ave_mse/float(total_images))
       print "That batch took {} iterations".format(iters)
+      print "{}\% of the batch was succesfully generated".format(percent_changed)
     return ave_mse/float(total_images)
       
 
