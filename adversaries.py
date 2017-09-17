@@ -10,8 +10,6 @@ import numpy as np
 import torch.nn as nn
 import torch.optim as optim
 
-def test(inputs):
-      yield inputs
 
 class Adverarial_Base(object):
 
@@ -30,6 +28,9 @@ class Adverarial_Base(object):
     self.CrossEntropy = nn.CrossEntropyLoss()
     self.MSE = nn.MSELoss()
     self.cuda = False
+
+  def generator_hack(self, inputs):
+      yield inputs
 
   def imshow(self, img):
     """Unnormalizes image and then shows via matplotlib."""
