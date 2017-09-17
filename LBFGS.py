@@ -19,7 +19,7 @@ class LBFGS(adversaries.Adverarial_Base):
 
   def check_iters(self, iters):
     """Returns true if iters has not exceed the max number of iters."""
-    if max_iters >= 0:
+    if self.max_iters >= 0:
       return iters < self.max_iters
     else:
       return True
