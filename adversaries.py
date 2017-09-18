@@ -200,7 +200,6 @@ class Adverarial_Base(object):
                                                          image_reg, lr)
       if self.cuda:
         ave_mse += mse.data.cpu().numpy()[0]
-        print mse.data.cpu().numpy()[0]
       else:
         ave_mse += mse.data.numpy()[0]
       ave_percent += percent_changed
