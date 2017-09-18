@@ -189,14 +189,14 @@ class Adverarial_Base(object):
       model.cuda()
     model.eval()
     ave_mse = 0.0
-    total_images = 0.0
+    # total_images = 0.0
     ave_percent = 0.0
     # Set all model parameters to not update during training
     for parameter in model.parameters():
         parameter.requires_grad = False
     print "Starting Iterations"
     for iteration, batch in enumerate(self.val_loader, 1):
-      total_images += self.batch_size
+      # total_images += self.batch_size
       iters, mse, percent_changed = self.adversary_batch(batch, model, 
                                                          target_class, 
                                                          image_reg, lr)
@@ -206,7 +206,7 @@ class Adverarial_Base(object):
       else:
         ave_mse += mse.data.numpy()[0]
       ave_percent += percent_changed
-      print "At iteration {}, the average mse is {}".format(total_images, ave_mse/float(total_images))
+      print "After {} images, the average mse is {}".format(total_images, ave_mse/float(iteration))
       print "That batch took {} iterations".format(iters)
       print "{}% of the batch was succesfully generated".format(percent_changed*100)
     return ave_mse/float(total_images)
