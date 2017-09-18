@@ -190,6 +190,7 @@ class Adverarial_Base(object):
     model.eval()
     ave_mse = 0.0
     total_images = 0.0
+    ave_percent = 0.0
     # Set all model parameters to not update during training
     for parameter in model.parameters():
         parameter.requires_grad = False
@@ -201,8 +202,10 @@ class Adverarial_Base(object):
                                                          image_reg, lr)
       if self.cuda:
         ave_mse += mse.data.cpu().numpy()[0]
+        print mse.data.cpu().numpy()[0]
       else:
         ave_mse += mse.data.numpy()[0]
+      ave_percent += percent_changed
       print "At iteration {}, the average mse is {}".format(total_images, ave_mse/float(total_images))
       print "That batch took {} iterations".format(iters)
       print "{}% of the batch was succesfully generated".format(percent_changed*100)
