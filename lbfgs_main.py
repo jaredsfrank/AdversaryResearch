@@ -33,7 +33,7 @@ args = parser.parse_args()
 
 
 if __name__ == "__main__":
-    lbfgs = LBFGS.LBFGS(args.batch_size, args.lr)
+    lbfgs = LBFGS.LBFGS(args.batch_size)
     ave_mse = 0.0
     iters = 10
     if args.verbose:
@@ -46,6 +46,6 @@ if __name__ == "__main__":
         lbfgs.max_iters = args.max_iters
 
     ave_mse = lbfgs.create_all_adversaries(target_class=args.target_class,
-                                           image_reg=args.image_reg)
+                                           image_reg=args.image_reg, lr=args.lr)
     print ave_mse
     
