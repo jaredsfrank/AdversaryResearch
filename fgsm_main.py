@@ -20,6 +20,9 @@ parser.add_argument("--target_class",
 parser.add_argument("--image_reg",
     help="Regularizer on the image loss function",
     type=int)
+parser.add_argument("--lr",
+    help="Learning rate", 
+    type=float)
 parser.add_argument('--verbose', action='store_true', help='print messages?')
 parser.add_argument('--show_images', action='store_true', help='show images?')
 parser.add_argument('--cuda', action='store_true', help='use cuda?')
@@ -38,6 +41,7 @@ if __name__ == "__main__":
         fgsm.cuda = True
 
     ave_mse = fgsm.create_all_adversaries(target_class=args.target_class,
-                                           image_reg=args.image_reg)
+                                           image_reg=args.image_reg,
+                                           lr=args.lr)
     print ave_mse
     
