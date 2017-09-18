@@ -25,7 +25,7 @@ class LBFGS(adversaries.Adverarial_Base):
     else:
       return True
     
-  def adversary_batch(self, data, model, target_class, image_reg, lr):
+  def adversary_batch(self, data, model, target_class, image_reg):
     """Creates adversarial examples for one batch of data.
 
     Generates adversarial batch using LBFGS iterative method.
@@ -36,7 +36,6 @@ class LBFGS(adversaries.Adverarial_Base):
       target_class: int, class to target for adverserial examples
         If target_class is -1, optimize non targeted attack. Choose next closest class.
       image_reg: Regularization constant for image loss component of loss function
-      lr: float, Learning rate
 
     Returns:
       iters: Number of iterations it took to create adversarial example
@@ -49,7 +48,7 @@ class LBFGS(adversaries.Adverarial_Base):
       images = images.cuda()
       original_labels = original_labels.cuda()
     inputs = Variable(images, requires_grad = True)
-    opt = optim.SGD(self.generator_hack(inputs), lr=lr, momentum=0.9)
+    opt = optim.SGD(self.generator_hack(inputs), lr=self.lr, momentum=0.9)
     self.clamp_images(images)
     old_images = images.clone()
     outputs = model(inputs)
@@ -78,8 +77,8 @@ class LBFGS(adversaries.Adverarial_Base):
       iters += 1
       if self.check_iters(iters) and self.all_changed(original_labels, predicted_classes):
         if self.show_images:
-          self.save_figure(inputs.data, "After_{}_{}".format(image_reg, lr))
-          self.save_figure(old_images, "Before_{}_{}".format(image_reg, lr))
+          self.save_figure(inputs.data, "After_{}_{}".format(image_reg, self.lr))
+          self.save_figure(old_images, "Before_{}_{}".format(image_reg, self.lr))
           self.diff(images, old_images)
           plt.show()
       else:
