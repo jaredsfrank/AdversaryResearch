@@ -123,7 +123,7 @@ class Adverarial_Base(object):
     return new_labels
 
   @abc.abstractmethod
-  def adversary_batch(self, data, model, target_class, image_reg, lr):
+  def adversary_batch(self, data, model, target_class, image_reg):
     """Creates adversarial examples for one batch of data.
 
     Helper function for create_one_adversary_batch.
@@ -134,7 +134,6 @@ class Adverarial_Base(object):
       target_class: int, class to target for adverserial examples
         If target_class is -1, optimize non targeted attack. Choose next closest class.
       image_reg: Regularization constant for image loss component of loss function
-      lr: float, Learning rate
 
     Returns:
       iters: Number of iterations it took to create adversarial example
@@ -145,7 +144,7 @@ class Adverarial_Base(object):
     # Load in first <batch_size> images for validation
     return
 
-  def create_one_adversary_batch(self, target_class, image_reg, lr):
+  def create_one_adversary_batch(self, target_class, image_reg):
     """Create adversarial example for one random batch of data.
   
     Args:
@@ -168,17 +167,16 @@ class Adverarial_Base(object):
     for parameter in model.parameters():
         parameter.requires_grad = False
     data = next(iter(self.val_loader))
-    return self.adversary_batch(data, model, target_class, image_reg, lr)
+    return self.adversary_batch(data, model, target_class, image_reg)
 
 
-  def create_all_adversaries(self, target_class, image_reg, lr):
+  def create_all_adversaries(self, target_class, image_reg):
     """Create adversarial example for every image in evaluation set.
   
     Args:
       target_class: int, class to target for adverserial examples
         If target_class is -1, optimize non targeted attack. Choose next closest class.
       image_reg: Regularization constant for image loss component of loss function
-      lr: float, Learning rate
 
     Returns:
       ave_mse: Float, average mean square error of generated adversarial examples.
@@ -197,7 +195,7 @@ class Adverarial_Base(object):
     for iteration, batch in enumerate(self.val_loader, 1):
       iters, mse, percent_changed = self.adversary_batch(batch, model, 
                                                          target_class, 
-                                                         image_reg, lr)
+                                                         image_reg)
       if self.cuda:
         ave_mse += mse.data.cpu().numpy()[0]
       else:

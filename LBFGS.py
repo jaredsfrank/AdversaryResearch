@@ -13,8 +13,9 @@ import torch.optim as optim
 
 class LBFGS(adversaries.Adverarial_Base):
 
-  def __init__(self, batch_size):
+  def __init__(self, batch_size, lr):
     self.max_iters = -1
+    self.lr = 1
     adversaries.Adverarial_Base.__init__(self, batch_size)
 
   def check_iters(self, iters):
@@ -27,7 +28,7 @@ class LBFGS(adversaries.Adverarial_Base):
   def adversary_batch(self, data, model, target_class, image_reg, lr):
     """Creates adversarial examples for one batch of data.
 
-    Helper function for create_one_adversary_batch.
+    Generates adversarial batch using LBFGS iterative method.
 
     Args:
       data: images, labels tuple of batch to be altered
