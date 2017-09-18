@@ -13,7 +13,7 @@ import torch.nn as nn
 class FGSM(adversaries.Adverarial_Base):
 
     
-  def adversary_batch(self, data, model, target_class, image_reg):
+  def adversary_batch(self, data, model, target_class, image_reg, lr):
     """Creates adversarial examples for one batch of data.
 
     Helper function for create_one_adversary_batch.
@@ -54,7 +54,7 @@ class FGSM(adversaries.Adverarial_Base):
       self.diff(images, old_images)
       plt.show()
     loss.backward()
-    inputs -= torch.sign(inputs.grad)
+    inputs.data -= lr*torch.sign(inputs.grad).data
     self.clamp_images(images)
     outputs = model(inputs)
     predicted_loss, predicted_classes = torch.max(outputs.data, 1)
