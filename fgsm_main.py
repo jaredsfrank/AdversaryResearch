@@ -31,11 +31,11 @@ if __name__ == "__main__":
     ave_mse = 0.0
     iters = 10
     if args.verbose:
-        lbfgs.verbose = True
+        fgsm.verbose = True
     if args.show_images:
-        lbfgs.show_images = True
+        fgsm.show_images = True
     if args.cuda:
-        lbfgs.cuda = True
+        fgsm.cuda = True
 
     ave_mse = fgsm.create_all_adversaries(target_class=args.target_class,
                                            image_reg=args.image_reg)
