@@ -54,7 +54,7 @@ class FGSM(adversaries.Adverarial_Base):
       self.diff(images, old_images)
       plt.show()
     loss.backward()
-    images -= torch.sign(inputs.grad)
+    inputs -= torch.sign(inputs.grad)
     self.clamp_images(images)
     outputs = model(inputs)
     predicted_loss, predicted_classes = torch.max(outputs.data, 1)
