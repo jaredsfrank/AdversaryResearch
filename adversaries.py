@@ -206,10 +206,10 @@ class Adverarial_Base(object):
       else:
         ave_mse += mse.data.numpy()[0]
       ave_percent += percent_changed
-      print "After {} images, the average mse is {}".format(total_images, ave_mse/float(iteration))
+      print "After {} images, the average mse is {}".format(iteration, ave_mse/float(iteration))
       print "That batch took {} iterations".format(iters)
       print "{}% of the batch was succesfully generated".format(percent_changed*100)
-    return ave_mse/float(total_images)
+    return ave_mse/float(iteration)
       
 
 
