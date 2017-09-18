@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import torch.nn as nn
 
-class LBFGS(adversaries.Adverarial_Base):
+class FGSM(adversaries.Adverarial_Base):
 
     
   def adversary_batch(self, data, model, target_class, image_reg):
