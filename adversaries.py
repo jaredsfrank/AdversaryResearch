@@ -208,9 +208,9 @@ class Adverarial_Base(object):
                                                          target_class, 
                                                          image_reg, lr)
       if self.cuda:
-        ave_mse += mse.data.cpu().numpy()[0]
+        ave_mse += mse# .data.cpu().numpy()[0]
       else:
-        ave_mse += mse.data.numpy()[0]
+        ave_mse += mse# .data.numpy()[0]
       ave_percent += percent_changed
       print "After {} images, the average mse is {}".format(self.batch_size*iteration, ave_mse/float(iteration))
       print "That batch took {} iterations".format(iters)

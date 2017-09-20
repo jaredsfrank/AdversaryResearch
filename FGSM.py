@@ -54,6 +54,6 @@ class FGSM(adversaries.Adverarial_Base):
     outputs = model(inputs)
     predicted_loss, predicted_classes = torch.max(outputs.data, 1)
     print images.shape
-    return 1, torch.Tensor(torch.max(images - old_images)), self.percent_changed(original_labels, predicted_classes)
+    return 1, torch.max(images - old_images), self.percent_changed(original_labels, predicted_classes)
 
 
