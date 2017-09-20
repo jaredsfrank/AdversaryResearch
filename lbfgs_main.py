@@ -10,6 +10,7 @@ import argparse
 import model_testing
 import LBFGS
 import numpy as np
+import Queue
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--batch_size", 
@@ -33,6 +34,23 @@ parser.add_argument('--cuda', action='store_true', help='use cuda?')
 args = parser.parse_args()
 
 
+def better_range(min_value, max_value):
+    l = [min_value, max_value]
+    q = Queue.Queue()
+    q.put((min_value+1, max_value))
+    seen = set()
+    while not q.empty():
+        next_min, next_max = q.get()
+        next_mid = (next_min + next_max)/2
+        l.append(next_mid)
+        if next_max - next_min > 1:
+            if next_mid - next_min > 0:
+                q.put((next_min, next_mid))
+            if next_max - next_mid > 1:
+                q.put((next_mid+1, next_max))
+    return l
+
+
 if __name__ == "__main__":
     lbfgs = LBFGS.LBFGS(args.batch_size)
     ave_mse = 0.0
@@ -48,7 +66,7 @@ if __name__ == "__main__":
 
     save_result = []
     np.savetxt("/scratch/jsf239/lbfgs_results.csv", np.array(save_result))
-    for i in range(1, 101):
+    for i in better_range(1, 100):
         lbfgs.max_iters = i
         ave_mse, succ = lbfgs.create_all_adversaries(target_class=args.target_class,
                                            image_reg=args.image_reg, lr=args.lr)
