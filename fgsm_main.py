@@ -9,6 +9,7 @@ python fgsm_main.py --batch_size 100 \
 import argparse
 import model_testing
 import FGSM
+import numpy as np
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--batch_size", 
@@ -40,8 +41,13 @@ if __name__ == "__main__":
     if args.cuda:
         fgsm.cuda = True
 
-    ave_mse = fgsm.create_all_adversaries(target_class=args.target_class,
-                                           image_reg=args.image_reg,
-                                           lr=args.lr)
+    save_result = []
+    np.savetxt("/scratch/jsf239/fgsm_results.csv", np.array(save_result))
+    for i in np.arange(0.0001, .1, .001):
+	    ave_mse = fgsm.create_all_adversaries(target_class=args.target_class,
+	                                           image_reg=args.image_reg,
+	                                           lr=i)
+	    save_result.append([ave_mse, succ])
+        np.savetxt("/scratch/jsf239/fgsm_results.csv", np.array(save_result))
     print ave_mse
     

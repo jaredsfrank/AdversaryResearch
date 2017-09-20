@@ -53,6 +53,7 @@ class FGSM(adversaries.Adverarial_Base):
     self.clamp_images(images)
     outputs = model(inputs)
     predicted_loss, predicted_classes = torch.max(outputs.data, 1)
-    return 1, torch.max(images - old_images), self.percent_changed(original_labels, predicted_classes)
+    max_diff = np.mean(((images - old_images).cpu().numpy().reshape(images.shape[0],-1).max(1)))
+    return 1, max_diff, self.percent_changed(original_labels, predicted_classes)
 
 
