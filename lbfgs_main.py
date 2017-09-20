@@ -9,6 +9,7 @@ python lbfgs_main.py --batch_size 100 \
 import argparse
 import model_testing
 import LBFGS
+import numpy as np
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--batch_size", 
@@ -45,7 +46,13 @@ if __name__ == "__main__":
     if args.max_iters is not None:
         lbfgs.max_iters = args.max_iters
 
-    ave_mse = lbfgs.create_all_adversaries(target_class=args.target_class,
+    save_result = []
+    np.savetxt("/scratch/jsf239/lbfgs_results.csv", np.array(save_result))
+    for i in range(1, 101):
+        lbfgs.max_iters = i
+        ave_mse, succ = lbfgs.create_all_adversaries(target_class=args.target_class,
                                            image_reg=args.image_reg, lr=args.lr)
+        save_result.append([ave_mse, succ])
+        np.savetxt("/scratch/jsf239/lbfgs_results.csv", np.array(save_result))
     print ave_mse
     

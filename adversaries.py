@@ -216,7 +216,7 @@ class Adverarial_Base(object):
       print "That batch took {} iterations".format(iters)
       print "{}% of the batch was succesfully generated".format(percent_changed*100)
       print "The average succes rate is {}%".format(ave_percent/float(iteration)*100)
-    return ave_mse/float(iteration)
+    return ave_mse/float(iteration), ave_percent/float(iteration)*100
       
 
 
