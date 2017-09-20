@@ -42,7 +42,7 @@ class FGSM(adversaries.Adverarial_Base):
     new_labels = self.target_class_tensor(target_class, outputs, original_labels)
     # Clamp loss so that all pixels are in valid range (Between 0 and 1 unnormalized)
     # Compute full loss of adversarial example
-    loss = self.CE_MSE_loss(inputs, outputs, original_labels, new_labels, image_reg)
+    loss = self.CE_MSE_loss(inputs, outputs, old_images, new_labels, image_reg)
     if self.show_images:
       self.save_figure(inputs.data, "After_{}_{}".format(image_reg, lr))
       self.save_figure(old_images, "Before_{}_{}".format(image_reg, lr))

@@ -93,7 +93,7 @@ class Adverarial_Base(object):
       np_preds = predictions.numpy()
     return np.all(np_orig != np_preds)
 
-  def CE_MSE_loss(self, inputs, outputs, old_labels, new_labels, image_reg):
+  def CE_MSE_loss(self, inputs, outputs, old_images, new_labels, image_reg):
     model_loss = self.CrossEntropy(outputs, new_labels)
     image_loss = self.MSE(inputs, Variable(old_images))
     if self.cuda:
