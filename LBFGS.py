@@ -82,5 +82,5 @@ class LBFGS(adversaries.Adverarial_Base):
           new_labels = self.target_class_tensor(target_class, outputs, original_labels)
           # self.MSE(images, Variable(old_images))
     print images.shape[0]
-    print ((images - old_images).cpu().numpy().reshape(images.shape[0],-1).max(0)).shape
+    print ((images - old_images).cpu().numpy().reshape(images.shape[0],-1).max(1)).shape
     return iters, torch.max(images - old_images), self.percent_changed(original_labels, predicted_classes)
