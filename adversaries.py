@@ -93,6 +93,15 @@ class Adverarial_Base(object):
       np_preds = predictions.numpy()
     return np.all(np_orig != np_preds)
 
+  def CE_MSE_loss(self, inputs, outputs, old_labels, new_labels, image_reg):
+    model_loss = self.CrossEntropy(outputs, new_labels)
+    image_loss = self.MSE(inputs, Variable(old_images))
+    if self.cuda:
+      model_loss = model_loss.cuda()
+      image_loss = image_loss.cuda()
+    loss = model_loss + image_reg*image_loss
+    return loss
+
   def clamp_images(self, images):
     """Clamps image to between minimum and maximum range in place."""
     for i in range(len(self.mean_norm)):

@@ -42,12 +42,7 @@ class FGSM(adversaries.Adverarial_Base):
     new_labels = self.target_class_tensor(target_class, outputs, original_labels)
     # Clamp loss so that all pixels are in valid range (Between 0 and 1 unnormalized)
     # Compute full loss of adversarial example
-    model_loss = self.CrossEntropy(outputs, new_labels)
-    image_loss = self.MSE(inputs, Variable(old_images))
-    if self.cuda:
-      model_loss = model_loss.cuda()
-      image_loss = image_loss.cuda()
-    loss = model_loss + image_reg*image_loss
+    loss = self.CE_MSE_loss(inputs, outputs, old_labels, new_labels, image_reg)
     if self.show_images:
       self.save_figure(inputs.data, "After_{}_{}".format(image_reg, lr))
       self.save_figure(old_images, "Before_{}_{}".format(image_reg, lr))
@@ -58,4 +53,4 @@ class FGSM(adversaries.Adverarial_Base):
     self.clamp_images(images)
     outputs = model(inputs)
     predicted_loss, predicted_classes = torch.max(outputs.data, 1)
-    return 1, self.MSE(images, Variable(old_images)), self.percent_changed(original_labels, predicted_classes)
+    return 1, torch.max(images - Variable(old_images)), self.percent_changed(original_labels, predicted_classes)

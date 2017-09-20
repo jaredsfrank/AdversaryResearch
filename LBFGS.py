@@ -64,12 +64,7 @@ class LBFGS(adversaries.Adverarial_Base):
       self.clamp_images(images)
       outputs = model(inputs)
       # Compute full loss of adversarial example
-      model_loss = self.CrossEntropy(outputs, new_labels)
-      image_loss = self.MSE(inputs, Variable(old_images))
-      if self.cuda:
-        model_loss = model_loss.cuda()
-        image_loss = image_loss.cuda()
-      loss = model_loss + image_reg*image_loss
+      loss = self.CE_MSE_loss(inputs, outputs, old_labels, new_labels, image_reg)
       predicted_loss, predicted_classes = torch.max(outputs.data, 1)
       if self.verbose:
         print "Target Class Weights Minus Predicted Weights:"
