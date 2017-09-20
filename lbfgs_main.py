@@ -67,7 +67,7 @@ if __name__ == "__main__":
     save_result = []
     np.savetxt("/scratch/jsf239/lbfgs_results.csv", np.array(save_result))
     for i in better_range(1, 100):
-        lbfgs.max_iters = i
+        lbfgs.max_iters = i*10
         ave_mse, succ = lbfgs.create_all_adversaries(target_class=args.target_class,
                                            image_reg=args.image_reg, lr=args.lr)
         save_result.append([ave_mse, succ])
