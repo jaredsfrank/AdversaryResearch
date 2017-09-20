@@ -44,10 +44,10 @@ if __name__ == "__main__":
     save_result = []
     np.savetxt("/scratch/jsf239/fgsm_results.csv", np.array(save_result))
     for i in np.arange(0.0001, .1, .001):
-	    ave_mse = fgsm.create_all_adversaries(target_class=args.target_class,
-	                                           image_reg=args.image_reg,
-	                                           lr=i)
-	    save_result.append([ave_mse, succ])
+        ave_mse = fgsm.create_all_adversaries(target_class=args.target_class,
+                                               image_reg=args.image_reg,
+                                               lr=i)
+        save_result.append([ave_mse, succ])
         np.savetxt("/scratch/jsf239/fgsm_results.csv", np.array(save_result))
     print ave_mse
     
