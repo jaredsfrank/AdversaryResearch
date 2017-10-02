@@ -13,9 +13,9 @@ from torch.autograd import Variable
 
 class ExactGPModel(gpytorch.GPModel):
     def __init__(self):
-        super(ExactGPModel,self).__init__(GaussianLikelihood(log_noise_bounds=(-5, 5)))
+        super(ExactGPModel,self).__init__(GaussianLikelihood(log_noise_bounds=(-60, 60)))
         self.mean_module = ConstantMean(constant_bounds=(-10, 10))
-        self.covar_module = RBFKernel(log_lengthscale_bounds=(-5, 5))
+        self.covar_module = RBFKernel(log_lengthscale_bounds=(-60, 60))
     
     def forward(self,x):
         mean_x = self.mean_module(x)
