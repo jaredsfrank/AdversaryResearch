@@ -44,6 +44,6 @@ if __name__ == "__main__":
 
     ave_mse, succ = gpfool.create_all_adversaries(target_class=args.target_class,
                                                image_reg=args.image_reg,
-                                               lr=args.lr
+                                               lr=args.lr)
     print(ave_mse)
     
