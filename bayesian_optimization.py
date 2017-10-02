@@ -42,8 +42,8 @@ def plot_model_and_predictions(model, plot_train_data=True):
 def find_minimum(model):
 	test_x = Variable(torch.linspace(0, 1, 51))
 	test_y = model(test_x)
-	print (test_y)
-	print (test_y.mean())
+	lower, upper = rand_var.confidence_region()
+	print(lower)
 
 
 def train_model(train_x, train_y):
