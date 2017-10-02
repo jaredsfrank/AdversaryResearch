@@ -23,7 +23,7 @@ class ExactGPModel(gpytorch.GPModel):
         return GaussianRandomVariable(mean_x, covar_x)
 
 def plot_model_and_predictions(model, plot_train_data=True):
-    f, observed_ax = plt.subplots(1, 1, figsize=(4, 3))
+    f, observed_ax = plt.subplots(1, 1, figsize=(10, 10))
     test_x = Variable(torch.linspace(-10, 10, 51))
     observed_pred = model(test_x)
 
@@ -33,7 +33,7 @@ def plot_model_and_predictions(model, plot_train_data=True):
             ax.plot(train_x.data.numpy(), train_y.data.numpy(), 'k*')
         ax.plot(test_x.data.numpy(), rand_var.mean().data.numpy(), 'b')
         ax.fill_between(test_x.data.numpy(), lower.data.numpy(), upper.data.numpy(), alpha=0.5)
-        ax.set_ylim([-3, 3])
+        ax.set_ylim([-60, 60])
         ax.legend(['Observed Data', 'Mean', 'Confidence'])
         ax.set_title(title)
 
