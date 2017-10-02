@@ -34,11 +34,11 @@ if __name__ == "__main__":
     ave_mse = 0.0
     iters = 10
     if args.verbose:
-        fgsm.verbose = True
+        gpfool.verbose = True
     if args.show_images:
-        fgsm.show_images = True
+        gpfool.show_images = True
     if args.cuda:
-        fgsm.cuda = True
+        gpfool.cuda = True
 
     ave_mse, succ = gpfool.create_all_adversaries(target_class=args.target_class,
                                                image_reg=args.image_reg,
