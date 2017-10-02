@@ -40,33 +40,38 @@ def plot_model_and_predictions(model, plot_train_data=True):
     return f
 
 
-train_x = Variable(torch.linspace(0, 1, 11))
-train_y = Variable(torch.sin(train_x.data * (2 * math.pi)) + torch.randn(train_x.size()) * 0.2)
-
-model = ExactGPModel()
-model.condition(train_x, train_y)
-fig = plot_model_and_predictions(model, plot_train_data=False)
-plt.show()
 
 
-model.train()
-optimizer = optim.Adam(model.parameters(), lr=0.1)
-optimizer.n_iter = 0
-for i in range(50):
-    optimizer.zero_grad()
-    output = model(train_x)
-    loss = -model.marginal_log_likelihood(output, train_y)
-    loss.backward()
-    optimizer.n_iter += 1
-    print('Iter %d/20 - Loss: %.3f   log_lengthscale: %.3f   log_noise: %.3f' % (
-        i + 1, loss.data[0],
-        model.covar_module.log_lengthscale.data[0, 0],
-        model.likelihood.log_noise.data[0]
-    ))
-    optimizer.step()
-    
-# Set back to eval mode
-model.eval()
-fig = plot_model_and_predictions(model)
-plt.show()
+def train_model(train_x, train_y)
+	model = ExactGPModel()
+	model.condition(train_x, train_y)
+	fig = plot_model_and_predictions(model, plot_train_data=False)
+	plt.show()
+	model.train()
+	optimizer = optim.Adam(model.parameters(), lr=0.1)
+	optimizer.n_iter = 0
+	for i in range(50):
+	    optimizer.zero_grad()
+	    output = model(train_x)
+	    loss = -model.marginal_log_likelihood(output, train_y)
+	    loss.backward()
+	    optimizer.n_iter += 1
+	    print('Iter %d/20 - Loss: %.3f   log_lengthscale: %.3f   log_noise: %.3f' % (
+	        i + 1, loss.data[0],
+	        model.covar_module.log_lengthscale.data[0, 0],
+	        model.likelihood.log_noise.data[0]
+	    ))
+	    optimizer.step()
+	return model
 
+def evaluate_model(model):
+	# Set back to eval mode
+	model.eval()
+	fig = plot_model_and_predictions(model)
+	plt.show()
+
+if __name__ == '__main__':
+	train_x = Variable(torch.linspace(0, 1, 11))
+	train_y = Variable(torch.sin(train_x.data * (2 * math.pi)) + torch.randn(train_x.size()) * 0.2)
+	model = train_model(train_x, train_y)
+	evaluate_model(model)
