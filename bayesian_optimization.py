@@ -14,7 +14,7 @@ from torch.autograd import Variable
 class ExactGPModel(gpytorch.GPModel):
     def __init__(self):
         super(ExactGPModel,self).__init__(GaussianLikelihood(log_noise_bounds=(-5, 5)))
-        self.mean_module = ConstantMean(constant_bounds=(-1, 1))
+        self.mean_module = ConstantMean(constant_bounds=(-10, 10))
         self.covar_module = RBFKernel(log_lengthscale_bounds=(-5, 5))
     
     def forward(self,x):
@@ -24,7 +24,7 @@ class ExactGPModel(gpytorch.GPModel):
 
 def plot_model_and_predictions(model, plot_train_data=True):
     f, observed_ax = plt.subplots(1, 1, figsize=(4, 3))
-    test_x = Variable(torch.linspace(0, 1, 51))
+    test_x = Variable(torch.linspace(-10, 10, 51))
     observed_pred = model(test_x)
 
     def ax_plot(ax, rand_var, title):
@@ -41,7 +41,7 @@ def plot_model_and_predictions(model, plot_train_data=True):
     return f
 
 def find_minimum(model):
-	test_x = Variable(torch.linspace(0, 1, 51))
+	test_x = Variable(torch.linspace(-10, 10, 51))
 	test_y = model(test_x)
 	lower, upper = test_y.confidence_region()
 	return test_x.data.numpy()[np.argmin(lower.data.numpy())]
@@ -78,7 +78,7 @@ if __name__ == '__main__':
 	x_data = [0.1, 0.3]
 	for i in range(20):
 		train_x = Variable(torch.Tensor(np.array(x_data)))
-		train_y = Variable(torch.sin(train_x.data * (2 * math.pi)) + torch.randn(train_x.size()) * 0.2)
+		train_y = Variable(0.5*(train_x.data**4 - 16*train_x.data**2 * 5*train_x.data))
 		model = train_model(train_x, train_y)
 		evaluate_model(model)
 		new_min = find_minimum(model)
