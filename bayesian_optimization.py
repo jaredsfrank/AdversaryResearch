@@ -44,16 +44,12 @@ def find_minimum(model):
 	test_x = Variable(torch.linspace(0, 1, 51))
 	test_y = model(test_x)
 	lower, upper = test_y.confidence_region()
-	print(np.argmin(lower.data.numpy()))
-	print(test_x.data.numpy()[np.argmin(lower.data.numpy())])
 	return test_x.data.numpy()[np.argmin(lower.data.numpy())]
 
 
 def train_model(train_x, train_y):
 	model = ExactGPModel()
 	model.condition(train_x, train_y)
-	fig = plot_model_and_predictions(model, plot_train_data=False)
-	plt.show()
 	model.train()
 	optimizer = optim.Adam(model.parameters(), lr=0.1)
 	optimizer.n_iter = 0
@@ -79,8 +75,11 @@ def evaluate_model(model):
 	plt.show()
 
 if __name__ == '__main__':
-	train_x = Variable(torch.linspace(0, 1, 11))
-	train_y = Variable(torch.sin(train_x.data * (2 * math.pi)) + torch.randn(train_x.size()) * 0.2)
-	model = train_model(train_x, train_y)
-	evaluate_model(model)
-	find_minimum(model)
+	x_data = []
+	for i in range(10):
+		train_x = Variable(x_data)
+		train_y = Variable(torch.sin(train_x.data * (2 * math.pi)) + torch.randn(train_x.size()) * 0.2)
+		model = train_model(train_x, train_y)
+		evaluate_model(model)
+		new_min = find_minimum(model)
+		x_data.append(new_min)
