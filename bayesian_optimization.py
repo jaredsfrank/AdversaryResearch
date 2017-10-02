@@ -1,6 +1,7 @@
 import math
 import torch
 import gpytorch
+import numpy as np
 from matplotlib import pyplot as plt
 from torch import optim
 from gpytorch.kernels import RBFKernel
