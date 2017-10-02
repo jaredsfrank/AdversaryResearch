@@ -1,8 +1,8 @@
 """Runs adversarial example trainer
 
 Example Usage:
-python fgsm_main.py --batch_size 100 \
-    --target_class 1 --image_reg 100
+python fgsm_main.py --target_class -1 \
+--image_reg 100 --lr .1 --cuda --batch_size 2
 
 
 """
@@ -65,5 +65,5 @@ if __name__ == "__main__":
                                                    lr=(3**i * 10**-4))
         save_result.append([ave_mse, succ])
         np.savetxt("/scratch/jsf239/fgsm_results.csv", np.array(save_result))
-    print ave_mse
+    print(ave_mse)
     

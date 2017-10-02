@@ -72,5 +72,5 @@ if __name__ == "__main__":
                                            image_reg=args.image_reg, lr=args.lr)
         save_result.append([ave_mse, succ])
         np.savetxt("/scratch/jsf239/lbfgs_results2.csv", np.array(save_result))
-    print ave_mse
+    print(ave_mse)
     

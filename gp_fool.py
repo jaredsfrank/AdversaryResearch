@@ -38,7 +38,7 @@ class GPFool(adversaries.Adverarial_Base):
     inputs = Variable(images, requires_grad = True)
     outputs = model(inputs)
     old_images = images.clone()
-    print old_images
+    print(old_images)
     return
     # Set target variables for model loss
     new_labels = self.target_class_tensor(target_class, outputs, original_labels)

@@ -62,15 +62,15 @@ class DeepFool(adversaries.Adverarial_Base):
     iters = 0
     while self.check_iters(iters) and not self.all_changed(original_labels, predicted_classes):
       if self.verbose:
-        print "Iteration {}".format(iters)
+        print("Iteration {}".format(iters))
       # Clamp loss so that all pixels are in valid range (Between 0 and 1 unnormalized)
       self.clamp_images(images)
       outputs = model(inputs)
       # Compute full loss of adversarial example
       predicted_loss, predicted_classes = torch.max(outputs.data, 1)
       if self.verbose:
-        print "Target Class Weights Minus Predicted Weights:"
-        print outputs.data[:, new_labels.data][:,0] - predicted_loss
+        print("Target Class Weights Minus Predicted Weights:")
+        print(outputs.data[:, new_labels.data][:,0] - predicted_loss)
       iters += 1
       if self.check_iters(iters) and self.all_changed(original_labels, predicted_classes):
         if self.show_images:
