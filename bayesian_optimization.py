@@ -39,7 +39,10 @@ def plot_model_and_predictions(model, plot_train_data=True):
     ax_plot(observed_ax, observed_pred, 'Observed Values (Likelihood)')
     return f
 
-
+def find_minimum(model):
+	test_x = Variable(torch.linspace(0, 1, 51))
+	test_y = model(test_x)
+	print test_y
 
 
 def train_model(train_x, train_y):
@@ -64,6 +67,7 @@ def train_model(train_x, train_y):
 	    optimizer.step()
 	return model
 
+
 def evaluate_model(model):
 	# Set back to eval mode
 	model.eval()
@@ -75,3 +79,4 @@ if __name__ == '__main__':
 	train_y = Variable(torch.sin(train_x.data * (2 * math.pi)) + torch.randn(train_x.size()) * 0.2)
 	model = train_model(train_x, train_y)
 	evaluate_model(model)
+	find_minimum(model)
