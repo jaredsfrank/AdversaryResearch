@@ -117,7 +117,7 @@ def load_and_run_pretrained():
     # Loading pretrained network and data 
     resnet = models.resnet101(pretrained=True)
     resnet.eval()
-    print resnet
+    print (resnet)
     valdir = "/scratch/datasets/imagenet/val"
     val_loader = load_data(valdir, 2)
     print("Done instantiating data loader")
