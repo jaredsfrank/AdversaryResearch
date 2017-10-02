@@ -42,7 +42,7 @@ def plot_model_and_predictions(model, plot_train_data=True):
 
 
 
-def train_model(train_x, train_y)
+def train_model(train_x, train_y):
 	model = ExactGPModel()
 	model.condition(train_x, train_y)
 	fig = plot_model_and_predictions(model, plot_train_data=False)
