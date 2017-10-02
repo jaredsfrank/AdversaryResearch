@@ -13,9 +13,9 @@ from torch.autograd import Variable
 
 class ExactGPModel(gpytorch.GPModel):
     def __init__(self):
-        super(ExactGPModel,self).__init__(GaussianLikelihood(log_noise_bounds=(-60, 60)))
+        super(ExactGPModel,self).__init__(GaussianLikelihood(log_noise_bounds=(-5, 5)))
         self.mean_module = ConstantMean(constant_bounds=(-10, 10))
-        self.covar_module = RBFKernel(log_lengthscale_bounds=(-60, 60))
+        self.covar_module = RBFKernel(log_lengthscale_bounds=(-5, 5))
     
     def forward(self,x):
         mean_x = self.mean_module(x)
@@ -23,7 +23,7 @@ class ExactGPModel(gpytorch.GPModel):
         return GaussianRandomVariable(mean_x, covar_x)
 
 def plot_model_and_predictions(model, plot_train_data=True):
-    f, observed_ax = plt.subplots(1, 1, figsize=(10, 10))
+    f, observed_ax = plt.subplots(1, 1, figsize=(4, 3))
     test_x = Variable(torch.linspace(-10, 10, 51))
     observed_pred = model(test_x)
 
@@ -75,7 +75,7 @@ def evaluate_model(model):
 	plt.show()
 
 if __name__ == '__main__':
-	x_data = [0.1, 0.3]
+	x_data = [-3, 1.5]
 	for i in range(20):
 		train_x = Variable(torch.Tensor(np.array(x_data)))
 		train_y = Variable(0.5*(train_x.data**4 - 16*train_x.data**2 * 5*train_x.data))
