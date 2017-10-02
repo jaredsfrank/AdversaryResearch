@@ -43,7 +43,8 @@ def find_minimum(model):
 	test_x = Variable(torch.linspace(0, 1, 51))
 	test_y = model(test_x)
 	lower, upper = test_y.confidence_region()
-	print(lower)
+	print(np.argmin(test_y.data.numpy()))
+	return test_x.data.numpy()[np.argmin(test_y.data.numpy())]
 
 
 def train_model(train_x, train_y):
