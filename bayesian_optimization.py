@@ -59,11 +59,11 @@ def train_model(train_x, train_y):
 	    loss = -model.marginal_log_likelihood(output, train_y)
 	    loss.backward()
 	    optimizer.n_iter += 1
-	    print('Iter %d/20 - Loss: %.3f   log_lengthscale: %.3f   log_noise: %.3f' % (
-	        i + 1, loss.data[0],
-	        model.covar_module.log_lengthscale.data[0, 0],
-	        model.likelihood.log_noise.data[0]
-	    ))
+	    # print('Iter %d/20 - Loss: %.3f   log_lengthscale: %.3f   log_noise: %.3f' % (
+	    #     i + 1, loss.data[0],
+	    #     model.covar_module.log_lengthscale.data[0, 0],
+	    #     model.likelihood.log_noise.data[0]
+	    # ))
 	    optimizer.step()
 	return model
 
@@ -77,6 +77,7 @@ def evaluate_model(model):
 if __name__ == '__main__':
 	x_data = [-3, 1.5]
 	for i in range(20):
+		print (x_data)
 		train_x = Variable(torch.Tensor(np.array(x_data)))
 		train_y = Variable(0.5*(train_x.data**4 - 16*train_x.data**2 * 5*train_x.data))
 		model = train_model(train_x, train_y)
