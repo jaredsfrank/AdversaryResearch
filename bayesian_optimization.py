@@ -76,7 +76,7 @@ def evaluate_model(model):
 
 if __name__ == '__main__':
 	x_data = [0.1, 0.3]
-	for i in range(10):
+	for i in range(20):
 		train_x = Variable(torch.Tensor(np.array(x_data)))
 		train_y = Variable(torch.sin(train_x.data * (2 * math.pi)) + torch.randn(train_x.size()) * 0.2)
 		model = train_model(train_x, train_y)
