@@ -45,6 +45,7 @@ def find_minimum(model):
 	test_y = model(test_x)
 	lower, upper = test_y.confidence_region()
 	print(np.argmin(lower.data.numpy()))
+	print(test_x.data.numpy()[np.argmin(lower.data.numpy())])
 	return test_x.data.numpy()[np.argmin(lower.data.numpy())]
 
 
