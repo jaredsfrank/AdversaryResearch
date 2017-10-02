@@ -7,7 +7,6 @@ python fgsm_main.py --target_class -1 \
 
 """
 import argparse
-import model_testing
 import FGSM
 import numpy as np
 import Queue

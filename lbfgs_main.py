@@ -7,7 +7,6 @@ python lbfgs_main.py --batch_size 100 \
 
 """
 import argparse
-import model_testing
 import LBFGS
 import numpy as np
 import Queue
