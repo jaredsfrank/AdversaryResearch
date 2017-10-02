@@ -61,7 +61,7 @@ def create_adversary(batch_size=1, target_class=1, image_reg=100, lr=.1, l_inf=F
     val_loader = load_data(valdir, batch_size, True)
     data = next(iter(val_loader))
     images, labels =  data
-    print "The expected labels are {}".format(labels)
+    print ("The expected labels are {}".format(labels))
     old_image = images.clone()
     inputs = Variable(images, requires_grad = True)
     new_labels = Variable(torch.LongTensor([target_class]*batch_size))
@@ -69,7 +69,7 @@ def create_adversary(batch_size=1, target_class=1, image_reg=100, lr=.1, l_inf=F
     CrossEntropy = nn.CrossEntropyLoss()
     MSE = nn.MSELoss()
     opt = optim.SGD(test(inputs), lr=lr, momentum=0.9)
-    print images[0,0,:,:].shape, np.min(images[0,:,:].numpy())
+    print (images[0,0,:,:].shape, np.min(images[0,:,:].numpy()))
     torch.clamp(images[:, 0,:,:], min=-.485/0.229, max=(1-.485)/0.229, out=old_image[:,0,:,:])
     torch.clamp(old_image[:, 1,:,:], min=-.456/0.224, max=(1-.456)/0.224, out=old_image[:,1,:,:])
     torch.clamp(old_image[:, 2,:,:], min=-.406/0.225, max=(1-.406)/0.225, out=old_image[:,2,:,:])
@@ -80,7 +80,7 @@ def create_adversary(batch_size=1, target_class=1, image_reg=100, lr=.1, l_inf=F
     iters = 0
     min_iters = 0
     while not is_done(predicted, target_class, batch_size, iters, min_iters):
-        print "Iteration {}".format(iters)
+        print ("Iteration {}".format(iters))
         opt.zero_grad()
         torch.clamp(images[:, 0,:,:], min=-.485/0.229, max=(1-.485)/0.229, out=images[:,0,:,:])
         torch.clamp(images[:, 1,:,:], min=-.456/0.224, max=(1-.456)/0.224, out=images[:,1,:,:])
@@ -94,21 +94,21 @@ def create_adversary(batch_size=1, target_class=1, image_reg=100, lr=.1, l_inf=F
             image_loss = torch.max(inputs - Variable(old_image))
         loss = model_loss + image_reg*image_loss
         predicted = torch.max(outputs.data, 1)
-        print "Target Class Weights:"
-        print outputs.data[:, target_class]
-        print "Predicted Classes:"
-        print predicted
+        print ("Target Class Weights:")
+        print (outputs.data[:, target_class])
+        print ("Predicted Classes:")
+        print (predicted)
         predicted = predicted[1]
         iters += 1
         if is_done(predicted, target_class, batch_size, iters, min_iters):
-            print images.numpy().shape
-            print old_image.numpy().shape
+            print (images.numpy().shape)
+            print (old_image.numpy().shape)
             save_figure(inputs.data, "After_{}_{}".format(image_reg, lr))
             diff(images, old_image)
             plt.show()
         else:
-            print image_loss
-            print model_loss
+            print (image_loss)
+            print (model_loss)
             loss.backward()
             opt.step()
     
