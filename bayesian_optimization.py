@@ -43,6 +43,7 @@ def find_minimum(model):
 	test_x = Variable(torch.linspace(0, 1, 51))
 	test_y = model(test_x)
 	print (test_y)
+	print (test_y.mean())
 
 
 def train_model(train_x, train_y):
