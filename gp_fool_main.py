@@ -7,10 +7,8 @@ python fgsm_main.py --batch_size 100 \
 
 """
 import argparse
-import model_testing
 import gp_fool
 import numpy as np
-import Queue
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--batch_size", 
