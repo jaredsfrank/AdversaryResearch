@@ -1,4 +1,5 @@
-from .bayesian_optimization import BayesianOptimization
+# from .bayesian_optimization import BayesianOptimization
 from .helpers import UtilityFunction
 
-__all__ = ["BayesianOptimization", "UtilityFunction"]
+# __all__ = ["BayesianOptimization", "UtilityFunction"]
+__all__ = ["UtilityFunction"]
