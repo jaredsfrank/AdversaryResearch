@@ -99,7 +99,8 @@ class UtilityFunction(object):
     @staticmethod
     def _ucb(x, gp, kappa):
         print("am i in here?")
-        print(x)
+        print(x.shape)
+        x = x.ravel()
         results = gp(Variable(torch.Tensor(x)))
         mean, std = results.std(), results.mean()
         return mean + kappa * std
