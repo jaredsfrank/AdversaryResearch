@@ -41,11 +41,24 @@ def plot_model_and_predictions(model, plot_train_data=True):
     ax_plot(observed_ax, observed_pred, 'Observed Values (Likelihood)')
     return f
 
-def find_minimum(model):
+def find_minimum2(model):
     test_x = Variable(torch.linspace(-10, 10, 51))
     test_y = model(test_x)
     lower, upper = test_y.confidence_region()
     return test_x.data.numpy()[np.argmin(lower.data.numpy())]
+
+def find_minimum(model):
+    bounds = np.array([[-10, 10]])
+    y_max = 100
+    acq='ucb'
+    kappa=2.576
+    xi=0.0
+    util = UtilityFunction(kind=acq, kappa=kappa, xi=xi)
+    x_max = acq_max(ac=util.utility,
+                    gp=model,
+                    y_max=y_max,
+                    bounds=bounds)
+    return x_max
 
 
 def train_model(train_x, train_y):
@@ -80,8 +93,9 @@ if __name__ == '__main__':
     for i in range(20):
         print (x_data)
         train_x = Variable(torch.Tensor(np.array(x_data)))
-        train_y = Variable(0.5*(train_x.data**4 - 16*train_x.data**2 * 5*train_x.data))
+        train_y = Variable(-0.5*(train_x.data**4 - 16*train_x.data**2 * 5*train_x.data))
         model = train_model(train_x, train_y)
         evaluate_model(model)
+
         new_min = find_minimum(model)
         x_data.append(new_min)

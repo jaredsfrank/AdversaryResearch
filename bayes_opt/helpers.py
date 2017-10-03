@@ -92,18 +92,21 @@ class UtilityFunction(object):
 
     @staticmethod
     def _ucb(x, gp, kappa):
-        mean, std = gp.predict(x, return_std=True)
+        results = gp(x)
+        mean, std = results.std(), results.mean()
         return mean + kappa * std
 
     @staticmethod
     def _ei(x, gp, y_max, xi):
-        mean, std = gp.predict(x, return_std=True)
+        results = gp(x)
+        mean, std = results.std(), results.mean()
         z = (mean - y_max - xi)/std
         return (mean - y_max - xi) * norm.cdf(z) + std * norm.pdf(z)
 
     @staticmethod
     def _poi(x, gp, y_max, xi):
-        mean, std = gp.predict(x, return_std=True)
+        results = gp(x)
+        mean, std = results.std(), results.mean()
         z = (mean - y_max - xi)/std
         return norm.cdf(z)
 
