@@ -15,7 +15,7 @@ from bayes_opt.helpers import UtilityFunction, acq_max
 class ExactGPModel(gpytorch.GPModel):
     def __init__(self):
         super(ExactGPModel,self).__init__(GaussianLikelihood(log_noise_bounds=(-5, 5)))
-        self.mean_module = ConstantMean(constant_bounds=(-10, 10))
+        self.mean_module = ConstantMean(constant_bounds=(-5, 5))
         self.covar_module = RBFKernel(log_lengthscale_bounds=(-5, 5))
     
     def forward(self,x):
@@ -25,7 +25,7 @@ class ExactGPModel(gpytorch.GPModel):
 
 def plot_model_and_predictions(model, train_x, train_y, plot_train_data=True):
     f, observed_ax = plt.subplots(1, 1, figsize=(8, 8))
-    test_x = Variable(torch.linspace(-10, 10, 51))
+    test_x = Variable(torch.linspace(-5, 5, 51))
     observed_pred = model(test_x)
 
     def ax_plot(ax, rand_var, title):
@@ -43,13 +43,13 @@ def plot_model_and_predictions(model, train_x, train_y, plot_train_data=True):
     return f
 
 def find_minimum2(model):
-    test_x = Variable(torch.linspace(-10, 10, 51))
+    test_x = Variable(torch.linspace(-5, 5, 51))
     test_y = model(test_x)
     lower, upper = test_y.confidence_region()
     return test_x.data.numpy()[np.argmin(lower.data.numpy())]
 
 def find_minimum(model):
-    bounds = np.array([[-10, 10]])
+    bounds = np.array([[-5, 5]])
     y_max = 100
     acq='ucb'
     kappa=10
