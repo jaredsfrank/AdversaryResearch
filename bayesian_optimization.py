@@ -9,7 +9,7 @@ from gpytorch.means import ConstantMean
 from gpytorch.likelihoods import GaussianLikelihood
 from gpytorch.random_variables import GaussianRandomVariable
 from torch.autograd import Variable
-from bayes_opt.helpers import UtilityFunctionm, acq_max
+from bayes_opt.helpers import UtilityFunction, acq_max
 
 
 class ExactGPModel(gpytorch.GPModel):
