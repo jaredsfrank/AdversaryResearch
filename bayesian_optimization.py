@@ -51,9 +51,9 @@ def find_minimum2(model):
 def find_minimum(model):
     bounds = np.array([[0, 1]])
     y_max = 100
-    acq='poi'
-    kappa=1
-    xi=0
+    acq='ucb'
+    kappa=10
+    xi=0.1
     util = UtilityFunction(kind=acq, kappa=kappa, xi=xi)
     x_max = acq_max(ac=util.utility,
                     gp=model,
@@ -96,7 +96,7 @@ if __name__ == '__main__':
         train_x = Variable(torch.Tensor(np.array(x_data)))
         # train_x = Variable(torch.linspace(0, 1, 11))
         # train_y = Variable(0.5*(train_x.data**4 - 16*train_x.data**2 + 5*train_x.data))
-        train_y = Variable(torch.sin(train_x.data * (2 * math.pi)) + torch.randn(train_x.size()) * 0.2)
+        train_y = Variable(-1*(torch.sin(train_x.data * (2 * math.pi)) + torch.randn(train_x.size()) * 0.2))
         model = train_model(train_x, train_y)
         print("THe model is ")
         print(model(train_x).mean().data.numpy())
