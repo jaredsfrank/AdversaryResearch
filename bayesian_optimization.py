@@ -74,11 +74,11 @@ def train_model(train_x, train_y):
         loss = -model.marginal_log_likelihood(output, train_y)
         loss.backward()
         optimizer.n_iter += 1
-        # print('Iter %d/20 - Loss: %.3f   log_lengthscale: %.3f   log_noise: %.3f' % (
-        #     i + 1, loss.data[0],
-        #     model.covar_module.log_lengthscale.data[0, 0],
-        #     model.likelihood.log_noise.data[0]
-        # ))
+        print('Iter %d/20 - Loss: %.3f   log_lengthscale: %.3f   log_noise: %.3f' % (
+            i + 1, loss.data[0],
+            model.covar_module.log_lengthscale.data[0, 0],
+            model.likelihood.log_noise.data[0]
+        ))
         optimizer.step()
     return model
 
