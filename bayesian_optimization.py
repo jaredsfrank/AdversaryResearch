@@ -51,9 +51,9 @@ def find_minimum2(model):
 def find_minimum(model):
     bounds = np.array([[0, 1]])
     y_max = 100
-    acq='ucb'
-    kappa=10
-    xi=0.1
+    acq='poi'
+    kappa=1
+    xi=0
     util = UtilityFunction(kind=acq, kappa=kappa, xi=xi)
     x_max = acq_max(ac=util.utility,
                     gp=model,
