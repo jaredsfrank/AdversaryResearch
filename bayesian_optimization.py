@@ -15,8 +15,8 @@ from bayes_opt.helpers import UtilityFunction, acq_max
 class ExactGPModel(gpytorch.GPModel):
     def __init__(self):
         super(ExactGPModel,self).__init__(GaussianLikelihood(log_noise_bounds=(-5, 5)))
-        self.mean_module = ConstantMean()# constant_bounds=(-200, 200))
-        self.covar_module = RBFKernel() # log_lengthscale_bounds=(-5, 5))
+        self.mean_module = ConstantMean(constant_bounds=(-1, 1))
+        self.covar_module = RBFKernel(log_lengthscale_bounds=(-5, 5))
     
     def forward(self,x):
         mean_x = self.mean_module(x)
@@ -25,7 +25,7 @@ class ExactGPModel(gpytorch.GPModel):
 
 def plot_model_and_predictions(model, train_x, train_y, plot_train_data=True):
     f, observed_ax = plt.subplots(1, 1, figsize=(8, 8))
-    test_x = Variable(torch.linspace(-5, 5, 51))
+    test_x = Variable(torch.linspace(-1, 1, 51))
     observed_pred = model(test_x)
 
     def ax_plot(ax, rand_var, title):
@@ -43,13 +43,13 @@ def plot_model_and_predictions(model, train_x, train_y, plot_train_data=True):
     return f
 
 def find_minimum2(model):
-    test_x = Variable(torch.linspace(-5, 5, 51))
+    test_x = Variable(torch.linspace(-1, 1, 51))
     test_y = model(test_x)
     lower, upper = test_y.confidence_region()
     return test_x.data.numpy()[np.argmin(lower.data.numpy())]
 
 def find_minimum(model):
-    bounds = np.array([[-5, 5]])
+    bounds = np.array([[-1, 1]])
     y_max = 100
     acq='ucb'
     kappa=10
@@ -90,11 +90,12 @@ def evaluate_model(model, train_x, train_y):
     plt.show()
 
 if __name__ == '__main__':
-    x_data = [-3, 1.5]
+    x_data = [-.5, .5]
     for i in range(20):
         print (x_data)
         train_x = Variable(torch.Tensor(np.array(x_data)))
-        train_y = Variable(0.5*(train_x.data**4 - 16*train_x.data**2 + 5*train_x.data))
+        # train_y = Variable(0.5*(train_x.data**4 - 16*train_x.data**2 + 5*train_x.data))
+        train_y = Variable(torch.sin(train_x.data * (2 * math.pi)) + torch.randn(train_x.size()) * 0.2)
         model = train_model(train_x, train_y)
         print("THe model is ")
         print(model(train_x).mean().data.numpy())
