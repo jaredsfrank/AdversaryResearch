@@ -4,6 +4,7 @@ import numpy as np
 from datetime import datetime
 from scipy.stats import norm
 from scipy.optimize import minimize
+from torch.autograd import Variable
 
 
 def acq_max(ac, gp, y_max, bounds):
@@ -92,20 +93,20 @@ class UtilityFunction(object):
 
     @staticmethod
     def _ucb(x, gp, kappa):
-        results = gp(x)
+        results = gp(Variable(x))
         mean, std = results.std(), results.mean()
         return mean + kappa * std
 
     @staticmethod
     def _ei(x, gp, y_max, xi):
-        results = gp(x)
+        results = gp(Variable(x))
         mean, std = results.std(), results.mean()
         z = (mean - y_max - xi)/std
         return (mean - y_max - xi) * norm.cdf(z) + std * norm.pdf(z)
 
     @staticmethod
     def _poi(x, gp, y_max, xi):
-        results = gp(x)
+        results = gp(Variable(x))
         mean, std = results.std(), results.mean()
         z = (mean - y_max - xi)/std
         return norm.cdf(z)
