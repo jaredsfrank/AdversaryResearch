@@ -48,10 +48,10 @@ def find_minimum2(model):
     lower, upper = test_y.confidence_region()
     return test_x.data.numpy()[np.argmin(lower.data.numpy())]
 
-def find_minimum(model, train_x):
+def find_minimum(model, train_y):
     bounds = np.array([[0, 1]])
     print("THe model is ")
-    y_max = np.max(model(train_x).mean().data.numpy())
+    y_max = np.max(train_y.data.numpy())
     acq='ucb'
     kappa=10
     xi=0.1
@@ -103,5 +103,5 @@ if __name__ == '__main__':
         print(model(train_x).mean().data.numpy())
         evaluate_model(model, train_x, train_y)
 
-        new_min = find_minimum(model)
+        new_min = find_minimum(model, train_y)
         x_data.append(new_min)
