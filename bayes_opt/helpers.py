@@ -37,19 +37,15 @@ def acq_max(ac, gp, y_max, bounds):
     """
 
     # Warm up with random points
-    print("1")
     x_tries = np.random.uniform(bounds[:, 0], bounds[:, 1],
                                  size=(1000, bounds.shape[0]))
     ys = ac(x_tries, gp=gp, y_max=y_max).data.numpy()
-    print (ys)
     x_max = x_tries[ys.argmax()]
     max_acq = ys.max()
-    print("2")
 
     # Explore the parameter space more throughly
     x_seeds = np.random.uniform(bounds[:, 0], bounds[:, 1],
                                 size=(250, bounds.shape[0]))
-    print("3")
     for x_try in x_seeds:
         # Find the minimum of minus the acquisition function
         res = minimize(lambda x: -ac(x.reshape(1, -1), gp=gp, y_max=y_max).data.numpy(),
@@ -61,7 +57,6 @@ def acq_max(ac, gp, y_max, bounds):
         if max_acq is None or -res.fun[0] >= max_acq:
             x_max = res.x
             max_acq = -res.fun[0]
-    print("4")
 
     # Clip output to make sure it lies within the bounds. Due to floating
     # point technicalities this is not always the case.
@@ -99,8 +94,6 @@ class UtilityFunction(object):
 
     @staticmethod
     def _ucb(x, gp, kappa):
-        print("am i in here?")
-        print(x.shape)
         x = x.ravel()
         results = gp(Variable(torch.Tensor(x)))
         mean, std = results.std(), results.mean()
