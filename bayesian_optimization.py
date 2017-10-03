@@ -9,6 +9,7 @@ from gpytorch.means import ConstantMean
 from gpytorch.likelihoods import GaussianLikelihood
 from gpytorch.random_variables import GaussianRandomVariable
 from torch.autograd import Variable
+from bayes_opt.helpers import UtilityFunctionm, acq_max
 
 
 class ExactGPModel(gpytorch.GPModel):
@@ -41,46 +42,46 @@ def plot_model_and_predictions(model, plot_train_data=True):
     return f
 
 def find_minimum(model):
-	test_x = Variable(torch.linspace(-10, 10, 51))
-	test_y = model(test_x)
-	lower, upper = test_y.confidence_region()
-	return test_x.data.numpy()[np.argmin(lower.data.numpy())]
+    test_x = Variable(torch.linspace(-10, 10, 51))
+    test_y = model(test_x)
+    lower, upper = test_y.confidence_region()
+    return test_x.data.numpy()[np.argmin(lower.data.numpy())]
 
 
 def train_model(train_x, train_y):
-	model = ExactGPModel()
-	model.condition(train_x, train_y)
-	model.train()
-	optimizer = optim.Adam(model.parameters(), lr=0.1)
-	optimizer.n_iter = 0
-	for i in range(50):
-	    optimizer.zero_grad()
-	    output = model(train_x)
-	    loss = -model.marginal_log_likelihood(output, train_y)
-	    loss.backward()
-	    optimizer.n_iter += 1
-	    # print('Iter %d/20 - Loss: %.3f   log_lengthscale: %.3f   log_noise: %.3f' % (
-	    #     i + 1, loss.data[0],
-	    #     model.covar_module.log_lengthscale.data[0, 0],
-	    #     model.likelihood.log_noise.data[0]
-	    # ))
-	    optimizer.step()
-	return model
+    model = ExactGPModel()
+    model.condition(train_x, train_y)
+    model.train()
+    optimizer = optim.Adam(model.parameters(), lr=0.1)
+    optimizer.n_iter = 0
+    for i in range(50):
+        optimizer.zero_grad()
+        output = model(train_x)
+        loss = -model.marginal_log_likelihood(output, train_y)
+        loss.backward()
+        optimizer.n_iter += 1
+        # print('Iter %d/20 - Loss: %.3f   log_lengthscale: %.3f   log_noise: %.3f' % (
+        #     i + 1, loss.data[0],
+        #     model.covar_module.log_lengthscale.data[0, 0],
+        #     model.likelihood.log_noise.data[0]
+        # ))
+        optimizer.step()
+    return model
 
 
 def evaluate_model(model):
-	# Set back to eval mode
-	model.eval()
-	fig = plot_model_and_predictions(model)
-	plt.show()
+    # Set back to eval mode
+    model.eval()
+    fig = plot_model_and_predictions(model)
+    plt.show()
 
 if __name__ == '__main__':
-	x_data = [-3, 1.5]
-	for i in range(20):
-		print (x_data)
-		train_x = Variable(torch.Tensor(np.array(x_data)))
-		train_y = Variable(0.5*(train_x.data**4 - 16*train_x.data**2 * 5*train_x.data))
-		model = train_model(train_x, train_y)
-		evaluate_model(model)
-		new_min = find_minimum(model)
-		x_data.append(new_min)
+    x_data = [-3, 1.5]
+    for i in range(20):
+        print (x_data)
+        train_x = Variable(torch.Tensor(np.array(x_data)))
+        train_y = Variable(0.5*(train_x.data**4 - 16*train_x.data**2 * 5*train_x.data))
+        model = train_model(train_x, train_y)
+        evaluate_model(model)
+        new_min = find_minimum(model)
+        x_data.append(new_min)
