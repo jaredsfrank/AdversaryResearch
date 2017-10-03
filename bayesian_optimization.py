@@ -54,10 +54,12 @@ def find_minimum(model):
     kappa=2.576
     xi=0.0
     util = UtilityFunction(kind=acq, kappa=kappa, xi=xi)
+    print "am i here?"
     x_max = acq_max(ac=util.utility,
                     gp=model,
                     y_max=y_max,
                     bounds=bounds)
+    print "now where"
     return x_max
 
 
@@ -92,7 +94,7 @@ if __name__ == '__main__':
     x_data = [-3, 1.5]
     for i in range(20):
         print (x_data)
-        train_x = Variable(torch.Tensor(np.array(x_data)))
+        train_x = Variable((np.array(x_data)))
         train_y = Variable(-0.5*(train_x.data**4 - 16*train_x.data**2 * 5*train_x.data))
         model = train_model(train_x, train_y)
         evaluate_model(model)
