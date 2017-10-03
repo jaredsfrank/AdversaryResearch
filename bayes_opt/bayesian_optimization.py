@@ -2,7 +2,7 @@ from __future__ import print_function
 from __future__ import division
 
 import numpy as np
-from sklearn.gaussian_process import GaussianProcessRegressor
+# from sklearn.gaussian_process import GaussianProcessRegressor
 from sklearn.gaussian_process.kernels import Matern
 from .helpers import UtilityFunction, unique_rows, PrintLog, acq_max
 
