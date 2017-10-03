@@ -79,7 +79,7 @@ if __name__ == '__main__':
     for i in range(20):
         print (x_data)
         train_x = Variable(torch.Tensor(np.array(x_data)))
-        train_y = Variable(0.5*(train_x.data**4 - 16*train_x.data**2 * 5*train_x.data))
+        train_y = Variable(0.5*(train_x.data**4 - 16*train_x.data**2 + 5*train_x.data))
         model = train_model(train_x, train_y)
         evaluate_model(model)
         new_min = find_minimum(model)
