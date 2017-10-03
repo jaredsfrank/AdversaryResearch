@@ -11,8 +11,7 @@ from gpytorch.random_variables import GaussianRandomVariable
 from torch.autograd import Variable
 from bayes_opt.helpers import UtilityFunction, acq_max
 
-global train_x
-global train_y
+
 class ExactGPModel(gpytorch.GPModel):
     def __init__(self):
         super(ExactGPModel,self).__init__(GaussianLikelihood(log_noise_bounds=(-5, 5)))
@@ -24,7 +23,7 @@ class ExactGPModel(gpytorch.GPModel):
         covar_x = self.covar_module(x)
         return GaussianRandomVariable(mean_x, covar_x)
 
-def plot_model_and_predictions(model, plot_train_data=True):
+def plot_model_and_predictions(model, train_x, train_y, plot_train_data=True):
     f, observed_ax = plt.subplots(1, 1, figsize=(8, 8))
     test_x = Variable(torch.linspace(-10, 10, 51))
     observed_pred = model(test_x)
@@ -83,10 +82,10 @@ def train_model(train_x, train_y):
     return model
 
 
-def evaluate_model(model):
+def evaluate_model(model, train_x, train_y):
     # Set back to eval mode
     model.eval()
-    fig = plot_model_and_predictions(model)
+    fig = plot_model_and_predictions(model, train_x, train_y)
     plt.show()
 
 if __name__ == '__main__':
@@ -96,7 +95,7 @@ if __name__ == '__main__':
         train_x = Variable(torch.Tensor(np.array(x_data)))
         train_y = Variable(-0.5*(train_x.data**4 - 16*train_x.data**2 * 5*train_x.data))
         model = train_model(train_x, train_y)
-        evaluate_model(model)
+        evaluate_model(model, train_x, train_y)
 
         new_min = find_minimum(model)
         x_data.append(new_min)
