@@ -11,7 +11,8 @@ from gpytorch.random_variables import GaussianRandomVariable
 from torch.autograd import Variable
 from bayes_opt.helpers import UtilityFunction, acq_max
 
-
+global train_x
+global train_y
 class ExactGPModel(gpytorch.GPModel):
     def __init__(self):
         super(ExactGPModel,self).__init__(GaussianLikelihood(log_noise_bounds=(-5, 5)))
