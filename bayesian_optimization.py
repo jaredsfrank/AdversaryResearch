@@ -97,7 +97,7 @@ if __name__ == '__main__':
         train_y = Variable(0.5*(train_x.data**4 - 16*train_x.data**2 + 5*train_x.data))
         model = train_model(train_x, train_y)
         print("THe model is ")
-        print(model(train_x))
+        print(model(train_x).mean().data.numpy())
         evaluate_model(model, train_x, train_y)
 
         new_min = find_minimum2(model)
