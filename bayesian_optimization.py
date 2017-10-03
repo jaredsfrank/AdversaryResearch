@@ -52,7 +52,7 @@ def find_minimum(model):
     y_max = 100
     acq='ucb'
     kappa=10
-    xi=0.0
+    xi=0.1
     util = UtilityFunction(kind=acq, kappa=kappa, xi=xi)
     x_max = acq_max(ac=util.utility,
                     gp=model,
