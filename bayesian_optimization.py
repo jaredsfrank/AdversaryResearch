@@ -54,12 +54,12 @@ def find_minimum(model):
     kappa=2.576
     xi=0.0
     util = UtilityFunction(kind=acq, kappa=kappa, xi=xi)
-    print "am i here?"
+    print ("am i here?")
     x_max = acq_max(ac=util.utility,
                     gp=model,
                     y_max=y_max,
                     bounds=bounds)
-    print "now where"
+    print ("now where")
     return x_max
 
 
