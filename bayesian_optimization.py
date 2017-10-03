@@ -93,8 +93,8 @@ if __name__ == '__main__':
     x_data = [-.5, .5]
     for i in range(20):
         print (x_data)
-        # train_x = Variable(torch.Tensor(np.array(x_data)))
-        train_x = Variable(torch.linspace(0, 1, 11))
+        train_x = Variable(torch.Tensor(np.array(x_data)))
+        # train_x = Variable(torch.linspace(0, 1, 11))
         # train_y = Variable(0.5*(train_x.data**4 - 16*train_x.data**2 + 5*train_x.data))
         train_y = Variable(torch.sin(train_x.data * (2 * math.pi)) + torch.randn(train_x.size()) * 0.2)
         model = train_model(train_x, train_y)
