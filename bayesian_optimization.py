@@ -98,5 +98,5 @@ if __name__ == '__main__':
         model = train_model(train_x, train_y)
         evaluate_model(model, train_x, train_y)
 
-        new_min = find_minimum(model)
+        new_min = find_minimum2(model)
         x_data.append(new_min)
