@@ -25,7 +25,7 @@ class ExactGPModel(gpytorch.GPModel):
 
 def plot_model_and_predictions(model, train_x, train_y, plot_train_data=True):
     f, observed_ax = plt.subplots(1, 1, figsize=(8, 8))
-    test_x = Variable(torch.linspace(-3, 3, 51))
+    test_x = Variable(torch.linspace(-5, 5, 51))
     observed_pred = model(test_x)
 
     def ax_plot(ax, rand_var, title):
