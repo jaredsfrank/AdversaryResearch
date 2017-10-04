@@ -47,7 +47,7 @@ def find_minimum(model):
     test_y = model(test_x)
     lower, upper = test_y.confidence_region()
     kappa = 10.0
-    results = gp(Variable(torch.Tensor(x)))
+    results = model(Variable(torch.Tensor(x)))
     mean, std = results.std(), results.mean()
     boundary = mean + kappa * std
     return test_x.data.numpy()[np.argmin(boundary.data.numpy())] 
