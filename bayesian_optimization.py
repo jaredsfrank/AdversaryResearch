@@ -43,7 +43,7 @@ def plot_model_and_predictions(model, train_x, train_y, plot_train_data=True):
     return f
 
 def find_minimum(model):
-    test_x = Variable(torch.linspace(0, 1, 51))
+    test_x = Variable(torch.linspace(-5, 5, 51))
     test_y = model(test_x)
     lower, upper = test_y.confidence_region()
     kappa = 100.0
@@ -52,19 +52,6 @@ def find_minimum(model):
     return test_x.data.numpy()[np.argmin(boundary.data.numpy())] 
     # return test_x.data.numpy()[np.argmin(lower.data.numpy())]
 
-def find_minimum2(model, train_y):
-    bounds = np.array([[-3, 3]])
-    print("THe model is ")
-    y_max = np.max(train_y.data.numpy())
-    acq='ucb'
-    kappa=10
-    xi=0.1
-    util = UtilityFunction(kind=acq, kappa=kappa, xi=xi)
-    x_max = acq_max(ac=util.utility,
-                    gp=model,
-                    y_max=y_max,
-                    bounds=bounds)
-    return x_max[0]
 
 
 def train_model(train_x, train_y):
