@@ -108,5 +108,5 @@ if __name__ == '__main__':
         print(model(train_x).mean().data.numpy())
         evaluate_model(model, train_x, train_y)
 
-        new_min = find_minimum(model, train_y)
+        new_min = find_minimum(model)
         x_data.append(new_min)
