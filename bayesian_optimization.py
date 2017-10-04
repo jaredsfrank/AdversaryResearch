@@ -57,7 +57,9 @@ def find_minimum(model):
 def train_model(train_x, train_y):
     model = ExactGPModel()
     model.condition(train_x, train_y)
+    print("im here")
     model.train()
+    print('now im here')
     optimizer = optim.Adam(model.parameters(), lr=0.1)
     optimizer.n_iter = 0
     for i in range(50):
