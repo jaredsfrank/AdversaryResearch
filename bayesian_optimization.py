@@ -42,13 +42,18 @@ def plot_model_and_predictions(model, train_x, train_y, plot_train_data=True):
     ax_plot(observed_ax, observed_pred, 'Observed Values (Likelihood)')
     return f
 
-def find_minimum2(model):
+def find_minimum(model):
     test_x = Variable(torch.linspace(0, 1, 51))
     test_y = model(test_x)
     lower, upper = test_y.confidence_region()
-    return test_x.data.numpy()[np.argmin(lower.data.numpy())]
+    kappa = 10.0
+    results = gp(Variable(torch.Tensor(x)))
+    mean, std = results.std(), results.mean()
+    boundary = mean + kappa * std
+    return test_x.data.numpy()[np.argmin(boundary.data.numpy())] 
+    # return test_x.data.numpy()[np.argmin(lower.data.numpy())]
 
-def find_minimum(model, train_y):
+def find_minimum2(model, train_y):
     bounds = np.array([[0, 1]])
     print("THe model is ")
     y_max = np.max(train_y.data.numpy())

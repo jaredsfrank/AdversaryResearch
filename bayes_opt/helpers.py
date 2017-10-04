@@ -40,23 +40,23 @@ def acq_max(ac, gp, y_max, bounds):
     x_tries = np.random.uniform(bounds[:, 0], bounds[:, 1],
                                  size=(1000, bounds.shape[0]))
     ys = ac(x_tries, gp=gp, y_max=y_max).data.numpy()
-    x_max = x_tries[ys.argmin()]
-    max_acq = ys.min()
+    x_max = x_tries[ys.argmax()]
+    max_acq = ys.max()
 
     # Explore the parameter space more throughly
     x_seeds = np.random.uniform(bounds[:, 0], bounds[:, 1],
                                 size=(250, bounds.shape[0]))
     for x_try in x_seeds:
-        # Find the minimum of the acquisition function
-        res = minimize(lambda x: ac(x.reshape(1, -1), gp=gp, y_max=y_max).data.numpy(),
+        # Find the minimum of minus the acquisition function
+        res = minimize(lambda x: -ac(x.reshape(1, -1), gp=gp, y_max=y_max).data.numpy(),
                        x_try.reshape(1, -1),
                        bounds=bounds,
                        method="L-BFGS-B")
 
         # Store it if better than previous minimum(maximum).
-        if max_acq is None or res.fun[0] >= max_acq:
+        if max_acq is None or -res.fun[0] >= max_acq:
             x_max = res.x
-            max_acq = res.fun[0]
+            max_acq = -res.fun[0]
 
     # Clip output to make sure it lies within the bounds. Due to floating
     # point technicalities this is not always the case.
