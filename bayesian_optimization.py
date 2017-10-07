@@ -3,9 +3,8 @@ import torch
 import gpytorch
 import numpy as np
 from matplotlib import pyplot as plt
-from torch import nn, optim
-from torch.autograd import Variable
-from gpytorch.kernels import RBFKernel, GridInterpolationKernel
+from torch import optim
+from gpytorch.kernels import RBFKernel
 from gpytorch.means import ConstantMean
 from gpytorch.likelihoods import GaussianLikelihood
 from gpytorch.random_variables import GaussianRandomVariable
@@ -13,19 +12,16 @@ from torch.autograd import Variable
 from bayes_opt.helpers import UtilityFunction, acq_max
 
 
-class KissGPModel(gpytorch.GPModel):
+class ExactGPModel(gpytorch.GPModel):
     def __init__(self):
-        super(KissGPModel, self).__init__(GaussianLikelihood(log_noise_bounds=(-5, 5)))
-        self.mean_module = ConstantMean(constant_bounds=(-1, 1))
-        covar_module = RBFKernel(log_lengthscale_bounds=(-3, 5))
-        self.grid_covar_module = GridInterpolationKernel(covar_module)
-        self.register_parameter('log_outputscale', nn.Parameter(torch.Tensor([0])), bounds=(-1, 1))
-        self.initialize_interpolation_grid(50, grid_bounds=[(-5, 5)])
-
-    def forward(self, x):
+        # The log_noise_bounds add a random constant to the covariance matrix diagonal
+        super(ExactGPModel,self).__init__(GaussianLikelihood(log_noise_bounds=(1, 5)))
+        self.mean_module = ConstantMean()# constant_bounds=(-1, 1))
+        self.covar_module = RBFKernel()# log_lengthscale_bounds=(-5, 5))
+    
+    def forward(self,x):
         mean_x = self.mean_module(x)
-        covar_x = self.grid_covar_module(x)
-        covar_x = covar_x.mul(self.log_outputscale.exp())
+        covar_x = self.covar_module(x)
         return GaussianRandomVariable(mean_x, covar_x)
 
 def plot_model_and_predictions(model, train_x, train_y, plot_train_data=True):
@@ -60,7 +56,7 @@ def find_minimum(model):
 
 
 def train_model(train_x, train_y):
-    model = KissGPModel()
+    model = ExactGPModel()
     model.condition(train_x, train_y)
     print("im here")
     model.train()
