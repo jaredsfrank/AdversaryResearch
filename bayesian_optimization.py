@@ -34,7 +34,7 @@ parser.add_argument("cov_max",
 
 
 class ExactGPModel(gpytorch.GPModel):
-    def __init__(self, a=1, b=5, c, d, e, f):
+    def __init__(self, a, b, c, d, e, f):
         # The log_noise_bounds add a random constant to the covariance matrix diagonal
         super(ExactGPModel,self).__init__(GaussianLikelihood(log_noise_bounds=(a, b)))
         self.mean_module = ConstantMean(constant_bounds=(c, d))
