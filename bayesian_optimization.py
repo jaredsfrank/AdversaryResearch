@@ -15,8 +15,8 @@ from bayes_opt.helpers import UtilityFunction, acq_max
 class ExactGPModel(gpytorch.GPModel):
     def __init__(self):
         # The log_noise_bounds add a random constant to the covariance matrix diagonal
-        super(ExactGPModel,self).__init__(GaussianLikelihood(log_noise_bounds=(0.1, 5)))
-        self.mean_module = ConstantMean()# constant_bounds=(-1, 1))
+        super(ExactGPModel,self).__init__(GaussianLikelihood(log_noise_bounds=(1, 5)))
+        self.mean_module = ConstantMean(constant_bounds=(-1, 1))
         self.covar_module = RBFKernel()# log_lengthscale_bounds=(-5, 5))
     
     def forward(self,x):
