@@ -14,7 +14,7 @@ from bayes_opt.helpers import UtilityFunction, acq_max
 
 class ExactGPModel(gpytorch.GPModel):
     def __init__(self):
-        super(ExactGPModel,self).__init__(GaussianLikelihood(log_noise_bounds=(-5, 5)))
+        super(ExactGPModel,self).__init__(GaussianLikelihood())# log_noise_bounds=(-5, 5)))
         self.mean_module = ConstantMean(constant_bounds=(-1, 1))
         self.covar_module = RBFKernel(log_lengthscale_bounds=(-5, 5))
     
