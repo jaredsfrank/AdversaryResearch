@@ -20,7 +20,7 @@ class KissGPModel(gpytorch.GPModel):
         covar_module = RBFKernel(log_lengthscale_bounds=(-3, 5))
         self.grid_covar_module = GridInterpolationKernel(covar_module)
         self.register_parameter('log_outputscale', nn.Parameter(torch.Tensor([0])), bounds=(-1, 1))
-        self.initialize_interpolation_grid(50, grid_bounds=[(0, 1)])
+        self.initialize_interpolation_grid(50, grid_bounds=[(-5, 5)])
 
     def forward(self, x):
         mean_x = self.mean_module(x)
@@ -48,7 +48,7 @@ def plot_model_and_predictions(model, train_x, train_y, plot_train_data=True):
     return f
 
 def find_minimum(model):
-    test_x = Variable(torch.linspace(0, 1, 51))
+    test_x = Variable(torch.linspace(-5, 5, 51))
     test_y = model(test_x)
     lower, upper = test_y.confidence_region()
     kappa = 100.0
@@ -93,7 +93,7 @@ if __name__ == '__main__':
     for i in range(20):
         print (x_data)
         train_x = Variable(torch.Tensor(np.array(x_data)))
-        train_x = Variable(torch.linspace(0, 1, 25))
+        train_x = Variable(torch.linspace(-5, 5, 25))
         # train_x = Variable(torch.linspace(0, 1, 11))
         train_y = Variable(0.5*(train_x.data**4 - 16*train_x.data**2 + 5*train_x.data))
         # train_y = Variable((torch.sin(train_x.data * (2 * math.pi)) + torch.randn(train_x.size()) * 0.2))
