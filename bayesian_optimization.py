@@ -10,14 +10,35 @@ from gpytorch.likelihoods import GaussianLikelihood
 from gpytorch.random_variables import GaussianRandomVariable
 from torch.autograd import Variable
 from bayes_opt.helpers import UtilityFunction, acq_max
+import argparse
+
+parser = argparse.ArgumentParser()
+parser.add_argument("log_noise_min", 
+                    help="Number of adversarial examples to generate",
+                    type=float)
+parser.add_argument("log_noise_max", 
+                    help="Number of adversarial examples to generate",
+                    type=float)
+parser.add_argument("const_min", 
+                    help="Number of adversarial examples to generate",
+                    type=float)
+parser.add_argument("const_max", 
+                    help="Number of adversarial examples to generate",
+                    type=float)
+parser.add_argument("cov_min", 
+                    help="Number of adversarial examples to generate",
+                    type=float)
+parser.add_argument("cov_max", 
+                    help="Number of adversarial examples to generate",
+                    type=float)
 
 
 class ExactGPModel(gpytorch.GPModel):
-    def __init__(self):
+    def __init__(self, a=1, b=5, c, d, e, f):
         # The log_noise_bounds add a random constant to the covariance matrix diagonal
-        super(ExactGPModel,self).__init__(GaussianLikelihood(log_noise_bounds=(1, 5)))
-        self.mean_module = ConstantMean(constant_bounds=(0, 100))
-        self.covar_module = RBFKernel(log_lengthscale_bounds=(-1, 1))
+        super(ExactGPModel,self).__init__(GaussianLikelihood(log_noise_bounds=(a, b)))
+        self.mean_module = ConstantMean(constant_bounds=(c, d))
+        self.covar_module = RBFKernel(log_lengthscale_bounds=(e, f))
     
     def forward(self,x):
         mean_x = self.mean_module(x)
@@ -55,8 +76,8 @@ def find_minimum(model):
 
 
 
-def train_model(train_x, train_y):
-    model = ExactGPModel()
+def train_model(train_x, train_y, a, b, c, d, e, f):
+    model = ExactGPModel(a, b, c, d, e, f)
     model.condition(train_x, train_y)
     print("im here")
     model.train()
@@ -93,7 +114,7 @@ if __name__ == '__main__':
         # train_x = Variable(torch.linspace(0, 1, 11))
         train_y = Variable(0.5*(train_x.data**4 - 16*train_x.data**2 + 5*train_x.data))
         # train_y = Variable((torch.sin(train_x.data * (2 * math.pi)) + torch.randn(train_x.size()) * 0.2))
-        model = train_model(train_x, train_y)
+        model = train_model(train_x, train_y, args.log_noise_min, args.log_noise_max, args.const_min, args.const_max, args.cov_min, args.cov_max)
         print("THe model is ")
         print(model(train_x).mean().data.numpy())
         evaluate_model(model, train_x, train_y)
