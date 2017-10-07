@@ -13,9 +13,9 @@ from torch.autograd import Variable
 from bayes_opt.helpers import UtilityFunction, acq_max
 
 
-class ExactGPModel(gpytorch.GPModel):
+class KissGPModel(gpytorch.GPModel):
     def __init__(self):
-        super(ExactGPModel, self).__init__(GaussianLikelihood(log_noise_bounds=(-5, 5)))
+        super(KissGPModel, self).__init__(GaussianLikelihood(log_noise_bounds=(-5, 5)))
         self.mean_module = ConstantMean(constant_bounds=(-1, 1))
         covar_module = RBFKernel(log_lengthscale_bounds=(-3, 5))
         self.grid_covar_module = GridInterpolationKernel(covar_module)
@@ -48,7 +48,7 @@ def plot_model_and_predictions(model, train_x, train_y, plot_train_data=True):
     return f
 
 def find_minimum(model):
-    test_x = Variable(torch.linspace(-5, 5, 51))
+    test_x = Variable(torch.linspace(-1, 1, 51))
     test_y = model(test_x)
     lower, upper = test_y.confidence_region()
     kappa = 100.0
@@ -60,7 +60,7 @@ def find_minimum(model):
 
 
 def train_model(train_x, train_y):
-    model = ExactGPModel()
+    model = KissGPModel()
     model.condition(train_x, train_y)
     print("im here")
     model.train()
