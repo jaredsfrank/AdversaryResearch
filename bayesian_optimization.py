@@ -31,6 +31,7 @@ parser.add_argument("cov_min",
 parser.add_argument("cov_max", 
                     help="Number of adversarial examples to generate",
                     type=float)
+args = parser.parse_args()
 
 
 class ExactGPModel(gpytorch.GPModel):
