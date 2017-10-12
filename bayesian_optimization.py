@@ -1,3 +1,18 @@
+"""
+Runs bayesian optimization on a function
+
+NOTE:
+    Currently I am using this file to just test hyperparams for the GP Regression
+    Therefore it currently takes parameters that correspond to some of the tunable hyperparameters
+    Example Run:
+        python bayesian_optimization.py -100 100 -100 100 1 4
+        Corresponds to running with:
+            GaussianLiklihood log_noise_bounds (-100, 100)
+            mean_module (-100, 199)
+            constant_boundslog_lengthscale_bounds (1, 4)
+"""
+
+
 import math
 import torch
 import gpytorch
@@ -12,34 +27,35 @@ from torch.autograd import Variable
 from bayes_opt.helpers import UtilityFunction, acq_max
 import argparse
 
+
 parser = argparse.ArgumentParser()
 parser.add_argument("log_noise_min", 
-                    help="Number of adversarial examples to generate",
+                    help="Minimum of Log Noise",
                     type=float)
 parser.add_argument("log_noise_max", 
-                    help="Number of adversarial examples to generate",
+                    help="Maximum of Log Noise",
                     type=float)
 parser.add_argument("const_min", 
-                    help="Number of adversarial examples to generate",
+                    help="Constant Bounds Minimum",
                     type=float)
 parser.add_argument("const_max", 
-                    help="Number of adversarial examples to generate",
+                    help="Constant Bounds Maximum",
                     type=float)
 parser.add_argument("cov_min", 
-                    help="Number of adversarial examples to generate",
+                    help="Covariance log lengthscale minimum",
                     type=float)
 parser.add_argument("cov_max", 
-                    help="Number of adversarial examples to generate",
+                    help="Covariance log lengthscale maximum",
                     type=float)
 args = parser.parse_args()
 
 
 class ExactGPModel(gpytorch.GPModel):
-    def __init__(self, a, b, c, d, e, f):
+    def __init__(self, log_noise_min, log_noise_max, constant_mean_min, constant_noise_max, log_lengthscale_min, log_lengthscale_max):
         # The log_noise_bounds add a random constant to the covariance matrix diagonal
-        super(ExactGPModel,self).__init__(GaussianLikelihood(log_noise_bounds=(a, b)))
-        self.mean_module = ConstantMean(constant_bounds=(c, d))
-        self.covar_module = RBFKernel(log_lengthscale_bounds=(e, f))
+        super(ExactGPModel,self).__init__(GaussianLikelihood(log_noise_bounds=(log_noise_min, log_noise_max)))
+        self.mean_module = ConstantMean(constant_bounds=(constant_mean_min, constant_noise_max))
+        self.covar_module = RBFKernel(log_lengthscale_bounds=(log_lengthscale_min, log_lengthscale_max))
     
     def forward(self,x):
         mean_x = self.mean_module(x)
@@ -111,6 +127,8 @@ if __name__ == '__main__':
     for i in range(20):
         print (x_data)
         train_x = Variable(torch.Tensor(np.array(x_data)))
+        ### NOTE: Normally for bayesian optimizatoin I would not simply use a grid of values 
+        ### as the train_x every time. But I'm having trouble fitting this function, so I'm just using that
         train_x = Variable(torch.linspace(-5, 5, 25))
         # train_x = Variable(torch.linspace(0, 1, 11))
         train_y = Variable(0.5*(train_x.data**4 - 16*train_x.data**2 + 5*train_x.data))
