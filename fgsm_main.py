@@ -2,7 +2,7 @@
 
 Example Usage:
 python fgsm_main.py --target_class -1 \
---image_reg 100 --lr .1 --cuda --batch_size 2
+--image_reg 100 --lr .0243 --cuda --batch_size 2
 
 
 """

@@ -12,6 +12,16 @@ import torch.nn as nn
 
 class FGSM(adversaries.Adverarial_Base):
 
+  def make_eval_model(self):
+    model = models.densenet(pretrained=True)
+    if self.cuda:
+      model.cuda()
+    model.eval()
+    # Set all model parameters to not update during training
+    for parameter in model.parameters():
+        parameter.requires_grad = False
+    return model
+
     
   def adversary_batch(self, data, model, target_class, image_reg, lr):
     """Creates adversarial examples for one batch of data.
@@ -51,6 +61,8 @@ class FGSM(adversaries.Adverarial_Base):
     loss.backward()
     inputs.data -= lr*torch.sign(inputs.grad).data
     self.clamp_images(images)
+
+    model = self.make_eval_model()
     outputs = model(inputs)
     predicted_loss, predicted_classes = torch.max(outputs.data, 1)
     max_diff = np.mean(((images - old_images).cpu().numpy().reshape(images.shape[0],-1).max(1)))
