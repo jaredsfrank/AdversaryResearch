@@ -56,6 +56,7 @@ class LBFGS(adversaries.Adverarial_Base):
     # if self.verbose:
     print("The predicted classes are:")
     print(predicted_classes)
+    print(original_labels)
     # Set target variables for model loss
     new_labels = self.target_class_tensor(target_class, outputs, original_labels)
     iters = 0
