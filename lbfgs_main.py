@@ -9,7 +9,7 @@ python lbfgs_main.py --batch_size 100 \
 import argparse
 import LBFGS
 import numpy as np
-import Queue
+import queue
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--batch_size", 
@@ -36,7 +36,7 @@ args = parser.parse_args()
 
 def better_range(min_value, max_value):
     l = [max_value, min_value]
-    q = Queue.Queue()
+    q = queue.Queue()
     q.put((min_value+1, max_value))
     seen = set()
     while not q.empty():
