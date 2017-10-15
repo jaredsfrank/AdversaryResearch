@@ -53,9 +53,9 @@ class LBFGS(adversaries.Adverarial_Base):
     old_images = images.clone()
     outputs = model(inputs)
     predicted_classes = torch.max(outputs.data, 1)[1]
-    if self.verbose:
-      print("The predicted classes are:")
-      print(predicted_classes)
+    # if self.verbose:
+    print("The predicted classes are:")
+    print(predicted_classes)
     # Set target variables for model loss
     new_labels = self.target_class_tensor(target_class, outputs, original_labels)
     iters = 0
