@@ -169,7 +169,7 @@ class Adverarial_Base(object):
 
     """
     # Load pretrained network
-    model = models.resnet101(pretrained=True)
+    model = models.resnet18(pretrained=True)
     if self.cuda:
       model.cuda()
     model.eval()
@@ -193,7 +193,7 @@ class Adverarial_Base(object):
       ave_mse: Float, average mean square error of generated adversarial examples.
     """
     # Load pretrained network
-    model = models.resnet101(pretrained=True)
+    model = models.resnet18(pretrained=True)
     if self.cuda:
       model.cuda()
     model.eval()
