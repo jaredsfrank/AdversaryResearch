@@ -13,7 +13,7 @@ import torch.nn as nn
 class FGSM(adversaries.Adverarial_Base):
 
   def make_eval_model(self):
-    model = models.resnet101(pretrained=True)
+    model = models.resnet18(pretrained=True)
     if self.cuda:
       model.cuda()
     model.eval()
