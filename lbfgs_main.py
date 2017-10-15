@@ -27,6 +27,7 @@ parser.add_argument("--lr",
 parser.add_argument("--max_iters",
     help="Maximum number of iterations", 
     type=float)
+parser.add_argument('--run_once', action='store_true', help='Run only one iteration?')
 parser.add_argument('--verbose', action='store_true', help='print messages?')
 parser.add_argument('--show_images', action='store_true', help='show images?')
 parser.add_argument('--cuda', action='store_true', help='use cuda?')
@@ -62,14 +63,17 @@ if __name__ == "__main__":
         lbfgs.cuda = True
     if args.max_iters is not None:
         lbfgs.max_iters = args.max_iters
-
-    save_result = []
-    np.savetxt("/scratch/jsf239/lbfgs_results2.csv", np.array(save_result))
-    for i in better_range(1, 20):
-        lbfgs.max_iters = 10*i
-        ave_mse, succ = lbfgs.create_all_adversaries(target_class=args.target_class,
-                                           image_reg=args.image_reg, lr=args.lr)
-        save_result.append([ave_mse, succ])
+    if not args.run_once:
+        save_result = []
         np.savetxt("/scratch/jsf239/lbfgs_results2.csv", np.array(save_result))
-    print(ave_mse)
+        for i in better_range(1, 20):
+            lbfgs.max_iters = 10*i
+            ave_mse, succ = lbfgs.create_all_adversaries(target_class=args.target_class,
+                                               image_reg=args.image_reg, lr=args.lr)
+            save_result.append([ave_mse, succ])
+            np.savetxt("/scratch/jsf239/lbfgs_results2.csv", np.array(save_result))
+        print(ave_mse)
+    else:
+        lbfgs.create_all_adversaries(target_class=args.target_class,
+                                     image_reg=args.image_reg, lr=args.lr)
     
