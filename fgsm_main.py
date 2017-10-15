@@ -9,7 +9,7 @@ python fgsm_main.py --target_class -1 \
 import argparse
 import FGSM
 import numpy as np
-import Queue
+import queue
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--batch_size", 
