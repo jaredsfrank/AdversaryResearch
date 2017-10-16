@@ -122,6 +122,7 @@ def evaluate_model(model, train_x, train_y):
     # Set back to eval mode
     model.eval()
     fig = plot_model_and_predictions(model, train_x, train_y)
+    fig.savefig("/scratch/jsf239/bayesian_opt_viz_{}.png".format(len(train_x)))
     plt.show()
 
 if __name__ == '__main__':
