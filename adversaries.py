@@ -72,7 +72,7 @@ class Adverarial_Base(object):
     maximum_element = np.max(image_diff)
     image_diff/=maximum_element
     plt.imshow(np.transpose(image_diff, (1, 2, 0)))
-    fig.savefig("/scratch/jsf239/diff.png".format)
+    fig.savefig("/scratch/jsf239/diff.png")
 
 
   def percent_changed(self, original_labels, predictions):
