@@ -71,7 +71,7 @@ class Adverarial_Base(object):
     image_diff = np.abs(image_diff.numpy())
     maximum_element = np.max(image_diff)
     image_diff/=maximum_element
-    fig = plt.imshow(np.transpose(image_diff, (1, 2, 0)))
+    plt.imshow(np.transpose(image_diff, (1, 2, 0)))
     fig.savefig("/scratch/jsf239/diff.png".format)
 
 
