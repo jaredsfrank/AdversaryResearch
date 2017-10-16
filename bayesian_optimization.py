@@ -135,7 +135,7 @@ if __name__ == '__main__':
         # train_x = Variable(torch.linspace(-5, 5, 25))
         # train_x = Variable(torch.linspace(0, 1, 11))
         # train_y = Variable(0.5*(train_x.data**4 - 16*train_x.data**2 + 5*train_x.data))
-        train_y = Variable((torch.sin(train_x.data * (2 * math.pi)) + torch.randn(train_x.size()) * 0.2))
+        train_y = Variable((torch.sin(train_x.data * (2 * math.pi))))
         model = train_model(train_x, train_y, args.log_noise_min, args.log_noise_max, args.const_min, args.const_max, args.cov_min, args.cov_max)
         print("THe model is ")
         print(model(train_x).mean().data.numpy())
