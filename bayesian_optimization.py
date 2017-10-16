@@ -160,7 +160,7 @@ if __name__ == '__main__':
     train_x = Variable(torch.linspace(0, 1, 11))
     train_y = Variable(torch.sin(train_x.data * (2 * math.pi)) + torch.randn(train_x.size()) * 0.2)
     model = ExactGPModel2()
-    model.condition()
+    model.condition(train_x, train_y)
     f = plot_model_and_predictions_blank(model, plot_train_data=True)
     plt.show()
     for i in range(20):
