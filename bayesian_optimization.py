@@ -94,7 +94,7 @@ def plot_model_and_predictions(model, train_x, train_y, plot_train_data=True):
     ax_plot(observed_ax, observed_pred, 'Observed Values (Likelihood)')
     return f
 
-def plot_model_and_predictions_blank(model, plot_train_data=True):
+def plot_model_and_predictions_blank(model, plot_train_data=False):
     f, observed_ax = plt.subplots(1, 1, figsize=(8, 8))
     test_x = Variable(torch.linspace(0, 1, 51))
     observed_pred = model(test_x)
