@@ -126,7 +126,7 @@ def evaluate_model(model, train_x, train_y):
     plt.show()
 
 if __name__ == '__main__':
-    x_data = [.25, .5]
+    x_data = [.25, .75]
     for i in range(20):
         print (x_data)
         train_x = Variable(torch.Tensor(np.array(x_data)))
