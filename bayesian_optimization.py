@@ -162,7 +162,7 @@ if __name__ == '__main__':
     model = ExactGPModel2()
     model.condition(train_x, train_y)
     f = plot_model_and_predictions_blank(model)
-    fig.savefig("/scratch/jsf239/bayesian_opt_viz/_0.png")
+    f.savefig("/scratch/jsf239/bayesian_opt_viz/_0.png")
     plt.show()
     for i in range(20):
         print (x_data)
