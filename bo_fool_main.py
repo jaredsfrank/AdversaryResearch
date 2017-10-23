@@ -7,7 +7,7 @@ python fgsm_main.py --target_class -1 \
 
 """
 import argparse
-import FGSM
+import bo_fool
 import numpy as np
 import queue
 
