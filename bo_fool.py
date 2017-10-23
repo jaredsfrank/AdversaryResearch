@@ -47,22 +47,22 @@ class BOFool(adversaries.Adverarial_Base):
 
     # Loop through each pimage, each channel, x, and y, perform bayesian optimazation
     for img_num in range(np_imgs.shape[0]):
-    	np_img = np_imgs[img_num]
-  		old_img = old_images[img_num]
-      	for x in range(np_img.shape[1]):
-      		for y in range(np_img.shape[2]):
-      			for c in range(np_img.shape[0]):
-  				    def eval_function(new_val):
-  				    	img_clone = np_img.clone()
-  				    	img_clone[c, x, y] = new_val
-  				    	var_img = Variable(torch.Tensor(img_clone).cuda())
-  				    	img_pred = model(var_img)
-  				    	loss = self.CE_MSE_loss(var_img, img_pred, old_img, new_labels[img_num], image_reg)
-  				    	return loss
-  				    bo = BayesOpt(eval_function)
-  				    new_val = run_bayes_opt()
-  				    # Very unsure about whether this change will carry over
-  				    np_imgs[img_num, c, x, y] = new_val
+      np_img = np_imgs[img_num]
+      old_img = old_images[img_num]
+        for x in range(np_img.shape[1]):
+          for y in range(np_img.shape[2]):
+            for c in range(np_img.shape[0]):
+              def eval_function(new_val):
+                img_clone = np_img.clone()
+                img_clone[c, x, y] = new_val
+                var_img = Variable(torch.Tensor(img_clone).cuda())
+                img_pred = model(var_img)
+                loss = self.CE_MSE_loss(var_img, img_pred, old_img, new_labels[img_num], image_reg)
+                return loss
+              bo = BayesOpt(eval_function)
+              new_val = run_bayes_opt()
+              # Very unsure about whether this change will carry over
+              np_imgs[img_num, c, x, y] = new_val
 
     model = self.make_eval_model()
     inputsw = Variable(torch.Tensor(np_imgs).cuda())
