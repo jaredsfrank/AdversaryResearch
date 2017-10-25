@@ -63,7 +63,7 @@ class BOFool(adversaries.Adverarial_Base):
               return loss
             bo = BayesOpt(eval_function)
             new_val = bo.run_bayes_opt()
-            print new_val
+            print(new_val)
             # Very unsure about whether this change will carry over
             np_imgs[img_num, c, x, y] = new_val
 
