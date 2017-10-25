@@ -53,7 +53,7 @@ class BayesOpt(object):
                 return new_min
             old_new_min = new_min
             self.train_x.append(new_min)
-            self.train_y.append(self.eval_function(new_min))
+            self.train_y += list(self.eval_function(new_min).data.cpu().numpy())
 
     def train_model(self, train_x, train_y):
         model = ExactGPModel()
