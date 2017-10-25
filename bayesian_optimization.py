@@ -48,6 +48,8 @@ class BayesOpt(object):
             train_y_var = Variable(torch.Tensor(np.array(self.train_y)))
             print("did i make it here?")
             model = self.train_model(train_x_var, train_y_var)
+            self.plot_model_and_predictions(model, train_x_var, train_y_var)
+            plt.show()
             new_min = self.find_minimum(model)
             print("in here, teh new min is {}".format(new_min))
             if new_min == old_new_min:
