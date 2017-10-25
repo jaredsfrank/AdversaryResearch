@@ -45,7 +45,7 @@ class BayesOpt(object):
             train_x_var = Variable(torch.Tensor(np.array(self.train_x)))
             print("train x is {}".format(self.train_x))
             print("train y is {}".format(np.array(self.train_y) - np.mean(self.train_y)))
-            train_y_var = Variable(torch.Tensor(10*(np.array(self.train_y) - np.mean(self.train_y))))
+            train_y_var = Variable(torch.Tensor(100*(np.array(self.train_y) - np.mean(self.train_y))))
             print("did i make it here?")
             model = self.train_model(train_x_var, train_y_var)
             self.plot_model_and_predictions(model, train_x_var, train_y_var)
