@@ -43,6 +43,7 @@ class BayesOpt(object):
         old_new_min = None
         for _ in range(max_iters):
             train_x_var = Variable(torch.Tensor(np.array(self.train_x)))
+            print("train x is {}".format(self.train_x))
             print("train y is {}".format(self.train_y))
             train_y_var = Variable(torch.Tensor(np.array(self.train_y)))
             model = self.train_model(train_x_var, train_y_var)
