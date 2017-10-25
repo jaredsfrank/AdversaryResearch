@@ -43,13 +43,13 @@ class BayesOpt(object):
         old_new_min = None
         for _ in range(max_iters):
             train_x_var = Variable(torch.Tensor(np.array(self.train_x)))
-            print("train x is {}".format(self.train_x))
-            print("train y is {}".format(np.array(self.train_y) - np.mean(self.train_y)))
+            # print("train x is {}".format(self.train_x))
+            # print("train y is {}".format(np.array(self.train_y) - np.mean(self.train_y)))
             train_y_var = Variable(torch.Tensor(1000*(np.array(self.train_y) - np.mean(self.train_y))))
-            print("did i make it here?")
+            # print("did i make it here?")
             model = self.train_model(train_x_var, train_y_var)
             model.eval()
-            self.plot_model_and_predictions(model, train_x_var, train_y_var)
+            # self.plot_model_and_predictions(model, train_x_var, train_y_var)
             plt.show()
             new_min = self.find_minimum(model)
             print("in here, teh new min is {}".format(new_min))
@@ -72,11 +72,6 @@ class BayesOpt(object):
             loss = -model.marginal_log_likelihood(output, train_y)
             loss.backward()
             optimizer.n_iter += 1
-            print('Iter %d/20 - Loss: %.3f   log_lengthscale: %.3f   log_noise: %.3f' % (
-                    i + 1, loss.data[0],
-                    model.covar_module.log_lengthscale.data[0, 0],
-                    model.likelihood.log_noise.data[0]
-            ))
             optimizer.step()
         return model
 
@@ -97,9 +92,9 @@ class BayesOpt(object):
         def ax_plot(ax, rand_var, title):
             lower, upper = rand_var.confidence_region()
             # if plot_train_data:
-            print("whats the difference")
-            print (train_x, train_y)
-            print (train_x.data.cpu().numpy(), train_y.data.cpu().numpy())
+            # print("whats the difference")
+            # print (train_x, train_y)
+            # print (train_x.data.cpu().numpy(), train_y.data.cpu().numpy())
             ax.plot(train_x.data.cpu().numpy(), train_y.data.cpu().numpy(), 'k*')
             ax.plot(test_x.data.numpy(), rand_var.mean().data.numpy(), 'b')
             ax.fill_between(test_x.data.numpy(), lower.data.numpy(), upper.data.numpy(), alpha=0.5)
