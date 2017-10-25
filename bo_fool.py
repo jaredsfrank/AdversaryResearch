@@ -41,7 +41,7 @@ class BOFool(adversaries.Adverarial_Base):
       original_labels = original_labels.cuda()
     inputs = Variable(images, requires_grad = True)
     outputs = model(inputs)
-    old_images = images.clone()
+    old_images = images.copy()
     # Set target variables for model loss
     new_labels = self.target_class_tensor(target_class, outputs, original_labels)
 
@@ -53,7 +53,7 @@ class BOFool(adversaries.Adverarial_Base):
         for y in range(np_img.shape[2]):
           for c in range(np_img.shape[0]):
             def eval_function(new_val):
-              img_clone = np_img.clone()
+              img_clone = np_img.copy()
               img_clone[c, x, y] = new_val
               var_img = Variable(torch.Tensor(img_clone).cuda())
               img_pred = model(var_img)
