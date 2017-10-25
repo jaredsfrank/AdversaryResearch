@@ -35,7 +35,7 @@ class BOFool(adversaries.Adverarial_Base):
     """
     # Load in first <batch_size> images for validation
     images, original_labels =  data
-    np_imgs = images.data 
+    np_imgs = images.numpy() 
     if self.cuda:
       images = images.cuda()
       original_labels = original_labels.cuda()
