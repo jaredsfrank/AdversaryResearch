@@ -85,7 +85,7 @@ class BayesOpt(object):
 
     def plot_model_and_predictions(self, model, train_x, train_y, plot_train_data=True):
         f, observed_ax = plt.subplots(1, 1, figsize=(8, 8))
-        test_x = Variable(torch.linspace(-5, 5, 51))
+        test_x = Variable(torch.linspace(0, 1, 100))
         observed_pred = model(test_x)
 
         def ax_plot(ax, rand_var, title):
@@ -95,7 +95,7 @@ class BayesOpt(object):
             ax.plot(train_x.data.numpy(), train_y.data.numpy(), 'k*')
             ax.plot(test_x.data.numpy(), rand_var.mean().data.numpy(), 'b')
             ax.fill_between(test_x.data.numpy(), lower.data.numpy(), upper.data.numpy(), alpha=0.5)
-            ax.set_ylim([-200, 200])
+            ax.set_ylim([-10, 10])
             ax.legend(['Observed Data', 'Mean', 'Confidence'])
             ax.set_title(title)
 
