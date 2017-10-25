@@ -73,7 +73,7 @@ class BayesOpt(object):
         return model
 
     def find_minimum(self, model):
-        test_x = Variable(torch.linspace(-5, 5, 51))
+        test_x = Variable(torch.linspace(0, 1, 1000))
         test_y = model(test_x)
         lower, upper = test_y.confidence_region()
         kappa = 100.0
