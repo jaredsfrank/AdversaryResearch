@@ -35,7 +35,7 @@ class BayesOpt(object):
         self.train_y = []
         self.eval_function = eval_function
         # Right now, only supporting 0 to 1
-        self.train_x = list(np.random.random_sample((bounds.shape[0], initial_points)))
+        self.train_x = list(np.random.random_sample(initial_points))
         for x in self.train_x:
             self.train_y.append(self.eval_function(x))
 
