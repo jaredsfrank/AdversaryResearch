@@ -48,6 +48,7 @@ class BayesOpt(object):
             train_y_var = Variable(torch.Tensor(1000*(np.array(self.train_y) - np.mean(self.train_y))))
             print("did i make it here?")
             model = self.train_model(train_x_var, train_y_var)
+            model.eval()
             self.plot_model_and_predictions(model, train_x_var, train_y_var)
             plt.show()
             new_min = self.find_minimum(model)
@@ -65,7 +66,7 @@ class BayesOpt(object):
         model.train()
         optimizer = optim.Adam(model.parameters(), lr=0.1)
         optimizer.n_iter = 0
-        for i in range(1000):
+        for i in range(100):
             optimizer.zero_grad()
             output = model(train_x)
             loss = -model.marginal_log_likelihood(output, train_y)
