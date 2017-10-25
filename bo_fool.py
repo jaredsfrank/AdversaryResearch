@@ -9,7 +9,7 @@ import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
 import torch.nn as nn
-import bayesian_optimization
+from bayesian_optimization import BayesOpt
 
 
 
