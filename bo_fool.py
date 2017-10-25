@@ -56,6 +56,7 @@ class BOFool(adversaries.Adverarial_Base):
               img_clone = np_img.copy()
               img_clone[c, x, y] = new_val
               print(img_clone)
+              print(img_clone.shape)
               var_img = Variable(torch.Tensor([img_clone]).cuda())
               img_pred = model(var_img)
               loss = self.CE_MSE_loss(var_img, img_pred, old_img, new_labels[img_num], image_reg)
