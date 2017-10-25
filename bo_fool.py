@@ -52,6 +52,7 @@ class BOFool(adversaries.Adverarial_Base):
       for x in range(np_img.shape[1]):
         for y in range(np_img.shape[2]):
           for c in range(np_img.shape[0]):
+            print("Im currently optimizing for pixel ({}, {}) for the {} channel".format(x, y, ['red','green','blue'][c]))
             def eval_function(new_val):
               img_clone = np_img.copy()
               img_clone[c, x, y] = new_val
