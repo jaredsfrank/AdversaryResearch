@@ -37,7 +37,7 @@ class BayesOpt(object):
         # Right now, only supporting 0 to 1
         self.train_x = list(np.random.random_sample(initial_points))
         for x in self.train_x:
-            self.train_y.append(self.eval_function(x))
+            self.train_y.append(self.eval_function(x).cpu().numpy())
 
     def run_bayes_opt(self, max_iters=100):
         old_new_min = None
