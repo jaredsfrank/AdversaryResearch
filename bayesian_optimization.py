@@ -91,7 +91,7 @@ class BayesOpt(object):
         def ax_plot(ax, rand_var, title):
             lower, upper = rand_var.confidence_region()
             # if plot_train_data:
-            print (train_x, train_y)
+            print (train_x.data.cpu().numpy(), train_y.data.cpu().numpy())
             ax.plot(train_x.data.cpu().numpy(), train_y.data.cpu().numpy(), 'k*')
             ax.plot(test_x.data.numpy(), rand_var.mean().data.numpy(), 'b')
             ax.fill_between(test_x.data.numpy(), lower.data.numpy(), upper.data.numpy(), alpha=0.5)
