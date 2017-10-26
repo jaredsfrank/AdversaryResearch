@@ -30,7 +30,7 @@ class ExactGPModel(gpytorch.GPModel):
 
 class BayesOpt(object):
 
-    def __init__(self, eval_function, min_, max_, bounds=np.array([[0,1]]), initial_points=15):
+    def __init__(self, eval_function, min_, max_, bounds=np.array([[0,1]]), initial_points=30):
         self.train_x = []
         self.train_y = []
         self.dims = bounds.shape[0]
@@ -68,7 +68,7 @@ class BayesOpt(object):
         model.train()
         optimizer = optim.Adam(model.parameters(), lr=0.1)
         optimizer.n_iter = 0
-        for i in range(10):
+        for i in range(100):
             optimizer.zero_grad()
             output = model(train_x)
             loss = -model.marginal_log_likelihood(output, train_y)
