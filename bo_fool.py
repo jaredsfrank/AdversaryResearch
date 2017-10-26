@@ -64,7 +64,8 @@ class BOFool(adversaries.Adverarial_Base):
               loss = self.CE_MSE_loss(var_img, img_pred, old_img, new_labels[img_num], image_reg)
               return loss
             print("initialization slow?")
-            bo = BayesOpt(eval_function, bounds=[[(-self.mean_norm[c])/self.std_norm[c], (1-self.mean_norm[c])/self.std_norm[c]]])
+            bounds = np.array([[(-self.mean_norm[c])/self.std_norm[c], (1-self.mean_norm[c])/self.std_norm[c]]])
+            bo = BayesOpt(eval_function, bounds=bounds)
             print("The old value was {}".format(np_img[c, x, y]))
             new_val = bo.run_bayes_opt()
             print("The new value is {}".format(new_val))
