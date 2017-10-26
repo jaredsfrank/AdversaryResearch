@@ -68,6 +68,11 @@ class BOFool(adversaries.Adverarial_Base):
             print("The new value is {}".format(new_val))
             # Very unsure about whether this change will carry over
             np_imgs[img_num, c, x, y] = new_val
+            print("The image loss is now:")
+            var_img = Variable(torch.Tensor(np_imgs).cuda())
+            img_pred = model(var_img)
+            print self.CE_MSE_loss(var_img, img_pred, old_img, new_labels[img_num], image_reg)
+
 
     model = self.make_eval_model()
     inputsw = Variable(torch.Tensor(np_imgs).cuda())
