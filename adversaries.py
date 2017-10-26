@@ -23,7 +23,7 @@ class Adverarial_Base(object):
     self.show_images = False
     valdir = "/scratch/datasets/imagenet/val"
     self.batch_size = batch_size
-    self.val_loader = self.load_data(valdir, self.batch_size, True)
+    self.val_loader = self.load_data(valdir, self.batch_size, False)
     # Instantiate Loss Classes
     self.CrossEntropy = nn.CrossEntropyLoss()
     self.MSE = nn.MSELoss()
