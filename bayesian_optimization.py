@@ -30,12 +30,14 @@ class ExactGPModel(gpytorch.GPModel):
 
 class BayesOpt(object):
 
-    def __init__(self, eval_function, bounds=np.array([[0,1]]), initial_points=30):
+    def __init__(self, eval_function, min_, max_, bounds=np.array([[0,1]]), initial_points=30):
         self.train_x = []
         self.train_y = []
+        self.min_ = min_
+        self.max_ = max_
         self.eval_function = eval_function
         # Right now, only supporting 0 to 1
-        self.train_x = list(np.random.random_sample(initial_points))
+        self.train_x = list(np.random.random_sample(initial_points)*(self.max_-self.min_)+self.min_)
         for x in self.train_x:
             self.train_y += list(self.eval_function(x).data.cpu().numpy())
 
@@ -49,7 +51,7 @@ class BayesOpt(object):
             # print("did i make it here?")
             model = self.train_model(train_x_var, train_y_var)
             model.eval()
-            # self.plot_model_and_predictions(model, train_x_var, train_y_var)
+            self.plot_model_and_predictions(model, train_x_var, train_y_var)
             plt.show()
             new_min = self.find_minimum(model)
             print("in here, the new min is {}".format(new_min))
@@ -76,7 +78,7 @@ class BayesOpt(object):
         return model
 
     def find_minimum(self, model):
-        test_x = Variable(torch.linspace(0, 1, 1000).cuda())
+        test_x = Variable(torch.linspace(self.min_, self.max_, 1000).cuda())
         test_y = model(test_x)
         lower, upper = test_y.confidence_region()
         kappa = 100.0
@@ -86,7 +88,7 @@ class BayesOpt(object):
 
     def plot_model_and_predictions(self, model, train_x, train_y, plot_train_data=True):
         f, observed_ax = plt.subplots(1, 1, figsize=(8, 8))
-        test_x = Variable(torch.linspace(0, 1, 100))
+        test_x = Variable(torch.linspace(self.min_, self.max_, 100))
         observed_pred = model(test_x)
 
         def ax_plot(ax, rand_var, title):
