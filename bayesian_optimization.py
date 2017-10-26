@@ -44,17 +44,11 @@ class BayesOpt(object):
     def run_bayes_opt(self, max_iters=1):
         old_new_min = None
         for _ in range(max_iters):
-            print(1)
             train_x_var = Variable(torch.Tensor(np.array(self.train_x)).cuda())
-            print(2)
             y_range = np.max(self.train_y) - np.min(self.train_y)
-            print(3)
             train_y_var = Variable(torch.Tensor(5/y_range*(np.array(self.train_y) - np.mean(self.train_y))).cuda())
-            print(4)
             model = self.train_model(train_x_var, train_y_var)
-            print(5)
             model.eval()
-            print(6)
             new_min = self.find_minimum(model)
             print("in here, the new min is {}".format(new_min))
             if new_min == old_new_min:
@@ -65,11 +59,13 @@ class BayesOpt(object):
         return old_new_min
 
     def train_model(self, train_x, train_y):
+        print("start")
         model = ExactGPModel().cuda()
         model.condition(train_x, train_y)
         model.train()
         optimizer = optim.Adam(model.parameters(), lr=0.1)
         optimizer.n_iter = 0
+        print(1)
         for i in range(100):
             optimizer.zero_grad()
             output = model(train_x)
@@ -77,6 +73,7 @@ class BayesOpt(object):
             loss.backward()
             optimizer.n_iter += 1
             optimizer.step()
+        print(2)
         return model
 
     def find_minimum(self, model):
