@@ -101,6 +101,7 @@ class BayesOpt(object):
             ax.plot(test_x.data.cpu().numpy(), rand_var.mean().data.cpu().numpy(), 'b')
             ax.fill_between(test_x.data.cpu().numpy(), lower.data.cpu().numpy(), upper.data.cpu().numpy(), alpha=0.5)
             ax.set_ylim([-10, 10])
+            ax.set_xlim([self.min_, self.max_])
             ax.legend(['Observed Data', 'Mean', 'Confidence'])
             ax.set_title(title)
 
