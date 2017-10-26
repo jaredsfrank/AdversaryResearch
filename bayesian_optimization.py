@@ -57,6 +57,7 @@ class BayesOpt(object):
             self.train_x.append(new_min)
             self.train_y += list(self.eval_function(new_min).data.cpu().numpy())
             self.plot_model_and_predictions(model, train_x_var, train_y_var)
+            plt.show()
         return old_new_min
 
     def train_model(self, train_x, train_y):
