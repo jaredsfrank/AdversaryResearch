@@ -30,12 +30,12 @@ class ExactGPModel(gpytorch.GPModel):
 
 class BayesOpt(object):
 
-    def __init__(self, eval_function, min_, max_, bounds=np.array([[0,1]]), initial_points=30):
+    def __init__(self, eval_function, bounds, initial_points=30):
         self.train_x = []
         self.train_y = []
         self.dims = bounds.shape[0]
-        self.min_ = min_
-        self.max_ = max_
+        self.min_ = bounds[0][0]
+        self.max_ = bounds[0][1]
         self.eval_function = eval_function
         # Right now, only supporting 0 to 1
         self.train_x = list(np.random.random_sample(initial_points)*(self.max_-self.min_)+self.min_)
