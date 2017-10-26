@@ -42,10 +42,10 @@ class BayesOpt(object):
     def run_bayes_opt(self, max_iters=5):
         old_new_min = None
         for _ in range(max_iters):
-            train_x_var = Variable(torch.Tensor(np.array(self.train_x)))
+            train_x_var = Variable(torch.Tensor(np.array(self.train_x)).cuda())
             # print("train x is {}".format(self.train_x))
             # print("train y is {}".format(np.array(self.train_y) - np.mean(self.train_y)))
-            train_y_var = Variable(torch.Tensor(1000*(np.array(self.train_y) - np.mean(self.train_y))))
+            train_y_var = Variable(torch.Tensor(1000*(np.array(self.train_y) - np.mean(self.train_y))).cuda())
             # print("did i make it here?")
             model = self.train_model(train_x_var, train_y_var)
             model.eval()
