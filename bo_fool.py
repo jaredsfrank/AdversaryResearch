@@ -63,7 +63,7 @@ class BOFool(adversaries.Adverarial_Base):
               loss = self.CE_MSE_loss(var_img, img_pred, old_img, new_labels[img_num], image_reg)
               return loss
             bo = BayesOpt(eval_function)
-            print("The old value was {}".foramt(np_img[c, x, y]))
+            print("The old value was {}".format(np_img[c, x, y]))
             new_val = bo.run_bayes_opt()
             print("The new value is {}".format(new_val))
             # Very unsure about whether this change will carry over
