@@ -53,7 +53,7 @@ class BayesOpt(object):
             # print("did i make it here?")
             model = self.train_model(train_x_var, train_y_var)
             model.eval()
-            self.plot_model_and_predictions(model, train_x_var, train_y_var)
+            # self.plot_model_and_predictions(model, train_x_var, train_y_var)
             plt.show()
             new_min = self.find_minimum(model)
             print("in here, the new min is {}".format(new_min))
