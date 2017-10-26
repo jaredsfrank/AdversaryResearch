@@ -69,6 +69,7 @@ class BOFool(adversaries.Adverarial_Base):
             # Very unsure about whether this change will carry over
             np_imgs[img_num, c, x, y] = new_val
             print("The image loss is now:")
+            print np_imgs.shape
             var_img = Variable(torch.Tensor(np_imgs).cuda())
             self.imshow(var_img)
             img_pred = model(var_img)
