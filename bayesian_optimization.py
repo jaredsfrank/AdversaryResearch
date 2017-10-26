@@ -76,13 +76,13 @@ class BayesOpt(object):
         return model
 
     def find_minimum(self, model):
-        test_x = Variable(torch.linspace(0, 1, 1000))
+        test_x = Variable(torch.linspace(0, 1, 1000).cuda())
         test_y = model(test_x)
         lower, upper = test_y.confidence_region()
         kappa = 100.0
         mean, std = test_y.std(), test_y.mean()
         boundary = mean + kappa * std
-        return test_x.data.numpy()[np.argmin(boundary.data.numpy())] 
+        return test_x.data.cpu().numpy()[np.argmin(boundary.data.cpu().numpy())] 
 
     def plot_model_and_predictions(self, model, train_x, train_y, plot_train_data=True):
         f, observed_ax = plt.subplots(1, 1, figsize=(8, 8))
