@@ -66,7 +66,7 @@ class BayesOpt(object):
         optimizer = optim.Adam(model.parameters(), lr=0.1)
         optimizer.n_iter = 0
         print(1)
-        for i in range(100):
+        for i in range(10):
             optimizer.zero_grad()
             output = model(train_x)
             loss = -model.marginal_log_likelihood(output, train_y)
