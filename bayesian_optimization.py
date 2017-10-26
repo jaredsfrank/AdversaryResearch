@@ -99,7 +99,7 @@ class BayesOpt(object):
             # print (train_x.data.cpu().numpy(), train_y.data.cpu().numpy())
             ax.plot(train_x.data.cpu().numpy(), train_y.data.cpu().numpy(), 'k*')
             ax.plot(test_x.data.cpu().numpy(), rand_var.mean().data.cpu().numpy(), 'b')
-            ax.fill_between(test_x.data.numpy(), lower.data.numpy(), upper.data.numpy(), alpha=0.5)
+            ax.fill_between(test_x.data.cpu().numpy(), lower.data.cpu().numpy(), upper.data.cpu().numpy(), alpha=0.5)
             ax.set_ylim([-10, 10])
             ax.legend(['Observed Data', 'Mean', 'Confidence'])
             ax.set_title(title)
