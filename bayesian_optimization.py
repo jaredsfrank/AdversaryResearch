@@ -61,7 +61,7 @@ class BayesOpt(object):
         return old_new_min
 
     def train_model(self, train_x, train_y):
-        model = ExactGPModel()
+        model = ExactGPModel().cuda()
         model.condition(train_x, train_y)
         model.train()
         optimizer = optim.Adam(model.parameters(), lr=0.1)
