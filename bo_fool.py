@@ -73,10 +73,14 @@ class BOFool(adversaries.Adverarial_Base):
 
             var_img = Variable(torch.Tensor(np_imgs).cuda())
             # self.imshow(torchvision.utils.make_grid(var_img.data))
-            self.diff(torchvision.utils.make_grid(var_img.data), torchvision.utils.make_grid(old_images))
-            plt.show()
+            # self.diff(torchvision.utils.make_grid(var_img.data), torchvision.utils.make_grid(old_images))
+            # plt.show()
             img_pred = model(var_img)
             print(self.CE_MSE_loss(var_img, img_pred, old_img, new_labels[img_num], image_reg))
+      var_img = Variable(torch.Tensor(np_imgs).cuda())
+      self.save_figure(var_img.data, "After_{}_{}".format(image_reg, lr))
+      self.diff(torchvision.utils.make_grid(var_img.data), torchvision.utils.make_grid(old_images))
+      plt.show()
 
 
     model = self.make_eval_model()
