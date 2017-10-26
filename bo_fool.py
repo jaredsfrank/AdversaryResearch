@@ -72,7 +72,8 @@ class BOFool(adversaries.Adverarial_Base):
             print("The image loss is now:")
 
             var_img = Variable(torch.Tensor(np_imgs).cuda())
-            self.imshow(torchvision.utils.make_grid(var_img.data))
+            # self.imshow(torchvision.utils.make_grid(var_img.data))
+            self.diff(torchvision.utils.make_grid(var_img.data), old_images)
             plt.show()
             img_pred = model(var_img)
             print(self.CE_MSE_loss(var_img, img_pred, old_img, new_labels[img_num], image_reg))
