@@ -44,17 +44,17 @@ class BayesOpt(object):
     def run_bayes_opt(self, max_iters=1):
         old_new_min = None
         for _ in range(max_iters):
+            print(1)
             train_x_var = Variable(torch.Tensor(np.array(self.train_x)).cuda())
-            # print("train x is {}".format(self.train_x))
-            # print("train y is {}".format(np.array(self.train_y) - np.mean(self.train_y)))
+            print(2)
             y_range = np.max(self.train_y) - np.min(self.train_y)
-
+            print(3)
             train_y_var = Variable(torch.Tensor(5/y_range*(np.array(self.train_y) - np.mean(self.train_y))).cuda())
-            # print("did i make it here?")
+            print(4)
             model = self.train_model(train_x_var, train_y_var)
+            print(5)
             model.eval()
-            # self.plot_model_and_predictions(model, train_x_var, train_y_var)
-            # plt.show()
+            print(6)
             new_min = self.find_minimum(model)
             print("in here, the new min is {}".format(new_min))
             if new_min == old_new_min:
@@ -95,10 +95,6 @@ class BayesOpt(object):
 
         def ax_plot(ax, rand_var, title):
             lower, upper = rand_var.confidence_region()
-            # if plot_train_data:
-            # print("whats the difference")
-            # print (train_x, train_y)
-            # print (train_x.data.cpu().numpy(), train_y.data.cpu().numpy())
             ax.plot(train_x.data.cpu().numpy(), train_y.data.cpu().numpy(), 'k*')
             ax.plot(test_x.data.cpu().numpy(), rand_var.mean().data.cpu().numpy(), 'b')
             ax.fill_between(test_x.data.cpu().numpy(), lower.data.cpu().numpy(), upper.data.cpu().numpy(), alpha=0.5)
