@@ -62,7 +62,7 @@ class BOFool(adversaries.Adverarial_Base):
               img_pred = model(var_img)
               loss = self.CE_MSE_loss(var_img, img_pred, old_img, new_labels[img_num], image_reg)
               return loss
-            bo = BayesOpt(eval_function, min_=(-self.mean_norm[c])/self.std_norm, max_=(1-self.mean_norm[c])/self.std_norm)
+            bo = BayesOpt(eval_function, min_=(-self.mean_norm[c])/self.std_norm[c], max_=(1-self.mean_norm[c])/self.std_norm[c])
             print("The old value was {}".format(np_img[c, x, y]))
             new_val = bo.run_bayes_opt()
             print("The new value is {}".format(new_val))
