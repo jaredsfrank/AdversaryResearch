@@ -54,7 +54,7 @@ class BayesOpt(object):
             model = self.train_model(train_x_var, train_y_var)
             model.eval()
             # self.plot_model_and_predictions(model, train_x_var, train_y_var)
-            plt.show()
+            # plt.show()
             new_min = self.find_minimum(model)
             print("in here, the new min is {}".format(new_min))
             if new_min == old_new_min:
