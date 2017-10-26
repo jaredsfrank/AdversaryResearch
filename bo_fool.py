@@ -52,6 +52,7 @@ class BOFool(adversaries.Adverarial_Base):
       for x in range(np_img.shape[1]):
         for y in range(np_img.shape[2]):
           for c in range(np_img.shape[0]):
+            print (np_imgs.shape)
             print("Im currently optimizing for pixel ({}, {}) for the {} channel".format(x, y, ['red','green','blue'][c]))
             def eval_function(new_val):
               img_clone = np_img.copy()
@@ -69,7 +70,7 @@ class BOFool(adversaries.Adverarial_Base):
             # Very unsure about whether this change will carry over
             np_imgs[img_num, c, x, y] = new_val
             print("The image loss is now:")
-            print np_imgs.shape
+
             var_img = Variable(torch.Tensor(np_imgs).cuda())
             self.imshow(var_img)
             img_pred = model(var_img)
