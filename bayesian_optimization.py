@@ -35,7 +35,6 @@ class BayesOpt(object):
         self.train_y = []
         self.min_ = min_
         self.max_ = max_
-        print(self.min_, self.max_)
         self.eval_function = eval_function
         # Right now, only supporting 0 to 1
         self.train_x = list(np.random.random_sample(initial_points)*(self.max_-self.min_)+self.min_)
