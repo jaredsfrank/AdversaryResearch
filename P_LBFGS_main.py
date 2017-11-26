@@ -62,6 +62,6 @@ if __name__ == "__main__":
         lbfgs.cuda = True
     if args.max_iters is not None:
         lbfgs.max_iters = args.max_iters
-    lbfgs.create_all_adversaries(target_class=args.target_class,
-                                 image_reg=args.image_reg, lr=args.lr)
+    lbfgs.create_one_adversary_batch(target_class=args.target_class,
+                                    image_reg=args.image_reg, lr=args.lr)
     
