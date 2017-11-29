@@ -25,6 +25,11 @@ class P_LBFGS(adversaries.Adverarial_Base):
       return iters < self.max_iters
     else:
       return True
+
+  def window_image(self, old_images, images, root_x, root_y, WINDOW_SIZE):
+  	"""Resores all values in images besides window"""
+  	print old_images, old_images.shape
+  	print images, images.shape
     
   def adversary_batch(self, data, model, target_class, image_reg, lr):
     """Creates adversarial examples for one batch of data.
@@ -76,6 +81,7 @@ class P_LBFGS(adversaries.Adverarial_Base):
         print("Target Class Weights Minus Predicted Weights:")
         print(outputs.data[:, new_labels.data][:,0] - predicted_loss)
       iters += 1
+      self.window_image(old_images, images, root_x, root_y, WINDOW_SIZE)
       if self.check_iters(iters) and self.all_changed(original_labels, predicted_classes):
         if self.show_images:
           self.save_figure(inputs.data, "After_{}_{}".format(image_reg, lr))
