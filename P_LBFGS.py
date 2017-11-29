@@ -73,6 +73,7 @@ class P_LBFGS(adversaries.Adverarial_Base):
     new_labels = self.target_class_tensor(target_class, outputs, original_labels)
     for root_x in range(images.shape[2]-WINDOW_SIZE):
       for root_y in range(images.shape[3]-WINDOW_SIZE):
+        images[:] = old_images[:]
         iters = 0
         while self.check_iters(iters) and not self.all_changed(original_labels, predicted_classes):
           if self.verbose:
