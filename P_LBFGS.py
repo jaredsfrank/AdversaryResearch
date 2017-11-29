@@ -11,7 +11,7 @@ import numpy as np
 import torch.nn as nn
 import torch.optim as optim
 
-WINDOW_SIZE = 3
+WINDOW_SIZE = 15
 
 class P_LBFGS(adversaries.Adverarial_Base):
 
