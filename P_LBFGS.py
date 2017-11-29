@@ -93,13 +93,11 @@ class P_LBFGS(adversaries.Adverarial_Base):
             # Compute full loss of adversarial example
             loss = self.CE_MSE_loss(inputs, outputs, old_images, new_labels, image_reg)
             predicted_loss, predicted_classes = torch.max(outputs.data, 1)
-            if self.verbose and iters % 20 == 0:
-              
-              print("checking {} {}".format(self.check_iters(iters), not self.all_changed(original_labels, predicted_classes)))
-              print((original_labels, predicted_classes))
-              print("Target Class Weights Minus Predicted Weights:")
-              print(outputs.data[:, new_labels.data][:,0] - predicted_loss)
             iters += 1
+            if self.verbose and iters % 20 == 0:
+              print("Target Class Weights Minus Predicted Weights of Original:")
+              print(outputs.data[:, new_labels.data][:,0] - predicted_loss)
+            
 
             y_indices = torch.LongTensor(np.tile(np.arange(WINDOW_SIZE)+root_y, WINDOW_SIZE)).cuda()
             x_indices = torch.LongTensor(np.repeat(np.arange(WINDOW_SIZE)+root_x, WINDOW_SIZE)).cuda()
@@ -117,6 +115,9 @@ class P_LBFGS(adversaries.Adverarial_Base):
             predicted_loss, predicted_classes = torch.max(outputs.data, 1)
 
 
+            if self.verbose and iters % 20 == 0:
+              print("Target Class Weights Minus Predicted Weights of Cropped:")
+              print(outputs.data[:, new_labels.data][:,0] - predicted_loss)
 
             # images = self.window_image(old_images, images, root_x, root_y, WINDOW_SIZE)
             if self.check_iters(iters) and self.all_changed(original_labels, predicted_classes):
