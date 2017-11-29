@@ -84,8 +84,6 @@ class P_LBFGS(adversaries.Adverarial_Base):
           iters = 0
           predicted_classes = original_predictions
           while self.check_iters(iters) and not self.all_changed(original_labels, predicted_classes):
-            print("checking {} {}".format(self.check_iters(iters), not self.all_changed(original_labels, predicted_classes)))
-            print((original_labels, predicted_classes))
             if self.verbose and iters % 20 == 0:
               print("Iteration {}".format(iters))
             opt.zero_grad()
@@ -96,6 +94,9 @@ class P_LBFGS(adversaries.Adverarial_Base):
             loss = self.CE_MSE_loss(inputs, outputs, old_images, new_labels, image_reg)
             predicted_loss, predicted_classes = torch.max(outputs.data, 1)
             if self.verbose and iters % 20 == 0:
+              
+              print("checking {} {}".format(self.check_iters(iters), not self.all_changed(original_labels, predicted_classes)))
+              print((original_labels, predicted_classes))
               print("Target Class Weights Minus Predicted Weights:")
               print(outputs.data[:, new_labels.data][:,0] - predicted_loss)
             iters += 1
