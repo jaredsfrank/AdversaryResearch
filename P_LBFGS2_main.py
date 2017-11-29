@@ -51,7 +51,7 @@ def better_range(min_value, max_value):
 
 
 if __name__ == "__main__":
-    lbfgs = P_LBFGS2.P_LBFGS(args.batch_size)
+    lbfgs = P_LBFGS2.LBFGS(args.batch_size)
     ave_mse = 0.0
     iters = 10
     if args.verbose:
