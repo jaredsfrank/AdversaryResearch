@@ -16,7 +16,7 @@ WINDOW_SIZE = 15
 class P_LBFGS(adversaries.Adverarial_Base):
 
   def __init__(self, batch_size):
-    self.max_iters = 20
+    self.max_iters = 200
     adversaries.Adverarial_Base.__init__(self, batch_size)
 
   def check_iters(self, iters):
