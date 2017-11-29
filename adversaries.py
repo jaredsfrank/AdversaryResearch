@@ -21,7 +21,7 @@ class Adverarial_Base(object):
     self.mean_norm = [0.485, 0.456, 0.406]
     self.std_norm = [0.229, 0.224, 0.225]
     self.verbose = False
-    self.show_images = True
+    self.show_images = False
     valdir = "/scratch/datasets/imagenet/val"
     self.batch_size = batch_size
     self.val_loader = self.load_data(valdir, self.batch_size, True)
