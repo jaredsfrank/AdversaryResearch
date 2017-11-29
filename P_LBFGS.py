@@ -28,12 +28,10 @@ class P_LBFGS(adversaries.Adverarial_Base):
 
   def window_image(self, old_images, images, root_x, root_y, window_size):
   	"""Resores all values in images besides window"""
-  	print (old_images.shape)
-  	print (images.shape[0])
+  	print (type(old_images))
+  	print (type(images))
   	mask = np.ones(images.shape)
-  	print(mask.shape)
   	mask[::,::,np.tile(np.arange(window_size)+root_y, window_size), np.repeat(np.arange(window_size)+root_x, window_size)] = 0
-  	print(mask, mask[0,0])
   	images.masked_scatter_(torch.ByteTensor(mask), old_images)
   	return images
     
