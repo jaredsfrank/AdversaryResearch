@@ -68,6 +68,7 @@ class P_LBFGS(adversaries.Adverarial_Base):
     new_labels = self.target_class_tensor(target_class, outputs, original_labels)
     iters = 0
     while self.check_iters(iters) and not self.all_changed(original_labels, predicted_classes):
+      print("AM I IN HERE")
       if self.verbose:
         print("Iteration {}".format(iters))
       opt.zero_grad()
