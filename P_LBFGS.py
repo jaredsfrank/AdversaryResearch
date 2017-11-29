@@ -26,14 +26,14 @@ class P_LBFGS(adversaries.Adverarial_Base):
     else:
       return True
 
-  def window_image(self, old_images, images, root_x, root_y, WINDOW_SIZE):
+  def window_image(self, old_images, images, root_x, root_y, window_size):
   	"""Resores all values in images besides window"""
   	print (old_images.shape)
   	print (images.shape[0])
   	mask = np.ones(images.shape)
-  	print(mask)
-  	# images.masked_scatter_(mask, old_images)
-  	# return images
+  	mask[root_y::root_y+window_size, root_x::root_x+window_size]
+  	images.masked_scatter_(mask, old_images)
+  	return images
     
   def adversary_batch(self, data, model, target_class, image_reg, lr):
     """Creates adversarial examples for one batch of data.
