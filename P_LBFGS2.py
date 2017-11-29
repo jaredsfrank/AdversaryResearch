@@ -93,6 +93,8 @@ class LBFGS(adversaries.Adverarial_Base):
       for root_y in range(images.shape[3]-WINDOW_SIZE):
         # if self.cuda:
         #   mask = mask.cuda()
+        y_indices = torch.LongTensor(np.tile(np.arange(WINDOW_SIZE)+root_y, WINDOW_SIZE)).cuda()
+        x_indices = torch.LongTensor(np.repeat(np.arange(WINDOW_SIZE)+root_x, WINDOW_SIZE)).cuda()
         test_images = old_images.clone()
         test_images[:,:,y_indices,x_indices] = images[:,:,y_indices,x_indices]
         outputs = model(Variable(test_images))
