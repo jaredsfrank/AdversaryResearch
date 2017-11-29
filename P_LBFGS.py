@@ -65,6 +65,7 @@ class P_LBFGS(adversaries.Adverarial_Base):
     old_images = images.clone()
     outputs = model(inputs)
     predicted_classes = torch.max(outputs.data, 1)[1]
+    original_predictions = predicted_classes.clone()
     # if self.verbose:
     print("The predicted classes are:")
     print(predicted_classes)
@@ -78,6 +79,7 @@ class P_LBFGS(adversaries.Adverarial_Base):
           print("starting? {} {}".format(root_x, root_y))
           images[:] = old_images[:]
           iters = 0
+          predicted_classes = original_predictions
           print((self.check_iters(iters), not self.all_changed(original_labels, predicted_classes)))
           while self.check_iters(iters) and not self.all_changed(original_labels, predicted_classes):
             if self.verbose:
