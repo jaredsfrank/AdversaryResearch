@@ -75,9 +75,10 @@ class P_LBFGS(adversaries.Adverarial_Base):
     if not self.all_changed(original_labels, predicted_classes):
       for root_x in range(images.shape[2]-WINDOW_SIZE):
         for root_y in range(images.shape[3]-WINDOW_SIZE):
-          print("starting? {} {}", root_x, root_y)
+          print("starting? {} {}".format(root_x, root_y))
           images[:] = old_images[:]
           iters = 0
+          print((self.check_iters(iters), not self.all_changed(original_labels, predicted_classes)))
           while self.check_iters(iters) and not self.all_changed(original_labels, predicted_classes):
             if self.verbose:
               print("Iteration {}".format(iters))
