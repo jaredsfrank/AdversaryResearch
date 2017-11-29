@@ -74,6 +74,7 @@ class P_LBFGS(adversaries.Adverarial_Base):
     iters = 0
     # Set target variables for model loss
     new_labels = self.target_class_tensor(target_class, outputs, original_labels)
+    all_scores = np.zeros((images.shape[2]-WINDOW_SIZE, images.shape[3]-WINDOW_SIZE))
     if not self.all_changed(original_labels, predicted_classes):
       for root_x in range(images.shape[2]-WINDOW_SIZE):
         for root_y in range(images.shape[3]-WINDOW_SIZE):
@@ -133,6 +134,8 @@ class P_LBFGS(adversaries.Adverarial_Base):
                 # self.MSE(images, Variable(old_images))
           max_diff = np.mean(((images - old_images).cpu().numpy().reshape(images.shape[0],-1).max(1)))
           print("Max diff was {}, iters was {}".format(max_diff, iters))
-      else:
-        return 0, 0, 0
+          all_scores[root_x, root_y] = iters
+          np.savetxt("/scratch/jsf239/all_scores.csv", all_scores, delimiter = ",", fmt = "%d")
+    else:
+      return 0, 0, 0
     return iters, max_diff, self.percent_changed(original_labels, predicted_classes)
