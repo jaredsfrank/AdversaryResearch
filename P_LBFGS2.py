@@ -61,7 +61,7 @@ class LBFGS(adversaries.Adverarial_Base):
     # Set target variables for model loss
     new_labels = self.target_class_tensor(target_class, outputs, original_labels)
     iters = 0
-    while self.check_iters(iters) and not self.all_changed(original_labels, predicted_classes) and iters < self.min_iters:
+    while (self.check_iters(iters) and not self.all_changed(original_labels, predicted_classes)) or iters < self.min_iters:
       if self.verbose:
         print("Iteration {}".format(iters))
       opt.zero_grad()
@@ -86,7 +86,7 @@ class LBFGS(adversaries.Adverarial_Base):
           opt.step()
           new_labels = self.target_class_tensor(target_class, outputs, original_labels)
           # self.MSE(images, Variable(old_images))
-    print(iters)
+    print("Iters is {}".format(iters))
     WINDOW_SIZE = 50
     self.clamp_images(images)
     for root_x in range(50,images.shape[2]-WINDOW_SIZE - 50):
