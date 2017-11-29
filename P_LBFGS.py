@@ -91,10 +91,13 @@ class P_LBFGS(adversaries.Adverarial_Base):
 
       y_indices = np.tile(np.arange(WINDOW_SIZE)+root_y, WINDOW_SIZE)
       x_indices = np.repeat(np.arange(WINDOW_SIZE)+root_x, WINDOW_SIZE)
+      other_images = old_images.clone()
+
       mask = torch.ByteTensor(images.shape)+1
       mask[:,:,:,:] = 1
-      mask[:,:,y_indices,x_indices] = 0
-      images.masked_scatter_(mask, old_images)
+      other_images[:,:,y_indices,x_indices] = images[:,:,y_indices,x_indices] 
+      images[:] = other_images[:]
+
 
 
       # images = self.window_image(old_images, images, root_x, root_y, WINDOW_SIZE)
