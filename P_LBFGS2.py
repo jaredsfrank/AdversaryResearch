@@ -89,8 +89,8 @@ class LBFGS(adversaries.Adverarial_Base):
     print(iters)
     WINDOW_SIZE = 5
     self.clamp_images(images)
-    for root_x in range(images.shape[2]-WINDOW_SIZE):
-      for root_y in range(images.shape[3]-WINDOW_SIZE):
+    for root_x in range(50,images.shape[2]-WINDOW_SIZE - 50):
+      for root_y in range(50, images.shape[3]-WINDOW_SIZE - 50):
         # if self.cuda:
         #   mask = mask.cuda()
         y_indices = torch.LongTensor(np.tile(np.arange(WINDOW_SIZE)+root_y, WINDOW_SIZE)).cuda()
@@ -98,7 +98,9 @@ class LBFGS(adversaries.Adverarial_Base):
         test_images = old_images.clone()
         test_images[:,:,y_indices,x_indices] = images[:,:,y_indices,x_indices]
         outputs = model(Variable(test_images))
-        predicted_classes = torch.max(outputs.data, 1)[1]
+        predicted_loss, predicted_classes = torch.max(outputs.data, 1)[1]
         print("Image {} {} changed? {}".format(root_x, root_y, self.all_changed(original_labels, predicted_classes)))
+        print ((predicted_classes, predicted_loss))
+        self.diff(test_images, old_images)
     max_diff = np.mean(((images - old_images).cpu().numpy().reshape(images.shape[0],-1).max(1)))
     return iters, max_diff, self.percent_changed(original_labels, predicted_classes)
