@@ -82,9 +82,11 @@ class LBFGS(adversaries.Adverarial_Base):
           self.diff(images, old_images)
           plt.show()
       else:
+          print("here")
           loss.backward()
           opt.step()
           new_labels = self.target_class_tensor(target_class, outputs, original_labels)
+          print("2")
           # self.MSE(images, Variable(old_images))
     print("Iters is {}".format(iters))
     WINDOW_SIZE = 50

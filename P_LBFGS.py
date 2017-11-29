@@ -108,6 +108,10 @@ class P_LBFGS(adversaries.Adverarial_Base):
             mask[:,:,:,:] = 1
             other_images[:,:,y_indices,x_indices] = images[:,:,y_indices,x_indices] 
             images[:] = other_images[:]
+            outputs = model(inputs)
+            # Compute full loss of adversarial example
+            loss = self.CE_MSE_loss(inputs, outputs, old_images, new_labels, image_reg)
+            predicted_loss, predicted_classes = torch.max(outputs.data, 1)
 
 
 
