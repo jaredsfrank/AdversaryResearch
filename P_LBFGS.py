@@ -32,7 +32,7 @@ class P_LBFGS(adversaries.Adverarial_Base):
   	print (images.shape[0])
   	mask = np.ones(images.shape)
   	mask[:,:,root_y::root_y+window_size, root_x::root_x+window_size] = 0
-  	print(mask)
+  	print(mask, mask[0,2,2])
   	images.masked_scatter_(torch.ByteTensor(mask), old_images)
   	return images
     
