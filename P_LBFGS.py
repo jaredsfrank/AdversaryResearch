@@ -33,7 +33,7 @@ class P_LBFGS(adversaries.Adverarial_Base):
   	mask = np.ones(images.shape)
   	mask[:,:,np.tile(np.arange(window_size)+root_y, window_size), np.repeat(np.arange(window_size)+root_x, window_size)] = 0
   	mask_t = torch.ByteTensor(mask)
-  	images.masked_scatter_(torch.ByteTensor(mask), old_images)
+  	images.masked_scatter_(mask_t, old_images)
   	return images
     
   def adversary_batch(self, data, model, target_class, image_reg, lr):
