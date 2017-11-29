@@ -69,6 +69,7 @@ class P_LBFGS(adversaries.Adverarial_Base):
     print("The predicted classes are:")
     print(predicted_classes)
     print(original_labels)
+    iters = 0
     # Set target variables for model loss
     new_labels = self.target_class_tensor(target_class, outputs, original_labels)
     if not self.all_changed(original_labels, predicted_classes):
@@ -106,6 +107,9 @@ class P_LBFGS(adversaries.Adverarial_Base):
 
 
             # images = self.window_image(old_images, images, root_x, root_y, WINDOW_SIZE)
+            if not self.check_iters(iters):
+              print("exceeded limit")
+              print(iters)
             if self.check_iters(iters) and self.all_changed(original_labels, predicted_classes):
               print(iters, predicted_classes)
               if self.show_images:
