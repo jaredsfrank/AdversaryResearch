@@ -87,7 +87,7 @@ class LBFGS(adversaries.Adverarial_Base):
           new_labels = self.target_class_tensor(target_class, outputs, original_labels)
           # self.MSE(images, Variable(old_images))
     print(iters)
-    WINDOW_SIZE = 5
+    WINDOW_SIZE = 50
     self.clamp_images(images)
     for root_x in range(50,images.shape[2]-WINDOW_SIZE - 50):
       for root_y in range(50, images.shape[3]-WINDOW_SIZE - 50):
@@ -100,7 +100,7 @@ class LBFGS(adversaries.Adverarial_Base):
         outputs = model(Variable(test_images))
         predicted_loss, predicted_classes = torch.max(outputs.data, 1)
         print("Image {} {} changed? {}".format(root_x, root_y, self.all_changed(original_labels, predicted_classes)))
-        print ((predicted_classes, predicted_loss))
-        self.diff(test_images, old_images)
+        # print ((predicted_classes, predicted_loss))
+        # self.diff(test_images, old_images)
     max_diff = np.mean(((images - old_images).cpu().numpy().reshape(images.shape[0],-1).max(1)))
     return iters, max_diff, self.percent_changed(original_labels, predicted_classes)
