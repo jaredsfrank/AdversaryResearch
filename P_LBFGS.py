@@ -91,8 +91,8 @@ class P_LBFGS(adversaries.Adverarial_Base):
               print(outputs.data[:, new_labels.data][:,0] - predicted_loss)
             iters += 1
 
-            y_indices = np.tile(np.arange(WINDOW_SIZE)+root_y, WINDOW_SIZE)
-            x_indices = np.repeat(np.arange(WINDOW_SIZE)+root_x, WINDOW_SIZE)
+            y_indices = torch.LongTensor(np.tile(np.arange(WINDOW_SIZE)+root_y, WINDOW_SIZE)).cuda()
+            x_indices = torch.LongTensor(np.repeat(np.arange(WINDOW_SIZE)+root_x, WINDOW_SIZE)).cuda()
             other_images = old_images.clone()
 
             mask = torch.ByteTensor(images.shape)+1
