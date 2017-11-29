@@ -93,7 +93,7 @@ class P_LBFGS(adversaries.Adverarial_Base):
             # Compute full loss of adversarial example
             loss = self.CE_MSE_loss(inputs, outputs, old_images, new_labels, image_reg)
             predicted_loss, predicted_classes = torch.max(outputs.data, 1)
-            if self.verbose:
+            if self.verbose and iters % 20 == 0:
               print("Target Class Weights Minus Predicted Weights:")
               print(outputs.data[:, new_labels.data][:,0] - predicted_loss)
             iters += 1
