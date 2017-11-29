@@ -88,6 +88,15 @@ class P_LBFGS(adversaries.Adverarial_Base):
       iters += 1
       root_x = 0
       root_y = 0
+
+      y_indices = np.tile(np.arange(WINDOW_SIZE)+root_y, WINDOW_SIZE)
+      x_indices = np.repeat(np.arange(WINDOW_SIZE)+root_x, WINDOW_SIZE)
+      mask = torch.ByteTensor(images.shape)+1
+      mask[:,:,:,:] = 1
+      mask[:,:,y_indices,x_indices] = 0
+      images.masked_scatter_(mask, old_images)
+
+
       # images = self.window_image(old_images, images, root_x, root_y, WINDOW_SIZE)
       if self.check_iters(iters) and self.all_changed(original_labels, predicted_classes):
         if self.show_images:
