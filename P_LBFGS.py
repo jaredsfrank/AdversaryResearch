@@ -33,7 +33,6 @@ class P_LBFGS(adversaries.Adverarial_Base):
   	mask = torch.ByteTensor(images.shape)+1
   	mask[:,:,:,:] = 1
   	mask[:,:,y_indices,x_indices] = 0
-  	print(mask)
   	images.masked_scatter_(mask, old_images)
   	return images
     
