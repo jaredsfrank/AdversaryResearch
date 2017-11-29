@@ -77,14 +77,14 @@ class P_LBFGS(adversaries.Adverarial_Base):
     if not self.all_changed(original_labels, predicted_classes):
       for root_x in range(images.shape[2]-WINDOW_SIZE):
         for root_y in range(images.shape[3]-WINDOW_SIZE):
-          root_x = 5
-          root_y = 5
+          # root_x = 5
+          # root_y = 5
           print("starting? {} {}".format(root_x, root_y))
           images[:] = old_images[:]
           iters = 0
           predicted_classes = original_predictions
           while self.check_iters(iters) and not self.all_changed(original_labels, predicted_classes):
-            if self.verbose:
+            if self.verbose and iters % 20 == 0:
               print("Iteration {}".format(iters))
             opt.zero_grad()
             # Clamp loss so that all pixels are in valid range (Between 0 and 1 unnormalized)
