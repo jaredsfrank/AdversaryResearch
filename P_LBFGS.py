@@ -16,7 +16,7 @@ WINDOW_SIZE = 15
 class P_LBFGS(adversaries.Adverarial_Base):
 
   def __init__(self, batch_size):
-    self.max_iters = -1
+    self.max_iters = 1000
     adversaries.Adverarial_Base.__init__(self, batch_size)
 
   def check_iters(self, iters):
@@ -135,7 +135,7 @@ class P_LBFGS(adversaries.Adverarial_Base):
           max_diff = np.mean(((images - old_images).cpu().numpy().reshape(images.shape[0],-1).max(1)))
           print("Max diff was {}, iters was {}".format(max_diff, iters))
           all_scores[root_x, root_y] = iters
-          np.savetxt("/scratch/jsf239/all_scores.csv", all_scores, delimiter = ",", fmt = "%d")
+          np.savetxt("/scratch/jsf239/all_scores_thresh.csv", all_scores, delimiter = ",", fmt = "%d")
     else:
       return 0, 0, 0
     return iters, max_diff, self.percent_changed(original_labels, predicted_classes)
