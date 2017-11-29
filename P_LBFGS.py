@@ -31,7 +31,9 @@ class P_LBFGS(adversaries.Adverarial_Base):
   	print (type(old_images))
   	print (type(images))
   	mask = np.ones(images.shape)
-  	mask[:,:,np.tile(np.arange(window_size)+root_y, window_size), np.repeat(np.arange(window_size)+root_x, window_size)] = 0
+  	y_indices = np.tile(np.arange(window_size)+root_y, window_size)
+  	x_indices = np.repeat(np.arange(window_size)+root_x, window_size)
+  	mask[:,:,list(y_indices),list(x_indices)] = 0
   	mask = list(mask)
   	mask[0] = list(mask[0])
   	print(mask)
