@@ -15,7 +15,7 @@ class LBFGS(adversaries.Adverarial_Base):
 
   def __init__(self, batch_size):
     self.max_iters = -1
-    self.min_iters = 100
+    self.min_iters = 50
     adversaries.Adverarial_Base.__init__(self, batch_size)
 
   def check_iters(self, iters):
