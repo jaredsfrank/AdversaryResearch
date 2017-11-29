@@ -28,8 +28,8 @@ class P_LBFGS(adversaries.Adverarial_Base):
 
   def window_image(self, old_images, images, root_x, root_y, WINDOW_SIZE):
   	"""Resores all values in images besides window"""
-  	print old_images, old_images.shape
-  	print images, images.shape
+  	print (old_images, old_images.shape)
+  	print (images, images.shape)
     
   def adversary_batch(self, data, model, target_class, image_reg, lr):
     """Creates adversarial examples for one batch of data.
@@ -67,9 +67,7 @@ class P_LBFGS(adversaries.Adverarial_Base):
     # Set target variables for model loss
     new_labels = self.target_class_tensor(target_class, outputs, original_labels)
     iters = 0
-    print("HERE???")
     while self.check_iters(iters) and not self.all_changed(original_labels, predicted_classes):
-      print("AM I IN HERE")
       if self.verbose:
         print("Iteration {}".format(iters))
       opt.zero_grad()
