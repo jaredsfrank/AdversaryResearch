@@ -30,7 +30,8 @@ class P_LBFGS(adversaries.Adverarial_Base):
   	"""Resores all values in images besides window"""
   	print (old_images.shape)
   	print (images.shape[0])
-  	# mask = None
+  	mask = np.ones(images.shape)
+  	print(mask)
   	# images.masked_scatter_(mask, old_images)
   	# return images
     
