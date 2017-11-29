@@ -80,7 +80,6 @@ class P_LBFGS(adversaries.Adverarial_Base):
           images[:] = old_images[:]
           iters = 0
           predicted_classes = original_predictions
-          print((self.check_iters(iters), not self.all_changed(original_labels, predicted_classes)))
           while self.check_iters(iters) and not self.all_changed(original_labels, predicted_classes):
             if self.verbose:
               print("Iteration {}".format(iters))
@@ -110,23 +109,18 @@ class P_LBFGS(adversaries.Adverarial_Base):
 
 
             # images = self.window_image(old_images, images, root_x, root_y, WINDOW_SIZE)
-            if not self.check_iters(iters):
-              print("exceeded limit")
-              print(iters)
             if self.all_changed(original_labels, predicted_classes):
-              print("boopd")
             if self.check_iters(iters) and self.all_changed(original_labels, predicted_classes):
-              print(iters, predicted_classes)
               if self.show_images:
                 self.save_figure(inputs.data, "After_{}_{}".format(image_reg, lr))
                 self.save_figure(old_images, "Before_{}_{}".format(image_reg, lr))
                 self.diff(images, old_images)
                 plt.show()
-              print("Down here?")
             else:
                 loss.backward()
                 opt.step()
                 new_labels = self.target_class_tensor(target_class, outputs, original_labels)
                 # self.MSE(images, Variable(old_images))
           max_diff = np.mean(((images - old_images).cpu().numpy().reshape(images.shape[0],-1).max(1)))
+          print("Max diff was {}, iters was {}".format(max_diff, iters))
     return iters, max_diff, self.percent_changed(original_labels, predicted_classes)
