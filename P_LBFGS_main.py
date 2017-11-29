@@ -7,7 +7,7 @@ python lbfgs_main.py --batch_size 100 \
 
 """
 import argparse
-import LBFGS
+import P_LBFGS
 import numpy as np
 import queue
 
@@ -51,7 +51,7 @@ def better_range(min_value, max_value):
 
 
 if __name__ == "__main__":
-    lbfgs = LBFGS.LBFGS(args.batch_size)
+    lbfgs = P_LBFGS.P_LBFGS(args.batch_size)
     ave_mse = 0.0
     iters = 10
     if args.verbose:
