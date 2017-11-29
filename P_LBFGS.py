@@ -84,7 +84,7 @@ class P_LBFGS(adversaries.Adverarial_Base):
           iters = 0
           predicted_classes = original_predictions
           while self.check_iters(iters) and not self.all_changed(original_labels, predicted_classes):
-            if self.verbose and iters % 20 == 0:
+            if self.verbose:
               print("Iteration {}".format(iters))
             opt.zero_grad()
             # Clamp loss so that all pixels are in valid range (Between 0 and 1 unnormalized)
@@ -125,4 +125,6 @@ class P_LBFGS(adversaries.Adverarial_Base):
                 # self.MSE(images, Variable(old_images))
           max_diff = np.mean(((images - old_images).cpu().numpy().reshape(images.shape[0],-1).max(1)))
           print("Max diff was {}, iters was {}".format(max_diff, iters))
+      else:
+        return 0, 0, 0
     return iters, max_diff, self.percent_changed(original_labels, predicted_classes)
