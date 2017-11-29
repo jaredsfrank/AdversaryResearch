@@ -110,6 +110,8 @@ class P_LBFGS(adversaries.Adverarial_Base):
             if not self.check_iters(iters):
               print("exceeded limit")
               print(iters)
+            if self.all_changed(original_labels, predicted_classes):
+              print("boopd")
             if self.check_iters(iters) and self.all_changed(original_labels, predicted_classes):
               print(iters, predicted_classes)
               if self.show_images:
