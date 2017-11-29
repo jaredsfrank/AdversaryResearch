@@ -95,6 +95,8 @@ class P_LBFGS(adversaries.Adverarial_Base):
           other_images = old_images.clone()
 
           mask = torch.ByteTensor(images.shape)+1
+          if self.cuda:
+            mask = mask.cuda()
           mask[:,:,:,:] = 1
           other_images[:,:,y_indices,x_indices] = images[:,:,y_indices,x_indices] 
           images[:] = other_images[:]
