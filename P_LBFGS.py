@@ -84,7 +84,7 @@ class P_LBFGS(adversaries.Adverarial_Base):
           iters = 0
           predicted_classes = original_predictions
           while self.check_iters(iters) and not self.all_changed(original_labels, predicted_classes):
-            if self.verbose:
+            if self.verbose and iters % 20 == 0:
               print("Iteration {}".format(iters))
             opt.zero_grad()
             # Clamp loss so that all pixels are in valid range (Between 0 and 1 unnormalized)
