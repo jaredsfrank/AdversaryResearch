@@ -67,7 +67,6 @@ class P_LBFGS(adversaries.Adverarial_Base):
     # Set target variables for model loss
     new_labels = self.target_class_tensor(target_class, outputs, original_labels)
     iters = 0
-    print(self.check_iters(iters), not self.all_changed(original_labels, predicted_classes))
     while self.check_iters(iters) and not self.all_changed(original_labels, predicted_classes):
       if self.verbose:
         print("Iteration {}".format(iters))
@@ -82,6 +81,8 @@ class P_LBFGS(adversaries.Adverarial_Base):
         print("Target Class Weights Minus Predicted Weights:")
         print(outputs.data[:, new_labels.data][:,0] - predicted_loss)
       iters += 1
+      root_x = 0
+      root_y = 0
       self.window_image(old_images, images, root_x, root_y, WINDOW_SIZE)
       if self.check_iters(iters) and self.all_changed(original_labels, predicted_classes):
         if self.show_images:
