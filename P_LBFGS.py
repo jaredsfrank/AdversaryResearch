@@ -89,7 +89,7 @@ class P_LBFGS(adversaries.Adverarial_Base):
       iters += 1
       root_x = 0
       root_y = 0
-      self.window_image(old_images, images, root_x, root_y, WINDOW_SIZE)
+      images = self.window_image(old_images, images, root_x, root_y, WINDOW_SIZE)
       if self.check_iters(iters) and self.all_changed(original_labels, predicted_classes):
         if self.show_images:
           self.save_figure(inputs.data, "After_{}_{}".format(image_reg, lr))
