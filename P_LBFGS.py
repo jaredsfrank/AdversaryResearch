@@ -71,50 +71,51 @@ class P_LBFGS(adversaries.Adverarial_Base):
     print(original_labels)
     # Set target variables for model loss
     new_labels = self.target_class_tensor(target_class, outputs, original_labels)
-    for root_x in range(images.shape[2]-WINDOW_SIZE):
-      for root_y in range(images.shape[3]-WINDOW_SIZE):
-        images[:] = old_images[:]
-        iters = 0
-        while self.check_iters(iters) and not self.all_changed(original_labels, predicted_classes):
-          if self.verbose:
-            print("Iteration {}".format(iters))
-          opt.zero_grad()
-          # Clamp loss so that all pixels are in valid range (Between 0 and 1 unnormalized)
-          self.clamp_images(images)
-          outputs = model(inputs)
-          # Compute full loss of adversarial example
-          loss = self.CE_MSE_loss(inputs, outputs, old_images, new_labels, image_reg)
-          predicted_loss, predicted_classes = torch.max(outputs.data, 1)
-          if self.verbose:
-            print("Target Class Weights Minus Predicted Weights:")
-            print(outputs.data[:, new_labels.data][:,0] - predicted_loss)
-          iters += 1
+    if not self.all_changed(original_labels, predicted_classes):
+      for root_x in range(images.shape[2]-WINDOW_SIZE):
+        for root_y in range(images.shape[3]-WINDOW_SIZE):
+          images[:] = old_images[:]
+          iters = 0
+          while self.check_iters(iters) and not self.all_changed(original_labels, predicted_classes):
+            if self.verbose:
+              print("Iteration {}".format(iters))
+            opt.zero_grad()
+            # Clamp loss so that all pixels are in valid range (Between 0 and 1 unnormalized)
+            self.clamp_images(images)
+            outputs = model(inputs)
+            # Compute full loss of adversarial example
+            loss = self.CE_MSE_loss(inputs, outputs, old_images, new_labels, image_reg)
+            predicted_loss, predicted_classes = torch.max(outputs.data, 1)
+            if self.verbose:
+              print("Target Class Weights Minus Predicted Weights:")
+              print(outputs.data[:, new_labels.data][:,0] - predicted_loss)
+            iters += 1
 
-          y_indices = np.tile(np.arange(WINDOW_SIZE)+root_y, WINDOW_SIZE)
-          x_indices = np.repeat(np.arange(WINDOW_SIZE)+root_x, WINDOW_SIZE)
-          other_images = old_images.clone()
+            y_indices = np.tile(np.arange(WINDOW_SIZE)+root_y, WINDOW_SIZE)
+            x_indices = np.repeat(np.arange(WINDOW_SIZE)+root_x, WINDOW_SIZE)
+            other_images = old_images.clone()
 
-          mask = torch.ByteTensor(images.shape)+1
-          if self.cuda:
-            mask = mask.cuda()
-          mask[:,:,:,:] = 1
-          other_images[:,:,y_indices,x_indices] = images[:,:,y_indices,x_indices] 
-          images[:] = other_images[:]
+            mask = torch.ByteTensor(images.shape)+1
+            if self.cuda:
+              mask = mask.cuda()
+            mask[:,:,:,:] = 1
+            other_images[:,:,y_indices,x_indices] = images[:,:,y_indices,x_indices] 
+            images[:] = other_images[:]
 
 
 
-          # images = self.window_image(old_images, images, root_x, root_y, WINDOW_SIZE)
-          if self.check_iters(iters) and self.all_changed(original_labels, predicted_classes):
-            print(iters, predicted_classes)
-            if self.show_images:
-              self.save_figure(inputs.data, "After_{}_{}".format(image_reg, lr))
-              self.save_figure(old_images, "Before_{}_{}".format(image_reg, lr))
-              self.diff(images, old_images)
-              plt.show()
-          else:
-              loss.backward()
-              opt.step()
-              new_labels = self.target_class_tensor(target_class, outputs, original_labels)
-              # self.MSE(images, Variable(old_images))
-        max_diff = np.mean(((images - old_images).cpu().numpy().reshape(images.shape[0],-1).max(1)))
+            # images = self.window_image(old_images, images, root_x, root_y, WINDOW_SIZE)
+            if self.check_iters(iters) and self.all_changed(original_labels, predicted_classes):
+              print(iters, predicted_classes)
+              if self.show_images:
+                self.save_figure(inputs.data, "After_{}_{}".format(image_reg, lr))
+                self.save_figure(old_images, "Before_{}_{}".format(image_reg, lr))
+                self.diff(images, old_images)
+                plt.show()
+            else:
+                loss.backward()
+                opt.step()
+                new_labels = self.target_class_tensor(target_class, outputs, original_labels)
+                # self.MSE(images, Variable(old_images))
+          max_diff = np.mean(((images - old_images).cpu().numpy().reshape(images.shape[0],-1).max(1)))
     return iters, max_diff, self.percent_changed(original_labels, predicted_classes)
