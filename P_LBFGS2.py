@@ -98,7 +98,7 @@ class LBFGS(adversaries.Adverarial_Base):
         test_images = old_images.clone()
         test_images[:,:,y_indices,x_indices] = images[:,:,y_indices,x_indices]
         outputs = model(Variable(test_images))
-        predicted_loss, predicted_classes = torch.max(outputs.data, 1)[1]
+        predicted_loss, predicted_classes = torch.max(outputs.data, 1)
         print("Image {} {} changed? {}".format(root_x, root_y, self.all_changed(original_labels, predicted_classes)))
         print ((predicted_classes, predicted_loss))
         self.diff(test_images, old_images)
