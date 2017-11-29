@@ -84,6 +84,7 @@ class P_LBFGS(adversaries.Adverarial_Base):
           iters = 0
           predicted_classes = original_predictions
           while self.check_iters(iters) and not self.all_changed(original_labels, predicted_classes):
+            print("checking {} {}".format(self.check_iters(iters), not self.all_changed(original_labels, predicted_classes)))
             if self.verbose and iters % 20 == 0:
               print("Iteration {}".format(iters))
             opt.zero_grad()
