@@ -85,5 +85,6 @@ class LBFGS(adversaries.Adverarial_Base):
           opt.step()
           new_labels = self.target_class_tensor(target_class, outputs, original_labels)
           # self.MSE(images, Variable(old_images))
+    print(iters)
     max_diff = np.mean(((images - old_images).cpu().numpy().reshape(images.shape[0],-1).max(1)))
     return iters, max_diff, self.percent_changed(original_labels, predicted_classes)
