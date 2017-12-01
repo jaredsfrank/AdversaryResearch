@@ -119,14 +119,6 @@ class P_LBFGS(adversaries.Adverarial_Base):
             if self.verbose and iters % 20 == 0:
               print("Target Class Weights Minus Predicted Weights of Cropped:")
               print(outputs.data[:, new_labels.data][:,0] - predicted_loss)
-
-            # images = self.window_image(old_images, images, root_x, root_y, WINDOW_SIZE)
-            if self.check_iters(iters) and self.all_changed(original_labels, predicted_classes):
-              if self.show_images:
-                self.save_figure(inputs.data, "After_{}_{}".format(image_reg, lr))
-                self.save_figure(old_images, "Before_{}_{}".format(image_reg, lr))
-                self.diff(images, old_images)
-                plt.show()
             else:
                 loss.backward()
                 opt.step()
@@ -134,6 +126,11 @@ class P_LBFGS(adversaries.Adverarial_Base):
                 # self.MSE(images, Variable(old_images))
           max_diff = np.mean(((images - old_images).cpu().numpy().reshape(images.shape[0],-1).max(1)))
           print("Max diff was {}, iters was {}".format(max_diff, iters))
+          if self.show_images:
+            self.save_figure(inputs.data, "After_{}_{}".format(image_reg, lr))
+            self.save_figure(old_images, "Before_{}_{}".format(image_reg, lr))
+            self.diff(images, old_images)
+            plt.show()
           all_scores[root_x, root_y] = iters
           np.savetxt("/scratch/jsf239/all_scores_thresh.csv", all_scores, delimiter = ",", fmt = "%d")
     else:
