@@ -16,7 +16,7 @@ WINDOW_SIZE = 15
 class P_LBFGS(adversaries.Adverarial_Base):
 
   def __init__(self, batch_size):
-    self.max_iters = 500
+    self.max_iters = 1000
     adversaries.Adverarial_Base.__init__(self, batch_size)
 
   def check_iters(self, iters):
@@ -74,7 +74,8 @@ class P_LBFGS(adversaries.Adverarial_Base):
     iters = 0
     # Set target variables for model loss
     new_labels = self.target_class_tensor(target_class, outputs, original_labels)
-    all_scores = np.zeros((images.shape[2]-WINDOW_SIZE, images.shape[3]-WINDOW_SIZE))
+    all_scores = np.zeros(((images.shape[2]-WINDOW_SIZE)/float(WINDOW_SIZE), (images.shape[3]-WINDOW_SIZE)/float(WINDOW_SIZE)))
+    prob_diffs = np.zeros(((images.shape[2]-WINDOW_SIZE)/float(WINDOW_SIZE), (images.shape[3]-WINDOW_SIZE)/float(WINDOW_SIZE)))
     if not self.all_changed(original_labels, predicted_classes):
       for root_x in range(0, images.shape[2]-WINDOW_SIZE, WINDOW_SIZE):
         for root_y in range(0, images.shape[3]-WINDOW_SIZE, WINDOW_SIZE):
@@ -131,8 +132,10 @@ class P_LBFGS(adversaries.Adverarial_Base):
             self.save_figure(old_images, "Before_{}_{}".format(image_reg, lr))
             self.diff(images, old_images)
             plt.show()
-          all_scores[root_x, root_y] = iters
+          all_scores[root_x/float(WINDOW_SIZE), root_y/float(WINDOW_SIZE)] = iters
+          prob_diffs[root_x/float(WINDOW_SIZE), root_y/float(WINDOW_SIZE)] = outputs.data[:, new_labels.data][:,0] - predicted_loss
           np.savetxt("/scratch/jsf239/all_scores_thresh.csv", all_scores, delimiter = ",", fmt = "%d")
+          np.savetxt("/scratch/jsf239/prob_diffs.csv", prob_diffs, delimiter = ",", fmt = "%d")
     else:
       return 0, 0, 0
     return iters, max_diff, self.percent_changed(original_labels, predicted_classes)
