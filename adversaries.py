@@ -28,6 +28,7 @@ class Adverarial_Base(object):
     # Instantiate Loss Classes
     self.CrossEntropy = nn.CrossEntropyLoss()
     self.MSE = nn.MSELoss()
+    self.sub_dir = ""
     self.cuda = False
 
   def generator_hack(self, inputs):
@@ -47,7 +48,7 @@ class Adverarial_Base(object):
     """Unnormalizes image, shows it, and saves it into scratch."""
     fig = plt.figure(name)
     self.imshow(torchvision.utils.make_grid(imgs))
-    fig.savefig("/scratch/jsf239/{}_2.png".format(name))
+    fig.savefig("/scratch/jsf239/}{}{}.png".format(self.sub_dir, name))
 
   def load_data(self, path, batch_size = 100, shuffle = True):
     """Initializes data loader given a batch size."""
@@ -73,7 +74,7 @@ class Adverarial_Base(object):
     maximum_element = np.max(image_diff)
     image_diff/=maximum_element
     plt.imshow(np.transpose(image_diff, (1, 2, 0)))
-    fig.savefig("/scratch/jsf239/diff_2.png")
+    fig.savefig("/scratch/jsf239/{}diff.png".format(self.sub_dir))
 
 
   def percent_changed(self, original_labels, predictions):
