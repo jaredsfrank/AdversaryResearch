@@ -134,8 +134,8 @@ class P_LBFGS(adversaries.Adverarial_Base):
             self.diff(images, old_images)
             plt.show()
           all_scores[root_x//(WINDOW_SIZE), root_y//(WINDOW_SIZE)] = iters
-          print(outputs.data[:, new_labels.data][:,0] - predicted_loss)
-          prob_diffs[root_x//(WINDOW_SIZE), root_y//(WINDOW_SIZE)] = (outputs.data[:, new_labels.data][:,0] - predicted_loss).numpy()
+          print(outputs.data[:, new_labels.data][:,0] - predicted_loss).cpu().numpy()
+          prob_diffs[root_x//(WINDOW_SIZE), root_y//(WINDOW_SIZE)] = (outputs.data[:, new_labels.data][:,0] - predicted_loss).cpu().numpy()
           np.savetxt("/scratch/jsf239/{}all_scores.csv".format(self.sub_dir), all_scores, delimiter = ",", fmt = "%d")
           np.savetxt("/scratch/jsf239/{}prob_diffs.csv".format(self.sub_dir), prob_diffs, delimiter = ",", fmt = "%d")
     else:
