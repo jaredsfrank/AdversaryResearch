@@ -48,7 +48,7 @@ class Adverarial_Base(object):
     """Unnormalizes image, shows it, and saves it into scratch."""
     fig = plt.figure(name)
     self.imshow(torchvision.utils.make_grid(imgs))
-    fig.savefig("/scratch/jsf239/}{}{}.png".format(self.sub_dir, name))
+    fig.savefig("/scratch/jsf239/{}{}.png".format(self.sub_dir, name))
 
   def load_data(self, path, batch_size = 100, shuffle = True):
     """Initializes data loader given a batch size."""
