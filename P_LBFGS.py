@@ -74,8 +74,8 @@ class P_LBFGS(adversaries.Adverarial_Base):
     iters = 0
     # Set target variables for model loss
     new_labels = self.target_class_tensor(target_class, outputs, original_labels)
-    all_scores = np.zeros(((images.shape[2]-WINDOW_SIZE)//(WINDOW_SIZE), (images.shape[3]-WINDOW_SIZE)//(WINDOW_SIZE)))
-    prob_diffs = np.zeros(((images.shape[2]-WINDOW_SIZE)//(WINDOW_SIZE), (images.shape[3]-WINDOW_SIZE)//(WINDOW_SIZE)))
+    all_scores = np.zeros(((images.shape[2]-WINDOW_SIZE)//(WINDOW_SIZE)+1, (images.shape[3]-WINDOW_SIZE)//(WINDOW_SIZE)+1))
+    prob_diffs = np.zeros(((images.shape[2]-WINDOW_SIZE)//(WINDOW_SIZE)+1, (images.shape[3]-WINDOW_SIZE)//(WINDOW_SIZE)+1))
     if not self.all_changed(original_labels, predicted_classes):
       for root_x in range(0, images.shape[2]-WINDOW_SIZE, WINDOW_SIZE):
         for root_y in range(0, images.shape[3]-WINDOW_SIZE, WINDOW_SIZE):
