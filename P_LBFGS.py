@@ -9,6 +9,7 @@ import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
 import torch.nn as nn
+from convert_label import convert_label
 # import torch.optim as optim
 
 WINDOW_SIZE = 15
@@ -69,8 +70,8 @@ class P_LBFGS(adversaries.Adverarial_Base):
     original_predictions = predicted_classes.clone()
     # if self.verbose:
     print("The predicted classes are:")
-    print(predicted_classes)
-    print(original_labels)
+    print(convert_label(predicted_classes.cpu().numpy()))
+    print(convert_label(original_labels.cpu().numpy()))
     iters = 0
     # Set target variables for model loss
     new_labels = self.target_class_tensor(target_class, outputs, original_labels)
