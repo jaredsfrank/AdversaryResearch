@@ -70,8 +70,8 @@ class P_LBFGS(adversaries.Adverarial_Base):
     original_predictions = predicted_classes.clone()
     # if self.verbose:
     print("The predicted classes are:")
-    print(convert_label(predicted_classes.cpu().numpy())[0])
-    print(convert_label(original_labels.cpu().numpy())[0])
+    print(convert_label(predicted_classes.cpu().numpy()))
+    print(convert_label(original_labels.cpu().numpy()))
     iters = 0
     # Set target variables for model loss
     new_labels = self.target_class_tensor(target_class, outputs, original_labels)
