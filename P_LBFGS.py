@@ -61,7 +61,7 @@ class P_LBFGS(adversaries.Adverarial_Base):
       images = images.cuda()
       original_labels = original_labels.cuda()
     inputs = Variable(images, requires_grad = True)
-    # opt = optim.SGD(self.generator_hack(inputs), lr=lr, momentum=0.9)
+    opt = optim.SGD(self.generator_hack(inputs), lr=lr, momentum=0.9)
     print("learning rate is {}".format(lr))
     self.clamp_images(images)
     old_images = images.clone()
