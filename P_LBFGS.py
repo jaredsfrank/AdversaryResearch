@@ -9,7 +9,7 @@ import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
 import torch.nn as nn
-import torch.optim as optim
+# import torch.optim as optim
 
 WINDOW_SIZE = 15
 
@@ -60,7 +60,7 @@ class P_LBFGS(adversaries.Adverarial_Base):
       images = images.cuda()
       original_labels = original_labels.cuda()
     inputs = Variable(images, requires_grad = True)
-    opt = optim.SGD(self.generator_hack(inputs), lr=lr, momentum=0.9)
+    # opt = optim.SGD(self.generator_hack(inputs), lr=lr, momentum=0.9)
     print("learning rate is {}".format(lr))
     self.clamp_images(images)
     old_images = images.clone()
@@ -88,7 +88,7 @@ class P_LBFGS(adversaries.Adverarial_Base):
           while self.check_iters(iters) and not self.all_changed(original_labels, predicted_classes):
             if self.verbose and iters % 20 == 0:
               print("Iteration {}".format(iters))
-            opt.zero_grad()
+            # opt.zero_grad()
             # Clamp loss so that all pixels are in valid range (Between 0 and 1 unnormalized)
             self.clamp_images(images)
             outputs = model(inputs)
@@ -122,7 +122,8 @@ class P_LBFGS(adversaries.Adverarial_Base):
               print(outputs.data[:, new_labels.data][:,0] - predicted_loss)
             else:
                 loss.backward()
-                opt.step()
+                # opt.step()
+                inputs.data -= lr*torch.sign(inputs.grad).data
                 new_labels = self.target_class_tensor(target_class, outputs, original_labels)
                 # self.MSE(images, Variable(old_images))
           max_diff = np.mean(((images - old_images).cpu().numpy().reshape(images.shape[0],-1).max(1)))
