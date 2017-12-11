@@ -55,6 +55,7 @@ class P_LBFGS(adversaries.Adverarial_Base):
     # Load pretrained network
     self.iteration = 0
     original_subdir = self.sub_dir 
+    successes = 0
     for i in range(1000):
       model = models.resnet101(pretrained=True)
       self.sub_dir = original_subdir + str(i).zfill(4)
@@ -65,7 +66,9 @@ class P_LBFGS(adversaries.Adverarial_Base):
       for parameter in model.parameters():
           parameter.requires_grad = False
       data = next(iter(self.val_loader))
-      batch = self.adversary_batch(data, model, target_class, image_reg, lr)
+      _, _, _, success = self.adversary_batch(data, model, target_class, image_reg, lr)
+      successes += success
+      np.savetxt("/scratch/jsf239/{}succ_percent.csv".format(original_subdir), successes, delimiter = ",", fmt = "%d")
     
   def adversary_batch(self, data, model, target_class, image_reg, lr):
     """Creates adversarial examples for one batch of data.
@@ -107,6 +110,7 @@ class P_LBFGS(adversaries.Adverarial_Base):
     new_labels = self.target_class_tensor(target_class, outputs, original_labels)
     all_scores = np.zeros(((images.shape[2]-WINDOW_SIZE)//(WINDOW_SIZE)+1, (images.shape[3]-WINDOW_SIZE)//(WINDOW_SIZE)+1))
     prob_diffs = np.zeros(((images.shape[2]-WINDOW_SIZE)//(WINDOW_SIZE)+1, (images.shape[3]-WINDOW_SIZE)//(WINDOW_SIZE)+1))
+    success = 0
     if not self.all_changed(original_labels, predicted_classes):
       for root_x in range(0, images.shape[2]-WINDOW_SIZE, WINDOW_SIZE):
         for root_y in range(0, images.shape[3]-WINDOW_SIZE, WINDOW_SIZE):
@@ -157,6 +161,8 @@ class P_LBFGS(adversaries.Adverarial_Base):
                 # inputs.data -= lr*torch.sign(inputs.grad).data
                 new_labels = self.target_class_tensor(target_class, outputs, original_labels)
                 # self.MSE(images, Variable(old_images))
+          if iters < self.max_iters:
+            success = 1
           max_diff = np.mean(((images - old_images).cpu().numpy().reshape(images.shape[0],-1).max(1)))
           print("Max diff was {}, iters was {}".format(max_diff, iters))
           if self.show_images:
@@ -170,5 +176,5 @@ class P_LBFGS(adversaries.Adverarial_Base):
           np.savetxt("/scratch/jsf239/{}all_scores.csv".format(self.sub_dir), all_scores, delimiter = ",", fmt = "%d")
           np.savetxt("/scratch/jsf239/{}prob_diffs.csv".format(self.sub_dir), prob_diffs, delimiter = ",")
     else:
-      return 0, 0, 0
-    return iters, max_diff, self.percent_changed(original_labels, predicted_classes)
+      return 0, 0, 1
+    return success, iters, max_diff, success
