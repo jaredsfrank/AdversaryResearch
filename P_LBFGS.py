@@ -53,6 +53,7 @@ class P_LBFGS(adversaries.Adverarial_Base):
 
     """
     # Load pretrained network
+    assert(len(self.sub_dir) == 0 or self.sub_dir[-1] == "/")
     self.iteration = 0
     original_subdir = self.sub_dir 
     successes = 0
