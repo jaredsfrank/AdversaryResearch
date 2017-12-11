@@ -36,6 +36,36 @@ class P_LBFGS(adversaries.Adverarial_Base):
     mask[:,:,y_indices,x_indices] = 0
     images.masked_scatter_(mask, old_images)
     return images
+
+
+  def create_1000_batches(self, target_class, image_reg, lr):
+    """Create adversarial example for one random batch of data.
+  
+    Args:
+      target_class: int, class to target for adverserial examples
+        If target_class is -1, optimize non targeted attack. Choose next closest class.
+      image_reg: Regularization constant for image loss component of loss function
+      lr: float, Learning rate
+
+    Returns:
+      iters: Number of iterations it took to create adversarial example
+      MSE: Means Squared error between original and altered image.
+
+    """
+    # Load pretrained network
+    self.iteration = 0
+    original_subdir = self.sub_dir 
+    for i in range(1000):
+      model = models.resnet101(pretrained=True)
+      self.sub_dir = original_subdir + str(i).zfill(4)
+      if self.cuda:
+        model.cuda()
+      model.eval()
+      # Set all model parameters to not update during training
+      for parameter in model.parameters():
+          parameter.requires_grad = False
+      data = next(iter(self.val_loader))
+      batch = self.adversary_batch(data, model, target_class, image_reg, lr)
     
   def adversary_batch(self, data, model, target_class, image_reg, lr):
     """Creates adversarial examples for one batch of data.
