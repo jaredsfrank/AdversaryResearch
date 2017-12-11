@@ -67,6 +67,6 @@ if __name__ == "__main__":
         lbfgs.max_iters = args.max_iters
     if args.sub_dir is not None:
         lbfgs.sub_dir = args.sub_dir
-    lbfgs.create_one_adversary_batch(target_class=args.target_class,
-                                    image_reg=args.image_reg, lr=args.lr)
+    lbfgs.create_1000_batches(target_class=args.target_class,
+                              image_reg=args.image_reg, lr=args.lr)
     
