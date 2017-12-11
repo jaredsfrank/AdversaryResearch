@@ -69,7 +69,7 @@ class P_LBFGS(adversaries.Adverarial_Base):
       data = next(iter(self.val_loader))
       _, _, _, success = self.adversary_batch(data, model, target_class, image_reg, lr)
       successes += success
-      np.savetxt("/scratch/jsf239/{}succ_percent.csv".format(original_subdir), np.array(successes), delimiter = ",", fmt = "%d")
+      np.savetxt("/scratch/jsf239/{}succ_percent.csv".format(original_subdir), np.array([successes]), delimiter = ",", fmt = "%d")
     
   def adversary_batch(self, data, model, target_class, image_reg, lr):
     """Creates adversarial examples for one batch of data.
