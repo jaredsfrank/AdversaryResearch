@@ -56,7 +56,7 @@ class P_LBFGS(adversaries.Adverarial_Base):
     assert(len(self.sub_dir) == 0 or self.sub_dir[-1] == "/")
     self.iteration = 0
     original_subdir = self.sub_dir 
-    successes = 0
+    successes = 3
     for i in range(1000):
       model = models.resnet101(pretrained=True)
       self.sub_dir = original_subdir + str(i).zfill(4)
@@ -67,9 +67,10 @@ class P_LBFGS(adversaries.Adverarial_Base):
       for parameter in model.parameters():
           parameter.requires_grad = False
       data = next(iter(self.val_loader))
-      _, _, _, success = self.adversary_batch(data, model, target_class, image_reg, lr)
-      successes += success
-      np.savetxt("/scratch/jsf239/{}succ_percent.csv".format(original_subdir), np.array([successes]), delimiter = ",", fmt = "%d")
+      if i < 4:
+        _, _, _, success = self.adversary_batch(data, model, target_class, image_reg, lr)
+        successes += success
+        np.savetxt("/scratch/jsf239/{}succ_percent.csv".format(original_subdir), np.array([successes/float(i)]), delimiter = ",", fmt = "%d")
     
   def adversary_batch(self, data, model, target_class, image_reg, lr):
     """Creates adversarial examples for one batch of data.
@@ -177,5 +178,6 @@ class P_LBFGS(adversaries.Adverarial_Base):
           np.savetxt("/scratch/jsf239/{}all_scores.csv".format(self.sub_dir), all_scores, delimiter = ",", fmt = "%d")
           np.savetxt("/scratch/jsf239/{}prob_diffs.csv".format(self.sub_dir), prob_diffs, delimiter = ",")
     else:
-      return 0, 0, 1
+      return 0, 0, 0, 1
     return success, iters, max_diff, success
+
