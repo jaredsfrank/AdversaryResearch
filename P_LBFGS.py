@@ -67,7 +67,7 @@ class P_LBFGS(adversaries.Adverarial_Base):
       for parameter in model.parameters():
           parameter.requires_grad = False
       data = next(iter(self.val_loader))
-      if i < 4:
+      if i >= 4:
         _, _, _, success = self.adversary_batch(data, model, target_class, image_reg, lr)
         successes += success
         np.savetxt("/scratch/jsf239/{}succ_percent.csv".format(original_subdir), np.array([successes/float(i)]), delimiter = ",", fmt = "%d")
