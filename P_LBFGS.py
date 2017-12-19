@@ -71,8 +71,7 @@ class P_LBFGS(adversaries.Adverarial_Base):
     # Load pretrained network
     assert(len(self.sub_dir) == 0 or self.sub_dir[-1] == "/")
     self.iteration = 0
-    original_subdir = self.sub_dir 
-    successes = 3
+    original_subdir = self.sub_dir
     for i in range(1000):
       model = models.resnet101(pretrained=True)
       self.sub_dir = original_subdir + str(i).zfill(4)
@@ -83,10 +82,9 @@ class P_LBFGS(adversaries.Adverarial_Base):
       for parameter in model.parameters():
           parameter.requires_grad = False
       data = next(iter(self.val_loader))
-      if i >= 5:
-        _, _, _, success = self.adversary_batch(data, model, target_class, image_reg, lr)
-        successes += success
-        np.savetxt("/scratch/jsf239/{}succ_percent.csv".format(original_subdir), np.array([successes/float(i)]), delimiter = ",")
+      _, _, _, success = self.adversary_batch(data, model, target_class, image_reg, lr)
+      successes += success
+      np.savetxt("/scratch/jsf239/{}succ_percent.csv".format(original_subdir), np.array([successes/float(i)]), delimiter = ",")
     
   def adversary_batch(self, data, model, target_class, image_reg, lr):
     """Creates adversarial examples for one batch of data.
@@ -167,7 +165,7 @@ class P_LBFGS(adversaries.Adverarial_Base):
 
         if self.show_images:
           self.save_figure(inputs.data, "After_{}_{}".format(image_reg, lr))
-          self.save_figure(old_images, "Before_{}_{}".format(image_reg, lr))
+          # self.save_figure(old_images, "Before_{}_{}".format(image_reg, lr))
           plt.show()
         print((outputs.data[:, new_labels.data][:,0] - predicted_loss).cpu().numpy())
         print(all_scores, type(all_scores), all_scores.dtype)
