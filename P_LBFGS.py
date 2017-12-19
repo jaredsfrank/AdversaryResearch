@@ -125,7 +125,7 @@ class P_LBFGS(adversaries.Adverarial_Base):
     # Set target variables for model loss
     new_labels = self.target_class_tensor(target_class, outputs, original_labels)
     all_scores = np.zeros((images.shape[0], (images.shape[2]-WINDOW_SIZE)//(WINDOW_SIZE)+1, (images.shape[3]-WINDOW_SIZE)//(WINDOW_SIZE)+1))
-    success = 0
+    success_list = np.zeros(images.shape[0])
     for root_x in range(0, images.shape[2]-WINDOW_SIZE, WINDOW_SIZE):
       for root_y in range(0, images.shape[3]-WINDOW_SIZE, WINDOW_SIZE):
         print("starting {} {}".format(root_x, root_y))
@@ -158,9 +158,10 @@ class P_LBFGS(adversaries.Adverarial_Base):
           new_labels = self.target_class_tensor(target_class, outputs, original_labels)
           all_scores[:, root_x//(WINDOW_SIZE), root_y//(WINDOW_SIZE)] += (original_labels.cpu().numpy() == predicted_classes.cpu().numpy()).astype("float64")
 
-        if iters < self.max_iters:
-          success = 1
-        success += len(np.where(all_scores[:, root_x//(WINDOW_SIZE), root_y//(WINDOW_SIZE)]<self.max_iters)[0])
+        # success += len(np.where(all_scores[:, root_x//(WINDOW_SIZE), root_y//(WINDOW_SIZE)]<self.max_iters)[0])
+        success_list = np.maximum(success, all_scores[:, root_x//(WINDOW_SIZE), root_y//(WINDOW_SIZE)] < self.max_iters)
+        success = np.sum(success_list)
+        print(success)
         max_diff = np.mean(((images - old_images).cpu().numpy().reshape(images.shape[0],-1).max(1)))
         print("Max diff was {}, iters was {}".format(max_diff, iters))
 
