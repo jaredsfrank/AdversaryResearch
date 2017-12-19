@@ -161,7 +161,7 @@ class P_LBFGS(adversaries.Adverarial_Base):
         # success += len(np.where(all_scores[:, root_x//(WINDOW_SIZE), root_y//(WINDOW_SIZE)]<self.max_iters)[0])
         success_list = np.maximum(success_list, all_scores[:, root_x//(WINDOW_SIZE), root_y//(WINDOW_SIZE)] < self.max_iters)
         success = np.sum(success_list)
-        print("THere are {} successes".format(success))
+        print("There are {} successes".format(success))
         max_diff = np.mean(((images - old_images).cpu().numpy().reshape(images.shape[0],-1).max(1)))
         print("Max diff was {}, iters was {}".format(max_diff, iters))
 
@@ -170,7 +170,6 @@ class P_LBFGS(adversaries.Adverarial_Base):
           # self.save_figure(old_images, "Before_{}_{}".format(image_reg, lr))
           plt.show()
         print((outputs.data[:, new_labels.data][:,0] - predicted_loss).cpu().numpy())
-        print(all_scores, type(all_scores), all_scores.dtype)
         # np.savetxt("/scratch/jsf239/{}all_scores.csv".format(self.sub_dir), all_scores, delimiter = ",")
         np.save("/scratch/jsf239/{}all_scores.csv".format(self.sub_dir), all_scores)
     return success, iters, max_diff, success
