@@ -161,7 +161,7 @@ class P_LBFGS(adversaries.Adverarial_Base):
         # success += len(np.where(all_scores[:, root_x//(WINDOW_SIZE), root_y//(WINDOW_SIZE)]<self.max_iters)[0])
         success_list = np.maximum(success, all_scores[:, root_x//(WINDOW_SIZE), root_y//(WINDOW_SIZE)] < self.max_iters)
         success = np.sum(success_list)
-        print(success)
+        print("THere are {} successes".format(success))
         max_diff = np.mean(((images - old_images).cpu().numpy().reshape(images.shape[0],-1).max(1)))
         print("Max diff was {}, iters was {}".format(max_diff, iters))
 
