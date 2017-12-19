@@ -41,7 +41,7 @@ class P_LBFGS(adversaries.Adverarial_Base):
     return images
 
 
-  def window_image(self, old_image, images, root_x, root_y, window_size):
+  def window_image(self, old_images, images, root_x, root_y, window_size):
     """Resores all values in images besides window in place"""
     y_indices = torch.LongTensor(np.tile(np.arange(window_size)+root_y, window_size)).cuda()
     x_indices = torch.LongTensor(np.repeat(np.arange(window_size)+root_x, window_size)).cuda()
@@ -149,7 +149,7 @@ class P_LBFGS(adversaries.Adverarial_Base):
             print("Target Class Weights Minus Predicted Weights of Original:")
             print(outputs.data[:, new_labels.data][:,0] - predicted_loss)
           
-          self.window_image(old_image, images, root_x, root_y, window_size)
+          self.window_image(old_images, images, root_x, root_y, window_size)
 
           outputs = model(inputs)
           loss = self.CE_MSE_loss(inputs, outputs, old_images, new_labels, image_reg)
