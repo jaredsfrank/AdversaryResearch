@@ -157,7 +157,7 @@ class P_LBFGS(adversaries.Adverarial_Base):
           loss.backward()
           opt.step()
           new_labels = self.target_class_tensor(target_class, outputs, original_labels)
-          all_scores[:, root_x//(WINDOW_SIZE), root_y//(WINDOW_SIZE)] += (original_labels.cpu().numpy() == predicted_classes.cpu().numpy())
+          all_scores[:, root_x//(WINDOW_SIZE), root_y//(WINDOW_SIZE)] += (original_labels.cpu().numpy() == predicted_classes.cpu().numpy()).astype("float64")
 
         if iters < self.max_iters:
           success = 1
