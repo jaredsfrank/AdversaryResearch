@@ -149,7 +149,7 @@ class P_LBFGS(adversaries.Adverarial_Base):
             print("Target Class Weights Minus Predicted Weights of Original:")
             print(outputs.data[:, new_labels.data][:,0] - predicted_loss)
           
-          self.window_image(old_images, images, root_x, root_y, window_size)
+          self.window_image(old_images, images, root_x, root_y, WINDOW_SIZE)
 
           outputs = model(inputs)
           loss = self.CE_MSE_loss(inputs, outputs, old_images, new_labels, image_reg)
