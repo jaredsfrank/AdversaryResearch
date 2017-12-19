@@ -171,6 +171,6 @@ class P_LBFGS(adversaries.Adverarial_Base):
           plt.show()
         print((outputs.data[:, new_labels.data][:,0] - predicted_loss).cpu().numpy())
         print(all_scores)
-        np.savetxt("/scratch/jsf239/{}all_scores.csv".format(self.sub_dir), all_scores, delimiter = ",", fmt = "%d")
+        np.savetxt("/scratch/jsf239/{}all_scores.csv".format(self.sub_dir), all_scores, delimiter = ",")
     return success, iters, max_diff, success
 
