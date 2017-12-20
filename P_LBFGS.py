@@ -29,7 +29,7 @@ class P_LBFGS(adversaries.Adverarial_Base):
       return iters < self.max_iters
     else:
       return True
-      
+
   def window_image(self, old_images, images, root_x, root_y, window_size):
     """Resores all values in images besides window in place"""
     y_indices = torch.LongTensor(np.tile(np.arange(window_size)+root_y, window_size)).cuda()
@@ -109,6 +109,7 @@ class P_LBFGS(adversaries.Adverarial_Base):
     # if self.verbose:
     print("The predicted classes are:")
     print(convert_label(predicted_classes.cpu().numpy()))
+    print(predicted_classes.cpu().numpy())
     print(convert_label(original_labels.cpu().numpy()))
 
     # Set target variables for model loss
@@ -153,7 +154,7 @@ class P_LBFGS(adversaries.Adverarial_Base):
         print("There are {} successes".format(success))
         max_diff = np.mean(((images - old_images).cpu().numpy().reshape(images.shape[0],-1).max(1)))
         print("Max diff was {}, iters was {}".format(max_diff, iters))
-        print(all_scores)
+        # print(all_scores)
 
         if self.show_images:
           self.save_figure(inputs.data, "After_{}_{}".format(image_reg, lr))
