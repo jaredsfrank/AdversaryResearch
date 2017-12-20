@@ -100,7 +100,7 @@ class P_LBFGS(adversaries.Adverarial_Base):
       images = images.cuda()
       original_labels = original_labels.cuda()
     inputs = Variable(images, requires_grad = True)
-    opt = optim.Adam(self.generator_hack(inputs), lr=lr)
+    opt = optim.SGD(self.generator_hack(inputs), lr=lr, momentum=0.9)
     self.clamp_images(images)
     old_images = images.clone()
     outputs = model(inputs)
@@ -117,6 +117,7 @@ class P_LBFGS(adversaries.Adverarial_Base):
     success_list = np.zeros(images.shape[0])
     for root_x in range(0, images.shape[2]-WINDOW_SIZE, WINDOW_SIZE):
       for root_y in range(0, images.shape[3]-WINDOW_SIZE, WINDOW_SIZE):
+        mini_list = np.ones(images.shape[0])
         print("starting {} {}".format(root_x, root_y))
         images[:] = old_images[:]
         iters = 0
@@ -138,7 +139,9 @@ class P_LBFGS(adversaries.Adverarial_Base):
           # Determine new closest labels
           new_labels = self.target_class_tensor(target_class, outputs, original_labels)
           # Upadate scores matrix
-          all_scores[:, root_x//(WINDOW_SIZE), root_y//(WINDOW_SIZE)] += (original_labels.cpu().numpy() == predicted_classes.cpu().numpy()).astype("float64")
+
+          mini_list = np.minimum((original_labels.cpu().numpy() == predicted_classes.cpu().numpy()).astype("float64"), mini_list)
+          all_scores[:, root_x//(WINDOW_SIZE), root_y//(WINDOW_SIZE)] += mini_list
           iters += 1
         success_list = np.maximum(success_list, all_scores[:, root_x//(WINDOW_SIZE), root_y//(WINDOW_SIZE)] < self.max_iters)
         success = np.sum(success_list)
