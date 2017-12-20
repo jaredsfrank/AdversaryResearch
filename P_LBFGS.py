@@ -157,6 +157,7 @@ class P_LBFGS(adversaries.Adverarial_Base):
           opt.step()
           new_labels = self.target_class_tensor(target_class, outputs, original_labels)
           all_scores[:, root_x//(WINDOW_SIZE), root_y//(WINDOW_SIZE)] += (original_labels.cpu().numpy() == predicted_classes.cpu().numpy()).astype("float64")
+          print(all_scores)
 
         # success += len(np.where(all_scores[:, root_x//(WINDOW_SIZE), root_y//(WINDOW_SIZE)]<self.max_iters)[0])
         success_list = np.maximum(success_list, all_scores[:, root_x//(WINDOW_SIZE), root_y//(WINDOW_SIZE)] < self.max_iters)
