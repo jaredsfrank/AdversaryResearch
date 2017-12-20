@@ -29,18 +29,7 @@ class P_LBFGS(adversaries.Adverarial_Base):
       return iters < self.max_iters
     else:
       return True
-
-  def window_image_old(self, old_images, images, root_x, root_y, window_size):
-    """Resores all values in images besides window"""
-    y_indices = np.tile(np.arange(window_size)+root_y, window_size)
-    x_indices = np.repeat(np.arange(window_size)+root_x, window_size)
-    mask = torch.ByteTensor(images.shape)+1
-    mask[:,:,:,:] = 1
-    mask[:,:,y_indices,x_indices] = 0
-    images.masked_scatter_(mask, old_images)
-    return images
-
-
+      
   def window_image(self, old_images, images, root_x, root_y, window_size):
     """Resores all values in images besides window in place"""
     y_indices = torch.LongTensor(np.tile(np.arange(window_size)+root_y, window_size)).cuda()
@@ -157,7 +146,6 @@ class P_LBFGS(adversaries.Adverarial_Base):
           opt.step()
           new_labels = self.target_class_tensor(target_class, outputs, original_labels)
           all_scores[:, root_x//(WINDOW_SIZE), root_y//(WINDOW_SIZE)] += (original_labels.cpu().numpy() == predicted_classes.cpu().numpy()).astype("float64")
-          print(all_scores)
 
         # success += len(np.where(all_scores[:, root_x//(WINDOW_SIZE), root_y//(WINDOW_SIZE)]<self.max_iters)[0])
         success_list = np.maximum(success_list, all_scores[:, root_x//(WINDOW_SIZE), root_y//(WINDOW_SIZE)] < self.max_iters)
