@@ -15,7 +15,7 @@ import torch.nn as nn
 from convert_label import convert_label
 import torch.optim as optim
 
-WINDOW_SIZE = 255
+WINDOW_SIZE = 250
 
 class P_LBFGS(adversaries.Adverarial_Base):
 
