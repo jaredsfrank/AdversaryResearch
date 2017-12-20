@@ -109,7 +109,6 @@ class P_LBFGS(adversaries.Adverarial_Base):
     # if self.verbose:
     print("The predicted classes are:")
     print(convert_label(predicted_classes.cpu().numpy()))
-    print(predicted_classes.cpu().numpy())
     print(convert_label(original_labels.cpu().numpy()))
 
     # Set target variables for model loss
@@ -122,33 +121,25 @@ class P_LBFGS(adversaries.Adverarial_Base):
         images[:] = old_images[:]
         iters = 0
         predicted_classes = original_predictions
-
+        # Generate adversarial examples for window
         while self.check_iters(iters) and not self.all_changed(original_labels, predicted_classes):
           if self.verbose and iters % 20 == 0:
             print("Iteration {}".format(iters))
           opt.zero_grad()
-          # Clamp loss so that all pixels are in valid range (Between 0 and 1 unnormalized)
-          self.clamp_images(images)
-          outputs = model(inputs)
-          # Compute full loss of adversarial example
-          loss = self.CE_MSE_loss(inputs, outputs, old_images, new_labels, image_reg)
-          predicted_loss, predicted_classes = torch.max(outputs.data, 1)
-          iters += 1
-          if self.verbose and iters % 20 == 0:
-            print("Target Class Weights Minus Predicted Weights of Original:")
-            print(outputs.data[:, new_labels.data][:,0] - predicted_loss)
-          
-          self.window_image(old_images, images, root_x, root_y, WINDOW_SIZE)
-
+          # Predict loss and classes
           outputs = model(inputs)
           loss = self.CE_MSE_loss(inputs, outputs, old_images, new_labels, image_reg)
           predicted_loss, predicted_classes = torch.max(outputs.data, 1)
+          # Back prop loss, clamp changes, and revert all changes but the window
           loss.backward()
           opt.step()
+          self.clamp_images(images)
+          self.window_image(old_images, images, root_x, root_y, WINDOW_SIZE)
+          # Determine new closest labels
           new_labels = self.target_class_tensor(target_class, outputs, original_labels)
+          # Upadate scores matrix
           all_scores[:, root_x//(WINDOW_SIZE), root_y//(WINDOW_SIZE)] += (original_labels.cpu().numpy() == predicted_classes.cpu().numpy()).astype("float64")
-
-        # success += len(np.where(all_scores[:, root_x//(WINDOW_SIZE), root_y//(WINDOW_SIZE)]<self.max_iters)[0])
+          iters += 1
         success_list = np.maximum(success_list, all_scores[:, root_x//(WINDOW_SIZE), root_y//(WINDOW_SIZE)] < self.max_iters)
         success = np.sum(success_list)
         print("There are {} successes".format(success))
