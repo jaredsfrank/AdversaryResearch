@@ -53,7 +53,7 @@ class Adverarial_Base(object):
   def load_data(self, path, batch_size = 100, shuffle = True):
     """Initializes data loader given a batch size."""
     normalize = transforms.Normalize(self.mean_norm, self.std_norm)
-    torch.cuda.manual_seed(126)
+    torch.manual_seed(126)
     data_loader = torch.utils.data.DataLoader(
             torchvision.datasets.ImageFolder(path, transforms.Compose([
                 transforms.Scale(256),
