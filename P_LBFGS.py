@@ -15,7 +15,7 @@ import torch.nn as nn
 from convert_label import convert_label
 import torch.optim as optim
 
-WINDOW_SIZE = 28
+WINDOW_SIZE = 255
 
 class P_LBFGS(adversaries.Adverarial_Base):
 
@@ -139,7 +139,6 @@ class P_LBFGS(adversaries.Adverarial_Base):
           # Determine new closest labels
           new_labels = self.target_class_tensor(target_class, outputs, original_labels)
           # Upadate scores matrix
-
           mini_list = np.minimum((original_labels.cpu().numpy() == predicted_classes.cpu().numpy()).astype("float64"), mini_list)
           all_scores[:, root_x//(WINDOW_SIZE), root_y//(WINDOW_SIZE)] += mini_list
           iters += 1
