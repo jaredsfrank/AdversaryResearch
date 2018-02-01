@@ -42,6 +42,8 @@ class FGSM(adversaries.Adverarial_Base):
     """
     # Load in first <batch_size> images for validation
     images, original_labels =  data
+    targets = np.ones_like(original_labels.numpy())
+    exit()
     if self.cuda:
       images = images.cuda()
       original_labels = original_labels.cuda()
@@ -66,6 +68,7 @@ class FGSM(adversaries.Adverarial_Base):
     outputs = model(inputs)
     predicted_loss, predicted_classes = torch.max(outputs.data, 1)
     max_diff = np.mean(((images - old_images).cpu().numpy().reshape(images.shape[0],-1).max(1)))
+
     return 1, max_diff, self.percent_changed(original_labels, predicted_classes)
 
 
