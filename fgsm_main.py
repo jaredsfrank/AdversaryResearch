@@ -1,8 +1,8 @@
 """Runs adversarial example trainer
 
 Example Usage:
-python fgsm_main.py --target_class -1 \
---image_reg 100 --lr .0243 --cuda --batch_size 2
+python fgsm_main.py --target_class 0 \
+--image_reg 100 --lr .0243 --cuda --batch_size 20
 
 
 """
@@ -55,21 +55,22 @@ if __name__ == "__main__":
         fgsm.show_images = True
     if args.cuda:
         fgsm.cuda = True
+    print(fgsm.create_one_adversary_batch(args.target_class, args.image_reg, args.lr))
 
-    if not args.lr:
-        save_result = []
-        np.savetxt("/scratch/jsf239/fgsm_results.csv", np.array(save_result))
-        for i in better_range(1, 9):
-            ave_mse, succ = fgsm.create_all_adversaries(target_class=args.target_class,
-                                                       image_reg=args.image_reg,
-                                                       lr=(3**i * 10**-4))
-            save_result.append([ave_mse, succ])
-            np.savetxt("/scratch/jsf239/fgsm_results.csv", np.array(save_result))
-        print(ave_mse)
-    else:
-        ave_mse, succ = fgsm.create_all_adversaries(target_class=args.target_class,
-                                                       image_reg=args.image_reg,
-                                                       lr=args.lr)
-        print(ave_mse, succ)
+    # if not args.lr:
+    #     save_result = []
+    #     np.savetxt("/scratch/jsf239/fgsm_results.csv", np.array(save_result))
+    #     for i in better_range(1, 9):
+    #         ave_mse, succ = fgsm.create_all_adversaries(target_class=args.target_class,
+    #                                                    image_reg=args.image_reg,
+    #                                                    lr=(3**i * 10**-4))
+    #         save_result.append([ave_mse, succ])
+    #         np.savetxt("/scratch/jsf239/fgsm_results.csv", np.array(save_result))
+    #     print(ave_mse)
+    # else:
+    #     ave_mse, succ = fgsm.create_all_adversaries(target_class=args.target_class,
+    #                                                    image_reg=args.image_reg,
+    #                                                    lr=args.lr)
+    #     print(ave_mse, succ)
 
     
