@@ -195,7 +195,7 @@ class Adverarial_Base(object):
     outputs = model(adversaries)
     images = data[0]
     _, predicted_classes = torch.max(outputs.data, 1)
-    true_classes = data[1]
+    original_labels = data[1]
     percent_changed = self.percent_changed(original_labels, predicted_classes, target)
     mse = self.MSE(adversaries, Variable(images))
     return mse, percent_changed
