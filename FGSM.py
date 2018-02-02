@@ -64,10 +64,10 @@ class FGSM(adversaries.Adverarial_Base):
     self.clamp_images(images)
 
     model = self.make_eval_model()
-    outputs = model(inputs)
+    # outputs = model(inputs)
     # predicted_loss, predicted_classes = torch.max(outputs.data, 1)
     # max_diff = np.mean(((images - old_images).cpu().numpy().reshape(images.shape[0],-1).max(1)))
 
-    return outputs
+    return inputs.clone()
 
 
