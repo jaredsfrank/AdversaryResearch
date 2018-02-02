@@ -165,8 +165,16 @@ class Adverarial_Base(object):
     # Load in first <batch_size> images for validation
     return
 
-  def resnet(self):
-    model = models.resnet101(pretrained=True)
+  def get_model(self, model_name):
+    if model_name == 'resnet':
+      model = models.resnet101(pretrained=True)
+    elif model_name == 'inception':
+      model = models.inception_v3(pretrained=True)
+    elif model_name == 'vgg':
+      model = models.vgg19(pretrained=True).cuda()
+    else:
+      print("Invalid option")
+      return
     if self.cuda:
       model.cuda()
     model.eval()

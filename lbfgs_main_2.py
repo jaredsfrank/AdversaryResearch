@@ -41,7 +41,7 @@ if __name__ == "__main__":
         lbfgs.cuda = True
     if args.max_iters is not None:
         lbfgs.max_iters = args.max_iters
-    model = lbfgs.resnet()
+    model = lbfgs.get_model('resnet')
     data, adversaries = lbfgs.create_one_adversary_batch(model, target_class=args.target_class, image_reg=args.image_reg, lr=args.lr)
     print(lbfgs.get_stats(data, adversaries, model, args.target_class))
 
