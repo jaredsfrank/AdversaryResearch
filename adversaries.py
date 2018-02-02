@@ -89,7 +89,7 @@ class Adverarial_Base(object):
     if target_class == -1:
       return np.sum(np_orig != np_preds)/float(len(np_orig))
     else:
-      return np.sum(np.ones_like(np_preds)*target_class != np_preds)/float(len(np_orig))
+      return np.sum(np.ones_like(np_preds)*target_class == np_preds)/float(len(np_orig))
 
   def all_changed(self, original_labels, predictions, target_class = -1):
     """Returns true if all predictions are wrong given original correct labels."""
