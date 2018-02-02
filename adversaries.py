@@ -200,7 +200,7 @@ class Adverarial_Base(object):
     _, predicted_classes = torch.max(outputs.data, 1)
     original_labels = data[1]
     percent_changed = self.percent_changed(original_labels, predicted_classes, target)
-    mse = self.MSE(adversaries, Variable(images))
+    mse = self.MSE(adversaries, Variable(images).cuda())
     return mse, percent_changed
 
 
