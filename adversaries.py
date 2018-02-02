@@ -162,7 +162,14 @@ class Adverarial_Base(object):
     # Load in first <batch_size> images for validation
     return
 
-  def create_one_adversary_batch(self, target_class, image_reg, lr):
+  def resnet(self):
+    model = models.resnet101(pretrained=True)
+    if self.cuda:
+      model.cuda()
+    model.eval()
+    return model
+
+  def create_one_adversary_batch(self, model, target_class, image_reg, lr):
     """Create adversarial example for one random batch of data.
   
     Args:
@@ -177,10 +184,6 @@ class Adverarial_Base(object):
 
     """
     # Load pretrained network
-    model = models.resnet101(pretrained=True)
-    if self.cuda:
-      model.cuda()
-    model.eval()
     # Set all model parameters to not update during training
     for parameter in model.parameters():
         parameter.requires_grad = False
