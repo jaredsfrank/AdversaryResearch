@@ -134,8 +134,8 @@ class Adverarial_Base(object):
       second_best_class = torch.topk(outputs, 2, 1)[1][:, 1]
       # For each label in outputs that is correctly classified, replace
       # use second best class. Otherwise, stick with current prediction
-      new_labels = Variable(predicted_classes).masked_scatter_(predicting_correct_class,
-                                                               Variable(second_best_class))
+      new_labels = Variable(predicted_classes).masked_scatter_(Variable(predicting_correct_class),
+                                                               second_best_class)
     else:
       new_labels = Variable(torch.LongTensor([target_class]*self.batch_size))
     if self.cuda:
