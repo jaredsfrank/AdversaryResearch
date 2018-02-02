@@ -2,7 +2,7 @@
 
 Example Usage:
 python lbfgs_main.py --batch_size 100 \
-    --target_class 1 --image_reg 100 --lr 1 --cuda
+    --target_class 1 --image_reg 100 --lr 1 --cuda \
     --verbose
 
 
@@ -40,8 +40,6 @@ if __name__ == "__main__":
         lbfgs.cuda = True
     if args.max_iters is not None:
         lbfgs.max_iters = args.max_iters
-	data, adversaries = lbfgs.create_one_adversary_batch(target_class=args.target_class, 
-														 image_reg=args.image_reg, 
-														 lr=args.lr)
+	data, adversaries = lbfgs.create_one_adversary_batch(target_class=args.target_class, image_reg=args.image_reg, lr=args.lr)
 	print(lbfgs.get_stats(data, adversaries, model, targs.target_class))
 
