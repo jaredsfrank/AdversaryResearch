@@ -24,7 +24,7 @@ class LBFGS(adversaries.Adverarial_Base):
     else:
       return True
     
-  def adversary_batch(self, data, model, target_class, image_reg, lr):
+  def adversary_batch(self, data, model, target_class, image_reg, lr, test_model=None):
     """Creates adversarial examples for one batch of data.
 
     Generates adversarial batch using LBFGS iterative method.
@@ -60,7 +60,7 @@ class LBFGS(adversaries.Adverarial_Base):
     # Set target variables for model loss
     new_labels = self.target_class_tensor(target_class, outputs, original_labels)
     iters = 0
-    while self.check_iters(iters) and not self.all_changed(original_labels, predicted_classes):
+    while self.check_iters(iters) and not self.all_changed(original_labels, predicted_classes, target_class):
       if self.verbose:
         print("Iteration {}".format(iters))
       opt.zero_grad()
@@ -70,11 +70,11 @@ class LBFGS(adversaries.Adverarial_Base):
       # Compute full loss of adversarial example
       loss = self.CE_MSE_loss(inputs, outputs, old_images, new_labels, image_reg)
       predicted_loss, predicted_classes = torch.max(outputs.data, 1)
-      if self.verbose:
-        print("Target Class Weights Minus Predicted Weights:")
-        print(outputs.data[:, new_labels.data][:,0] - predicted_loss)
+      # if self.verbose:
+      #   print("Target Class Weights Minus Predicted Weights:")
+      #   print(outputs.data[:, new_labels.data][:,0] - predicted_loss)
       iters += 1
-      if self.check_iters(iters) and self.all_changed(original_labels, predicted_classes):
+      if self.check_iters(iters) and self.all_changed(original_labels, predicted_classes, target_class):
         if self.show_images:
           self.save_figure(inputs.data, "After_{}_{}".format(image_reg, lr))
           self.save_figure(old_images, "Before_{}_{}".format(image_reg, lr))
@@ -85,6 +85,4 @@ class LBFGS(adversaries.Adverarial_Base):
           opt.step()
           new_labels = self.target_class_tensor(target_class, outputs, original_labels)
           # self.MSE(images, Variable(old_images))
-    print(iters)
-    max_diff = np.mean(((images - old_images).cpu().numpy().reshape(images.shape[0],-1).max(1)))
-    return iters, max_diff, self.percent_changed(original_labels, predicted_classes)
+    return inputs.clone()

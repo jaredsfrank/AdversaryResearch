@@ -88,7 +88,7 @@ class Adverarial_Base(object):
       np_preds = predictions.numpy()
     return np.sum(np_orig != np_preds)/float(len(np_orig))
 
-  def all_changed(self, original_labels, predictions):
+  def all_changed(self, original_labels, predictions, target_class = -1):
     """Returns true if all predictions are wrong given original correct labels."""
     if self.cuda:
       np_orig = original_labels.cpu().numpy()
@@ -96,7 +96,10 @@ class Adverarial_Base(object):
     else:
       np_orig = original_labels.numpy()
       np_preds = predictions.numpy()
-    return np.all(np_orig != np_preds)
+    if target_class == -1:
+      return np.all(np_orig != np_preds)
+    else:
+      return np.all(np.ones_like(np_preds)*target_class == np_preds)
 
   def CE_MSE_loss(self, inputs, outputs, old_images, new_labels, image_reg):
     model_loss = self.CrossEntropy(outputs, new_labels)
@@ -182,7 +185,17 @@ class Adverarial_Base(object):
     for parameter in model.parameters():
         parameter.requires_grad = False
     data = next(iter(self.val_loader))
-    return self.adversary_batch(data, model, target_class, image_reg, lr)
+    outputs = self.adversary_batch(data, model, target_class, image_reg, lr)
+    return data, outputs
+
+  def get_stats(self, data, adversaries, model, target = -1):
+    outputs = model(inputs)
+    images = data[0]
+    _, predicted_classes = torch.max(outputs.data, 1)
+    true_classes = data[1]
+    percent_changed = self.percent_changed(original_labels, predicted_classes, target)
+    mse = self.MSE(adversaries, Variable(images))
+    return mse, percent_changed
 
 
   def create_all_adversaries(self, target_class, image_reg, lr):

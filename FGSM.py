@@ -65,9 +65,9 @@ class FGSM(adversaries.Adverarial_Base):
 
     model = self.make_eval_model()
     outputs = model(inputs)
-    predicted_loss, predicted_classes = torch.max(outputs.data, 1)
-    max_diff = np.mean(((images - old_images).cpu().numpy().reshape(images.shape[0],-1).max(1)))
+    # predicted_loss, predicted_classes = torch.max(outputs.data, 1)
+    # max_diff = np.mean(((images - old_images).cpu().numpy().reshape(images.shape[0],-1).max(1)))
 
-    return 1, max_diff, self.percent_changed(targets, predicted_classes)
+    return outputs
 
 
