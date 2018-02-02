@@ -78,7 +78,7 @@ class Adverarial_Base(object):
     fig.savefig("/scratch/jsf239/{}diff.png".format(self.sub_dir))
 
 
-  def percent_changed(self, original_labels, predictions):
+  def percent_changed(self, original_labels, predictions, target_class = -1):
     """Returns percent of original labels that were fooled."""
     if self.cuda:
       np_orig = original_labels.cpu().numpy()
@@ -86,7 +86,10 @@ class Adverarial_Base(object):
     else:
       np_orig = original_labels.numpy()
       np_preds = predictions.numpy()
-    return np.sum(np_orig != np_preds)/float(len(np_orig))
+    if target_class == -1:
+      return np.sum(np_orig != np_preds)/float(len(np_orig))
+    else:
+      return np.sum(np.ones_like(np_preds)*target_class != np_preds)/float(len(np_orig))
 
   def all_changed(self, original_labels, predictions, target_class = -1):
     """Returns true if all predictions are wrong given original correct labels."""
