@@ -37,6 +37,7 @@ class Adverarial_Base(object):
   def imshow(self, img):
     """Unnormalizes image and then shows via matplotlib."""
     # Unnormalize each channel according to channel means and stds
+    img = img.clone()
     for i in range(len(self.mean_norm)):
       img[i, :, :] = img[i, :, :] * self.std_norm[i] + self.mean_norm[i]
     if self.cuda:
