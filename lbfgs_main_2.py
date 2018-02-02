@@ -1,7 +1,7 @@
 """Runs adversarial example trainer
 
 Example Usage:
-python lbfgs_main.py --batch_size 100 \
+python lbfgs_main_2.py --batch_size 100 \
     --target_class 1 --image_reg 100 --lr 1 --cuda \
     --verbose
 
@@ -34,6 +34,7 @@ args = parser.parse_args()
 
 if __name__ == "__main__":
     lbfgs = LBFGS.LBFGS(args.batch_size)
+    lbfgs.show_images = False
     if args.verbose:
         lbfgs.verbose = True
     if args.cuda:
