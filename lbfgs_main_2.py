@@ -43,5 +43,5 @@ if __name__ == "__main__":
         lbfgs.max_iters = args.max_iters
     model = lbfgs.resnet()
     data, adversaries = lbfgs.create_one_adversary_batch(model, target_class=args.target_class, image_reg=args.image_reg, lr=args.lr)
-    print(lbfgs.get_stats(data, adversaries, model, targs.target_class))
+    print(lbfgs.get_stats(data, adversaries, model, args.target_class))
 
