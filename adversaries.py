@@ -192,7 +192,7 @@ class Adverarial_Base(object):
     return data, outputs
 
   def get_stats(self, data, adversaries, model, target = -1):
-    outputs = model(inputs)
+    outputs = model(adversaries)
     images = data[0]
     _, predicted_classes = torch.max(outputs.data, 1)
     true_classes = data[1]
